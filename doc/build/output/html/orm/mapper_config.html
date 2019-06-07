@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="ko" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ko" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>매퍼 설정 &mdash; SQLAlchemy 1.3.0b1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="색인" href="../genindex.html" />
+    <link rel="search" title="검색" href="../search.html" />
+    <link rel="copyright" title="저작권" href="../copyright.html" />
+    <link rel="next" title="매핑 유형" href="mapping_styles.html" />
+    <link rel="prev" title="ORM 튜토리얼" href="tutorial.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">개요</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">SQLAlchemy ORM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html">ORM 튜토리얼</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">매퍼 설정</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="mapping_styles.html">매핑 유형</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scalar_mapping.html">컬럼 표현식 매핑</a></li>
+<li class="toctree-l3"><a class="reference internal" href="inheritance.html">클래스 상속 구조 매핑하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nonstandard_mappings.html">비 전통적인 매핑</a></li>
+<li class="toctree-l3"><a class="reference internal" href="versioning.html">버전 카운터 설정</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mapping_api.html">Class Mapping API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="relationships.html">릴레이션십 설정</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_objects.html">객체 로딩</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session.html">세션 사용하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending.html">Events and Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extensions/index.html">ORM Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">ORM Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">SQLAlchemy Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index.html">Dialects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors.html">Error Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index.html">Changes and Migration</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+      <li>매퍼 설정</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy//docs-korean/doc/build/orm/mapper_config.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mapper-configuration">
+<span id="mapper-config-toplevel"></span><h1>매퍼 설정<a class="headerlink" href="#mapper-configuration" title="제목 주소">¶</a></h1>
+<p>이 섹션에서는 매퍼(Mapper)을 사용하는데 필요한 다양한 설정 패턴들을 다뤄볼 것이다.이 섹션을 진행하기 전 당신이 <a class="reference internal" href="tutorial.html#ormtutorial-toplevel"><span class="std std-ref">ORM 튜토리얼</span></a>을 이미 살펴보았고 기초적인 매퍼와 관계를 구성하고 사용할 줄 안다고 가정하겠다.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mapping_styles.html">매핑 유형</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mapping_styles.html#declarative-mapping">선언적 매핑(Declarative Mapping)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapping_styles.html#classical-mappings">고전적 매핑(Classical Mappings)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapping_styles.html#runtime-introspection-of-mappings-objects">매핑과 객체의 런타임 검사(Runtime Introspection of Mappings, Objects)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scalar_mapping.html">컬럼 표현식 매핑</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mapping_columns.html">테이블 컬럼 매핑</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapped_sql_expr.html">매핑된 속성으로서 SQL 표현식</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapped_attributes.html">속성 동작 변경</a></li>
+<li class="toctree-l2"><a class="reference internal" href="composites.html">복합 열 유형(Composite Column Types)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inheritance.html">클래스 상속 구조 매핑하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inheritance.html#joined-table-inheritance">조인 테이블 상속</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inheritance.html#single-table-inheritance">단일 테이블 상속</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inheritance.html#concrete-table-inheritance">구체 테이블 상속</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nonstandard_mappings.html">비 전통적인 매핑</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nonstandard_mappings.html#mapping-a-class-against-multiple-tables">여러 테이블에 대한 매핑 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nonstandard_mappings.html#mapping-a-class-against-arbitrary-selects">Mapping a Class against Arbitrary Selects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nonstandard_mappings.html#multiple-mappers-for-one-class">Multiple Mappers for One Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="versioning.html">버전 카운터 설정</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="versioning.html#simple-version-counting">단순 버전 관리</a></li>
+<li class="toctree-l2"><a class="reference internal" href="versioning.html#custom-version-counters-types">커스텀 버전 카운터/타입</a></li>
+<li class="toctree-l2"><a class="reference internal" href="versioning.html#server-side-version-counters">Server Side Version Counters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="versioning.html#programmatic-or-conditional-version-counters">Programmatic or Conditional Version Counters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mapping_api.html">Class Mapping API</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="mapping_styles.html" class="btn btn-neutral float-right" title="매핑 유형" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial.html" class="btn btn-neutral" title="ORM 튜토리얼" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+      최종 업데이트: 06/07/2019 11:12:12
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.3.0b1',
+            LANGUAGE:'ko',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

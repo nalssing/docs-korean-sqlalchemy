@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="ko" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ko" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>복합 열 유형(Composite Column Types) &mdash; SQLAlchemy 1.3.0b1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="색인" href="../genindex.html" />
+    <link rel="search" title="검색" href="../search.html" />
+    <link rel="copyright" title="저작권" href="../copyright.html" />
+    <link rel="next" title="클래스 상속 구조 매핑하기" href="inheritance.html" />
+    <link rel="prev" title="속성 동작 변경" href="mapped_attributes.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">개요</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">SQLAlchemy ORM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html">ORM 튜토리얼</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="mapper_config.html">매퍼 설정</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="mapping_styles.html">매핑 유형</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="scalar_mapping.html">컬럼 표현식 매핑</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="mapping_columns.html">테이블 컬럼 매핑</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mapped_sql_expr.html">매핑된 속성으로서 SQL 표현식</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mapped_attributes.html">속성 동작 변경</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">복합 열 유형(Composite Column Types)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="inheritance.html">클래스 상속 구조 매핑하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nonstandard_mappings.html">비 전통적인 매핑</a></li>
+<li class="toctree-l3"><a class="reference internal" href="versioning.html">버전 카운터 설정</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mapping_api.html">Class Mapping API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="relationships.html">릴레이션십 설정</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_objects.html">객체 로딩</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session.html">세션 사용하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending.html">Events and Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extensions/index.html">ORM Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">ORM Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">SQLAlchemy Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index.html">Dialects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors.html">Error Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index.html">Changes and Migration</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+          <li><a href="mapper_config.html">매퍼 설정</a> &raquo;</li>
+        
+          <li><a href="scalar_mapping.html">컬럼 표현식 매핑</a> &raquo;</li>
+        
+      <li>복합 열 유형(Composite Column Types)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy//docs-korean/doc/build/orm/composites.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-sqlalchemy.orm"></span><div class="section" id="composite-column-types">
+<span id="mapper-composite"></span><h1>복합 열 유형(Composite Column Types)<a class="headerlink" href="#composite-column-types" title="제목 주소">¶</a></h1>
+<p>컬럼 세트는 단일 사용자 정의(single user-defined) 데이터 타입과 연관될 수 있다. ORM 제공하는 클래스를 사용하여 컬럼 그룹을 나타내는 단일 속성(attribute)를 제공한다.</p>
+<p>아래의 간단한 예제는 <code class="docutils literal notranslate"><span class="pre">Point</span></code>객체의 컬럼 쌍을 보여준다. <code class="docutils literal notranslate"><span class="pre">Point</span></code>는 <code class="docutils literal notranslate"><span class="pre">.x</span></code>와 <code class="docutils literal notranslate"><span class="pre">.y</span></code>의 쌍을 나타낸다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Point</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">__composite_values__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Point(x=</span><span class="si">%r</span><span class="s2">, y=</span><span class="si">%r</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="n">other</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span> \
+            <span class="n">other</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>사용자 정의 데이터 타입 클래스(custom datatype class)의 요구사항은 생성자(constructor)가 컬럼의 포맷에 맞게 대응하는 인자(arguments) 받아들이고, 그리고 메서드에 <code class="docutils literal notranslate"><span class="pre">__composite_values__()</span></code>를 제공해야 한다. <code class="docutils literal notranslate"><span class="pre">__composite_values()</span></code>는 컬럼-기반 속성(attribute)의 순서 목록, 또는 튜플, 리스트로 오브젝트의 상태를 반환해야 한다.또한 두 인스턴스의 동등성(equality)를 테스트하는 적절한 방법 <code class="docutils literal notranslate"><span class="pre">__ne__()</span></code>와 <code class="docutils literal notranslate"><span class="pre">__eq__()</span></code>을 제공해야 한다.</p>
+<p>우리는 <code class="docutils literal notranslate"><span class="pre">x1/y1</span></code>과 <code class="docutils literal notranslate"><span class="pre">x2/y2</span></code>두 점을 나타내는 <code class="docutils literal notranslate"><span class="pre">vertices</span></code>테이블을 매핑하는 것을 만들 것이다.이것들은 일반적으로 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> 객체들로 만들어진다. 그런 다음  <a class="reference internal" href="#sqlalchemy.orm.composite" title="sqlalchemy.orm.composite"><code class="xref py py-func docutils literal notranslate"><span class="pre">composite()</span></code></a>함수는 <code class="docutils literal notranslate"><span class="pre">Point</span></code> 클래스를 통해 컬럼 세트를 나타낼 새로운 속성을 할당하는데 사용된다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">composite</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declarative_base</span>
+
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Vertex</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;vertices&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="n">composite</span><span class="p">(</span><span class="n">Point</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">composite</span><span class="p">(</span><span class="n">Point</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>위의 고전적 매핑은 존재하는 테이블에 각각 <a class="reference internal" href="#sqlalchemy.orm.composite" title="sqlalchemy.orm.composite"><code class="xref py py-func docutils literal notranslate"><span class="pre">composite()</span></code></a>함수를 정의해야 한다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mapper</span><span class="p">(</span><span class="n">Vertex</span><span class="p">,</span> <span class="n">vertices_table</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;start&#39;</span><span class="p">:</span><span class="n">composite</span><span class="p">(</span><span class="n">Point</span><span class="p">,</span> <span class="n">vertices_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">vertices_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">y1</span><span class="p">),</span>
+    <span class="s1">&#39;end&#39;</span><span class="p">:</span><span class="n">composite</span><span class="p">(</span><span class="n">Point</span><span class="p">,</span> <span class="n">vertices_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">x2</span><span class="p">,</span> <span class="n">vertices_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">y2</span><span class="p">),</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>이제 우리는 <code class="docutils literal notranslate"><span class="pre">Vertex</span></code> 인스턴드를 저장하고 사용할 수 있다. 또한 애드-훅(ad-hoc) <code class="docutils literal notranslate"><span class="pre">Point</span></code> 인스턴스의 <code class="docutils literal notranslate"><span class="pre">.start</span></code>와 <code class="docutils literal notranslate"><span class="pre">.end</span></code>를 사용하여 쿼리를 그들을 그들을 쿼리 할 수 있다.</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">Vertex</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">q</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Vertex</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Vertex</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="n">Point</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class=" -Sql -Sql-Link">{sql}</span><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">)</span>
+<span class=" -Sql -Sql-Popup">BEGIN (implicit)</span>
+<span class=" -Sql -Sql-Popup">INSERT INTO vertices (x1, y1, x2, y2) VALUES (?, ?, ?, ?)</span>
+<span class=" -Sql -Sql-Popup">(3, 4, 5, 6)</span>
+<span class=" -Sql -Sql-Popup">SELECT vertices.id AS vertices_id,</span>
+<span class=" -Sql -Sql-Popup">        vertices.x1 AS vertices_x1,</span>
+<span class=" -Sql -Sql-Popup">        vertices.y1 AS vertices_y1,</span>
+<span class=" -Sql -Sql-Popup">        vertices.x2 AS vertices_x2,</span>
+<span class=" -Sql -Sql-Popup">        vertices.y2 AS vertices_y2</span>
+<span class=" -Sql -Sql-Popup">FROM vertices</span>
+<span class=" -Sql -Sql-Popup">WHERE vertices.x1 = ? AND vertices.y1 = ?</span>
+<span class=" -Sql -Sql-Popup"> LIMIT ? OFFSET ?</span>
+<span class=" -Sql -Sql-Popup">(3, 4, 1, 0)</span>
+<span class=" -Sql -Sql-Popup">{stop}</span><span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="sqlalchemy.orm.composite">
+<code class="descclassname">sqlalchemy.orm.</code><code class="descname">composite</code><span class="sig-paren">(</span><em>class_</em>, <em>*attrs</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.orm.composite" title="정의 주소">¶</a></dt>
+<dd><p>매퍼와 함께 사용하기위한 복합 컬럼-기반 속성(property)를 반환 한다.</p>
+<p>더 많은 예제를 보려면 <a class="reference internal" href="#mapper-composite"><span class="std std-ref">복합 열 유형(Composite Column Types)</span></a>절을 참조한다.</p>
+<p><a class="reference internal" href="#sqlalchemy.orm.composite" title="sqlalchemy.orm.composite"><code class="xref py py-func docutils literal notranslate"><span class="pre">composite()</span></code></a>함수에 의해 반환되는 <a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.MapperProperty" title="sqlalchemy.orm.interfaces.MapperProperty"><code class="xref py py-class docutils literal notranslate"><span class="pre">MapperProperty</span></code></a>클래스는 <a class="reference internal" href="internals.html#sqlalchemy.orm.descriptor_props.CompositeProperty" title="sqlalchemy.orm.descriptor_props.CompositeProperty"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompositeProperty</span></code></a>클래스이다.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><ul class="first last simple">
+<li><span class="target" id="sqlalchemy.orm.composite.params.class_"></span><strong>class_</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.composite.params.class_">¶</a> -- &quot;복합 타입(composite type)&quot; 클래스나 컬럼 값이 주어진 복합 오브젝트의 새로운 인스턴스를 생성하는 어떠한 클래스메소드(classmethod), 호출가능한 객체.</li>
+<li><span class="target" id="sqlalchemy.orm.composite.params.*cols"></span><strong>*cols</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.composite.params.*cols">¶</a> -- 매핑될 컬럼 객체 목록</li>
+<li><span class="target" id="sqlalchemy.orm.composite.params.active_history"></span><strong>active_history=False</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.composite.params.active_history">¶</a> -- When <code class="docutils literal notranslate"><span class="pre">True</span></code>, indicates that the &quot;previous&quot; value for a
+scalar attribute should be loaded when replaced, if not
+already loaded.  See the same flag on <a class="reference internal" href="mapping_columns.html#sqlalchemy.orm.column_property" title="sqlalchemy.orm.column_property"><code class="xref py py-func docutils literal notranslate"><span class="pre">column_property()</span></code></a>.</li>
+<li><span class="target" id="sqlalchemy.orm.composite.params.group"></span><strong>group</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.composite.params.group">¶</a> -- A group name for this property when marked as deferred.</li>
+<li><span class="target" id="sqlalchemy.orm.composite.params.deferred"></span><strong>deferred</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.composite.params.deferred">¶</a> -- When True, the column property is &quot;deferred&quot;, meaning that it does
+not load immediately, and is instead loaded when the attribute is
+first accessed on an instance.  See also
+<a class="reference internal" href="loading_columns.html#sqlalchemy.orm.deferred" title="sqlalchemy.orm.deferred"><code class="xref py py-func docutils literal notranslate"><span class="pre">deferred()</span></code></a>.</li>
+<li><span class="target" id="sqlalchemy.orm.composite.params.comparator_factory"></span><strong>comparator_factory</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.composite.params.comparator_factory">¶</a> -- a class which extends
+<a class="reference internal" href="internals.html#sqlalchemy.orm.descriptor_props.CompositeProperty.Comparator" title="sqlalchemy.orm.descriptor_props.CompositeProperty.Comparator"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompositeProperty.Comparator</span></code></a> which provides custom SQL
+clause generation for comparison operations.</li>
+<li><span class="target" id="sqlalchemy.orm.composite.params.doc"></span><strong>doc</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.composite.params.doc">¶</a> -- optional string that will be applied as the doc on the
+class-bound descriptor.</li>
+<li><span class="target" id="sqlalchemy.orm.composite.params.info"></span><strong>info</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.composite.params.info">¶</a> -- Optional data dictionary which will be populated into the
+<a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.MapperProperty.info" title="sqlalchemy.orm.interfaces.MapperProperty.info"><code class="xref py py-attr docutils literal notranslate"><span class="pre">MapperProperty.info</span></code></a> attribute of this object.</li>
+<li><span class="target" id="sqlalchemy.orm.composite.params.extension"></span><strong>extension</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.composite.params.extension">¶</a> -- <p>an <a class="reference internal" href="deprecated.html#sqlalchemy.orm.interfaces.AttributeExtension" title="sqlalchemy.orm.interfaces.AttributeExtension"><code class="xref py py-class docutils literal notranslate"><span class="pre">AttributeExtension</span></code></a> instance,
+or list of extensions, which will be prepended to the list of
+attribute listeners for the resulting descriptor placed on the
+class.</p>
+<div class="deprecated">
+<p><span class="versionmodified">버전 0.7 폐지: </span><a class="reference internal" href="deprecated.html#sqlalchemy.orm.interfaces.AttributeExtension" title="sqlalchemy.orm.interfaces.AttributeExtension"><code class="xref py py-class docutils literal notranslate"><span class="pre">AttributeExtension</span></code></a> is deprecated in favor of the <a class="reference internal" href="events.html#sqlalchemy.orm.events.AttributeEvents" title="sqlalchemy.orm.events.AttributeEvents"><code class="xref py py-class docutils literal notranslate"><span class="pre">AttributeEvents</span></code></a> listener interface.  The <a class="reference internal" href="#sqlalchemy.orm.composite.params.extension" title="sqlalchemy.orm.composite"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">composite.extension</span></code></a> parameter will be removed in a future release.</p>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="section" id="tracking-in-place-mutations-on-composites">
+<h2>컴포지트(Composites) 에서 현재 위치 변경 추적<a class="headerlink" href="#tracking-in-place-mutations-on-composites" title="제목 주소">¶</a></h2>
+<p>기본 복합(composite) 값의 현재 위치 변경 사항은 자동으로 추적되지 않는다. 대신, 복합 클래스는 무모 객체에 이벤트를 명시적으로 제공해야 한다. 이 작업은  이벤트를 사용하여 각 사용자 정의 복합 객체를 모든 부모 연결과 연관 시키는 <a class="reference internal" href="extensions/mutable.html#sqlalchemy.ext.mutable.MutableComposite" title="sqlalchemy.ext.mutable.MutableComposite"><code class="xref py py-class docutils literal notranslate"><span class="pre">MutableComposite</span></code></a>믹스인(mix-in) 의 사용을 통해 대부분 자동화 된다.예제를 보려면 <a class="reference internal" href="extensions/mutable.html#mutable-composites"><span class="std std-ref">Establishing Mutability on Composites</span></a>를 참조한다.</p>
+</div>
+<div class="section" id="redefining-comparison-operations-for-composites">
+<span id="composite-operations"></span><h2>복합 요소에 대한 비교 연산 재정의<a class="headerlink" href="#redefining-comparison-operations-for-composites" title="제목 주소">¶</a></h2>
+<p>&quot;equals&quot;비교 연산은 기본적으로 서로 일치하는 모든 해당열의 AND를 생성한다. <a class="reference internal" href="#sqlalchemy.orm.composite" title="sqlalchemy.orm.composite"><code class="xref py py-func docutils literal notranslate"><span class="pre">composite()</span></code></a>의 <code class="docutils literal notranslate"><span class="pre">comparator_factory</span></code>인자 변경을 통해 변경될 수 있다.이미 존재하거나 새로운 연산을 정의하기 위해 <a class="reference internal" href="internals.html#sqlalchemy.orm.descriptor_props.CompositeProperty.Comparator" title="sqlalchemy.orm.descriptor_props.CompositeProperty.Comparator"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompositeProperty.Comparator</span></code></a>클래스를 명시한다. 아래의 예제에서 &quot;greater than&quot;연산자를 사용하여, &quot;greater than&quot;과 같은 표현식을 구현한다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm.properties</span> <span class="k">import</span> <span class="n">CompositeProperty</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">sql</span>
+
+<span class="k">class</span> <span class="nc">PointComparator</span><span class="p">(</span><span class="n">CompositeProperty</span><span class="o">.</span><span class="n">Comparator</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;redefine the &#39;greater than&#39; operation&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">sql</span><span class="o">.</span><span class="n">and_</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">a</span><span class="o">&gt;</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span>
+                          <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__clause_element__</span><span class="p">()</span><span class="o">.</span><span class="n">clauses</span><span class="p">,</span>
+                              <span class="n">other</span><span class="o">.</span><span class="n">__composite_values__</span><span class="p">())])</span>
+
+<span class="k">class</span> <span class="nc">Vertex</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">___tablename__</span> <span class="o">=</span> <span class="s1">&#39;vertices&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="n">composite</span><span class="p">(</span><span class="n">Point</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span>
+                        <span class="n">comparator_factory</span><span class="o">=</span><span class="n">PointComparator</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">composite</span><span class="p">(</span><span class="n">Point</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span>
+                        <span class="n">comparator_factory</span><span class="o">=</span><span class="n">PointComparator</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="nesting-composites">
+<h2>복합체 중첩<a class="headerlink" href="#nesting-composites" title="제목 주소">¶</a></h2>
+<p>복합객체는 원하는대로 작동하도록 복합 클래스 내에서 동작을 재정의 한 다음, 복합 클래스를일반적으로 개별 컬럼의 전체 길이에 매핑하여 간단한 중첩 스키마에서 작동하도록 정의 할 수 있다. 일반적으로 사용자 정의 사용 방식과 로우-생성(generate-from-row) 사용을 위해 별도의 생성자를 정의하는 것이 편리하다. 아래에서 우리는 그 <code class="docutils literal notranslate"><span class="pre">Vertex</span></code>클래스 자체를 복합 객체로 재구성하여 <code class="docutils literal notranslate"><span class="pre">HasVertex</span></code>클래스에 매핑한다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">composite</span>
+
+<span class="k">class</span> <span class="nc">Point</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">__composite_values__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Point(x=</span><span class="si">%r</span><span class="s2">, y=</span><span class="si">%r</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="n">other</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span> \
+            <span class="n">other</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Vertex</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;generate a Vertex from a row&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Vertex</span><span class="p">(</span>
+            <span class="n">Point</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+            <span class="n">Point</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__composite_values__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">__composite_values__</span><span class="p">()</span> <span class="o">+</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">__composite_values__</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">HasVertex</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;has_vertex&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+
+    <span class="n">vertex</span> <span class="o">=</span> <span class="n">composite</span><span class="p">(</span><span class="n">Vertex</span><span class="o">.</span><span class="n">_generate</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>위의 매핑을 아래와 같이 사용할 수 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hv</span> <span class="o">=</span> <span class="n">HasVertex</span><span class="p">(</span><span class="n">vertex</span><span class="o">=</span><span class="n">Vertex</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">Point</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)))</span>
+
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">hv</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="n">hv</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">HasVertex</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+    <span class="n">HasVertex</span><span class="o">.</span><span class="n">vertex</span> <span class="o">==</span> <span class="n">Vertex</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">Point</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)))</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hv</span><span class="o">.</span><span class="n">vertex</span><span class="o">.</span><span class="n">start</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hv</span><span class="o">.</span><span class="n">vertex</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="inheritance.html" class="btn btn-neutral float-right" title="클래스 상속 구조 매핑하기" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mapped_attributes.html" class="btn btn-neutral" title="속성 동작 변경" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+      최종 업데이트: 06/07/2019 11:12:12
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.3.0b1',
+            LANGUAGE:'ko',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

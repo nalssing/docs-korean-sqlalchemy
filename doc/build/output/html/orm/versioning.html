@@ -1,0 +1,461 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="ko" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ko" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>버전 카운터 설정 &mdash; SQLAlchemy 1.3.0b1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="색인" href="../genindex.html" />
+    <link rel="search" title="검색" href="../search.html" />
+    <link rel="copyright" title="저작권" href="../copyright.html" />
+    <link rel="next" title="Class Mapping API" href="mapping_api.html" />
+    <link rel="prev" title="비 전통적인 매핑" href="nonstandard_mappings.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">개요</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">SQLAlchemy ORM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html">ORM 튜토리얼</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="mapper_config.html">매퍼 설정</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="mapping_styles.html">매핑 유형</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scalar_mapping.html">컬럼 표현식 매핑</a></li>
+<li class="toctree-l3"><a class="reference internal" href="inheritance.html">클래스 상속 구조 매핑하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nonstandard_mappings.html">비 전통적인 매핑</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">버전 카운터 설정</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mapping_api.html">Class Mapping API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="relationships.html">릴레이션십 설정</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_objects.html">객체 로딩</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session.html">세션 사용하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending.html">Events and Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extensions/index.html">ORM Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">ORM Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">SQLAlchemy Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index.html">Dialects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors.html">Error Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index.html">Changes and Migration</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+          <li><a href="mapper_config.html">매퍼 설정</a> &raquo;</li>
+        
+      <li>버전 카운터 설정</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy//docs-korean/doc/build/orm/versioning.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="configuring-a-version-counter">
+<span id="mapper-version-counter"></span><h1>버전 카운터 설정<a class="headerlink" href="#configuring-a-version-counter" title="제목 주소">¶</a></h1>
+<p><a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.Mapper" title="sqlalchemy.orm.mapper.Mapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapper</span></code></a> 클래스는 <span class="xref std std-term">version id column</span>이라는 테이블 컬럼을 지원한다. 매핑된 테이블에 <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> 연산이 있을 때마다 값이 증가하거나 바뀐다. ORM이 해당 레코드 행을 <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> 또는 <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> 실행을 할 때마다 메모리에 저장된 값이 실제 데이터베이스에 있는 값과 같은지 확인한다.</p>
+<div class="admonition warning">
+<p class="first admonition-title">경고</p>
+<p class="last">버전관리 기능은 객체의 인메모리 레코드 값을 비교해야 하기 때문에 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.flush" title="sqlalchemy.orm.session.Session.flush"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Session.flush()</span></code></a> 프로세스에만 적용되는데 ORM은 개별 레코드 행 단위로 flush 처리하기 때문에 여러개의 행을 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.update" title="sqlalchemy.orm.query.Query.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Query.update()</span></code></a> 또는 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.delete" title="sqlalchemy.orm.query.Query.delete"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Query.delete()</span></code></a> 메서드로 동시처리할 때는 적용되지 않는다. 이 때는 UPDATE 또는 DELETE 명령이 만들어질 뿐 이 행들의 내용에 대해 직접 영향을 미치지는 않는다.</p>
+</div>
+<p>이 기능의 목적은 두 개의 트랜잭션이 같은 행을 동시에 수정하려고 하는 것을 감지하거나 리프레시를 하지 않고 이전 트랜잭션의 시간 경과된(staled) 데이터를 재사용하는 것을 막는 것이다. (만약 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>에서 <code class="docutils literal notranslate"><span class="pre">expire_on_commit=False</span></code> 설정을 하면 먼저 트랜잭션의 값을 재사용하는 것이 가능하다)</p>
+<div class="topic">
+<p class="topic-title first">Concurrent transaction updates</p>
+<p>복수의 트랜잭션이 동시에 값을 수정하려는 경우, 보통은 데이터베이스 트랜잭션 격리 레벨이 <span class="xref std std-term">repeatable read</span> 격리 레벨보다 낮은 경우가 많다. 그렇지 않으면 트랜택션은 동시에 업데이트된 값을 읽지 못한다. 이 경우 SQLAlchemy 버전관리 기능은 트랜잭션 내의 충돌이 있는 경우 유용하지 않다. 하지만 트랜잭션 바깥의 충돌에서는 사용할 수 있다.</p>
+<p>repeatable read 수준을 강제하는 데이터베이스는 동시 업데이트시에 목표 레코드를 잠그거나 트랜잭션이 끝났을 때 에러를 내는 형태의 동시성 제어를 한다. SQLAlchemy의 version_id_col은 이러한 격리 수준에서도 트랜잭션 내의 버전 추적을 가능하게 한다.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p class="last"><a class="reference external" href="http://www.postgresql.org/docs/9.1/static/transaction-iso.html#XACT-REPEATABLE-READ">Repeatable Read 격리 수준</a> - 에러 조건의 설명을 포함한 PostgreSQL의 repeatable read 구현에 대한 설명</p>
+</div>
+</div>
+<div class="section" id="simple-version-counting">
+<h2>단순 버전 관리<a class="headerlink" href="#simple-version-counting" title="제목 주소">¶</a></h2>
+<p>버전을 추적하는 가장 단순한 방법은 매핑된 테이블에 숫자 컬럼을 추가한 뒤 이를 <code class="docutils literal notranslate"><span class="pre">version_id_col</span></code> 인수로 매퍼 옵션에 추가하는 것이다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">version_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;version_id_col&quot;</span><span class="p">:</span> <span class="n">version_id</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">주석</p>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">version_id</span></code> 컬럼은 NOT NULL로 만들어야 한다. 버전관리 컬럼에서는 NULL 값을 지원하지 않는다.</p>
+</div>
+<p>또한 <code class="docutils literal notranslate"><span class="pre">User</span></code> 매핑은 <code class="docutils literal notranslate"><span class="pre">version_id</span></code> 컬럼을 사용하여 정수로 버전을 관리한다. <code class="docutils literal notranslate"><span class="pre">User</span></code> 타입 객체가 처음으로 flush될 때 <code class="docutils literal notranslate"><span class="pre">version_id</span></code> 컬럼의 값은  &quot;1&quot;이 된다. 나중에 테치블이 UPDATE할 때는 다음처럼 해야 한다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">UPDATE</span> <span class="n">user</span> <span class="n">SET</span> <span class="n">version_id</span><span class="o">=</span><span class="p">:</span><span class="n">version_id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="p">:</span><span class="n">name</span>
+<span class="n">WHERE</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="p">:</span><span class="n">user_id</span> <span class="n">AND</span> <span class="n">user</span><span class="o">.</span><span class="n">version_id</span> <span class="o">=</span> <span class="p">:</span><span class="n">user_version_id</span>
+<span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;new name&quot;</span><span class="p">,</span> <span class="s2">&quot;version_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;user_version_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>위의 UPDATE 명령에서는 업데이트하는 행을 찾을 때 <cite>user.id = 1`</cite> 조건 뿐 아니라 <code class="docutils literal notranslate"><span class="pre">user.version_id</span> <span class="pre">=</span> <span class="pre">1</span></code> 조건까지 만족하는 행을 찾는다. &quot;1&quot;이 우리가 사용하는 객체의 최신 버전 넘버이기 때문이다. 만약 다른 곳의 트랜잭션이 이 행의 값을 독단적으로 바꾸었다면 더이상 이 버전 넘버가 맞지 않기 때문에 UPDATE 명령은 행을 찾지 못한다고 보고할 것이다. 이 조건이 바로 SQLAlchemy가 UPDATE (또는 DELETE) 명령을 실행할 때 확인하는 조건이다. 만약 해당하는 행을 찾지 못하면 해당 버전의 데이터가 시간경과되었다(stale)는 뜻이고 <a class="reference internal" href="exceptions.html#sqlalchemy.orm.exc.StaleDataError" title="sqlalchemy.orm.exc.StaleDataError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">StaleDataError</span></code></a> 에러가 발생한다.</p>
+</div>
+<div class="section" id="custom-version-counters-types">
+<span id="custom-version-counter"></span><h2>커스텀 버전 카운터/타입<a class="headerlink" href="#custom-version-counters-types" title="제목 주소">¶</a></h2>
+<p>Other kinds of values or counters can be used for versioning.  Common types include
+dates and GUIDs.   When using an alternate type or counter scheme, SQLAlchemy
+provides a hook for this scheme using the <code class="docutils literal notranslate"><span class="pre">version_id_generator</span></code> argument,
+which accepts a version generation callable.  This callable is passed the value of the current
+known version, and is expected to return the subsequent version.</p>
+<p>For example, if we wanted to track the versioning of our <code class="docutils literal notranslate"><span class="pre">User</span></code> class
+using a randomly generated GUID, we could do this (note that some backends
+support a native GUID type, but we illustrate here using a simple string):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">version_uuid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;version_id_col&#39;</span><span class="p">:</span><span class="n">version_uuid</span><span class="p">,</span>
+        <span class="s1">&#39;version_id_generator&#39;</span><span class="p">:</span><span class="k">lambda</span> <span class="n">version</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>The persistence engine will call upon <code class="docutils literal notranslate"><span class="pre">uuid.uuid4()</span></code> each time a
+<code class="docutils literal notranslate"><span class="pre">User</span></code> object is subject to an INSERT or an UPDATE.  In this case, our
+version generation function can disregard the incoming value of <code class="docutils literal notranslate"><span class="pre">version</span></code>,
+as the <code class="docutils literal notranslate"><span class="pre">uuid4()</span></code> function
+generates identifiers without any prerequisite value.  If we were using
+a sequential versioning scheme such as numeric or a special character system,
+we could make use of the given <code class="docutils literal notranslate"><span class="pre">version</span></code> in order to help determine the
+subsequent value.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p class="last"><a class="reference internal" href="../core/custom_types.html#custom-guid-type"><span class="std std-ref">Backend-agnostic GUID Type</span></a></p>
+</div>
+</div>
+<div class="section" id="server-side-version-counters">
+<span id="server-side-version-counter"></span><h2>Server Side Version Counters<a class="headerlink" href="#server-side-version-counters" title="제목 주소">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">version_id_generator</span></code> can also be configured to rely upon a value
+that is generated by the database.  In this case, the database would need
+some means of generating new identifiers when a row is subject to an INSERT
+as well as with an UPDATE.   For the UPDATE case, typically an update trigger
+is needed, unless the database in question supports some other native
+version identifier.  The PostgreSQL database in particular supports a system
+column called <a class="reference external" href="http://www.postgresql.org/docs/9.1/static/ddl-system-columns.html">xmin</a>
+which provides UPDATE versioning.  We can make use
+of the PostgreSQL <code class="docutils literal notranslate"><span class="pre">xmin</span></code> column to version our <code class="docutils literal notranslate"><span class="pre">User</span></code>
+class as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">FetchedValue</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">xmin</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s2">&quot;xmin&quot;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">FetchedValue</span><span class="p">())</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;version_id_col&#39;</span><span class="p">:</span> <span class="n">xmin</span><span class="p">,</span>
+        <span class="s1">&#39;version_id_generator&#39;</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>With the above mapping, the ORM will rely upon the <code class="docutils literal notranslate"><span class="pre">xmin</span></code> column for
+automatically providing the new value of the version id counter.</p>
+<div class="topic">
+<p class="topic-title first">creating tables that refer to system columns</p>
+<p>In the above scenario, as <code class="docutils literal notranslate"><span class="pre">xmin</span></code> is a system column provided by PostgreSQL,
+we use the <code class="docutils literal notranslate"><span class="pre">system=True</span></code> argument to mark it as a system-provided
+column, omitted from the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> statement.</p>
+</div>
+<p>The ORM typically does not actively fetch the values of database-generated
+values when it emits an INSERT or UPDATE, instead leaving these columns as
+&quot;expired&quot; and to be fetched when they are next accessed, unless the <code class="docutils literal notranslate"><span class="pre">eager_defaults</span></code>
+<a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">mapper()</span></code></a> flag is set.  However, when a
+server side version column is used, the ORM needs to actively fetch the newly
+generated value.  This is so that the version counter is set up <em>before</em>
+any concurrent transaction may update it again.   This fetching is also
+best done simultaneously within the INSERT or UPDATE statement using <a class="reference internal" href="../glossary.html#term-returning"><span class="xref std std-term">RETURNING</span></a>,
+otherwise if emitting a SELECT statement afterwards, there is still a potential
+race condition where the version counter may change before it can be fetched.</p>
+<p>When the target database supports RETURNING, an INSERT statement for our <code class="docutils literal notranslate"><span class="pre">User</span></code> class will look
+like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="s2">&quot;user&quot;</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="n">VALUES</span> <span class="p">(</span><span class="o">%</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="n">s</span><span class="p">)</span> <span class="n">RETURNING</span> <span class="s2">&quot;user&quot;</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="o">.</span><span class="n">xmin</span>
+<span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;ed&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Where above, the ORM can acquire any newly generated primary key values along
+with server-generated version identifiers in one statement.   When the backend
+does not support RETURNING, an additional SELECT must be emitted for <strong>every</strong>
+INSERT and UPDATE, which is much less efficient, and also introduces the possibility of
+missed version counters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="s2">&quot;user&quot;</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="n">VALUES</span> <span class="p">(</span><span class="o">%</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;ed&#39;</span><span class="p">}</span>
+
+<span class="n">SELECT</span> <span class="s2">&quot;user&quot;</span><span class="o">.</span><span class="n">version_id</span> <span class="n">AS</span> <span class="n">user_version_id</span> <span class="n">FROM</span> <span class="s2">&quot;user&quot;</span> <span class="n">where</span>
+<span class="s2">&quot;user&quot;</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="p">:</span><span class="n">param_1</span>
+<span class="p">{</span><span class="s2">&quot;param_1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>It is <em>strongly recommended</em> that server side version counters only be used
+when absolutely necessary and only on backends that support <a class="reference internal" href="../glossary.html#term-returning"><span class="xref std std-term">RETURNING</span></a>,
+e.g. PostgreSQL, Oracle, SQL Server (though SQL Server has
+<a class="reference external" href="http://blogs.msdn.com/b/sqlprogrammability/archive/2008/07/11/update-with-output-clause-triggers-and-sqlmoreresults.aspx">major caveats</a> when triggers are used), Firebird.</p>
+<div class="versionadded">
+<p><span class="versionmodified">버전 0.9.0에 추가: </span>Support for server side version identifier tracking.</p>
+</div>
+</div>
+<div class="section" id="programmatic-or-conditional-version-counters">
+<h2>Programmatic or Conditional Version Counters<a class="headerlink" href="#programmatic-or-conditional-version-counters" title="제목 주소">¶</a></h2>
+<p>When <code class="docutils literal notranslate"><span class="pre">version_id_generator</span></code> is set to False, we can also programmatically
+(and conditionally) set the version identifier on our object in the same way
+we assign any other mapped attribute.  Such as if we used our UUID example, but
+set <code class="docutils literal notranslate"><span class="pre">version_id_generator</span></code> to <code class="docutils literal notranslate"><span class="pre">False</span></code>, we can set the version identifier
+at our choosing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">version_uuid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;version_id_col&#39;</span><span class="p">:</span><span class="n">version_uuid</span><span class="p">,</span>
+        <span class="s1">&#39;version_id_generator&#39;</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="p">}</span>
+
+<span class="n">u1</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span> <span class="n">version_uuid</span><span class="o">=</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+
+<span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">u1</span><span class="p">)</span>
+
+<span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="n">u1</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;u2&#39;</span>
+<span class="n">u1</span><span class="o">.</span><span class="n">version_uuid</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
+
+<span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can update our <code class="docutils literal notranslate"><span class="pre">User</span></code> object without incrementing the version counter
+as well; the value of the counter will remain unchanged, and the UPDATE
+statement will still check against the previous value.  This may be useful
+for schemes where only certain classes of UPDATE are sensitive to concurrency
+issues:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># will leave version_uuid unchanged</span>
+<span class="n">u1</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;u3&#39;</span>
+<span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">버전 0.9.0에 추가: </span>Support for programmatic and conditional version identifier tracking.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="mapping_api.html" class="btn btn-neutral float-right" title="Class Mapping API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="nonstandard_mappings.html" class="btn btn-neutral" title="비 전통적인 매핑" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+      최종 업데이트: 06/07/2019 11:12:12
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.3.0b1',
+            LANGUAGE:'ko',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,986 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="ko" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ko" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>상속 구조 로딩 &mdash; SQLAlchemy 1.3.0b1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="색인" href="../genindex.html" />
+    <link rel="search" title="검색" href="../search.html" />
+    <link rel="copyright" title="저작권" href="../copyright.html" />
+    <link rel="next" title="Constructors and Object Initialization" href="constructors.html" />
+    <link rel="prev" title="Relationship Loading Techniques" href="loading_relationships.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">개요</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">SQLAlchemy ORM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html">ORM 튜토리얼</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapper_config.html">매퍼 설정</a></li>
+<li class="toctree-l2"><a class="reference internal" href="relationships.html">릴레이션십 설정</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="loading_objects.html">객체 로딩</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="loading_columns.html">Loading Columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="loading_relationships.html">Relationship Loading Techniques</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">상속 구조 로딩</a></li>
+<li class="toctree-l3"><a class="reference internal" href="constructors.html">Constructors and Object Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="query.html">Query API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="session.html">세션 사용하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending.html">Events and Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extensions/index.html">ORM Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">ORM Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">SQLAlchemy Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index.html">Dialects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors.html">Error Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index.html">Changes and Migration</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+          <li><a href="loading_objects.html">객체 로딩</a> &raquo;</li>
+        
+      <li>상속 구조 로딩</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy//docs-korean/doc/build/orm/inheritance_loading.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="loading-inheritance-hierarchies">
+<span id="inheritance-loading-toplevel"></span><h1>상속 구조 로딩<a class="headerlink" href="#loading-inheritance-hierarchies" title="제목 주소">¶</a></h1>
+<p><a class="reference internal" href="inheritance.html#inheritance-toplevel"><span class="std std-ref">클래스 상속 구조 매핑하기</span></a>에 설명된 것과 같이 클래스들이 &quot;조인된&quot;, &quot;단일&quot;, &quot;구체&quot; 테이블 상속 방식을 사용하여 상속 계층 구조에 매핑 된 경우 특정 베이스 클래스에 대한 일반적인 동작을 하는 쿼리는 하위 자식 클래스에도 똑같이 동작한다.단일 쿼리가 다른 클래스 또는 하위 클래스를 사용하여 결과를 반환 할 수 있는 경우 &quot;다형성 로딩&quot; 이란 용어를 사용한다.</p>
+<p>다형성 로딩 영역, 특히 조인 된 테이블 상속, 단일 테이블 상속의 경우 서브클래스의 속성(attribute) 먼저 쿼리하고 나중에 로드해야하는 추가적인 문제가 있다. 특정 서브 클래스의 속성이 먼저 쿼리될때 우리는 그 쿼리에 필터를 적용할 수 있고 그 다음 우리가 객체를 다시 가져올때 로드된다. 만약 서브 클래스를 먼저 쿼리하지 않으면 나중에 처음 엑세스할때 객체가 로드된다. 이 기본 동작의 제어는 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>을 사용하여 제공되며 두 가지 변형 옵션인 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.with_polymorphic" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.with_polymorphic</span></code></a>와  <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.polymorphic_load" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.polymorphic_load</span></code></a>를 사용한 매퍼 구성 및, <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>레벨에서 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.with_polymorphic" title="sqlalchemy.orm.query.Query.with_polymorphic"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Query.with_polymorphic()</span></code></a>함수를 사용할 수 있다. &quot;with_polymorphic&quot;계열은 어떤 특정한 베이스 클래스의 서브 클래스가 쿼리 안에 포함되어야 하는지 지정하는 기능을 제공한다. 이는 SELECT 구문에서 사용할 수 있는 컬럼들과 테이블들을 의미한다.</p>
+<div class="section" id="using-with-polymorphic">
+<span id="with-polymorphic"></span><h2>with_polymorphic 사용<a class="headerlink" href="#using-with-polymorphic" title="제목 주소">¶</a></h2>
+<p>다음 절의 경우  <code class="docutils literal notranslate"><span class="pre">Employee</span></code>/ <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>/ <code class="docutils literal notranslate"><span class="pre">Manager</span></code>는 <a class="reference internal" href="inheritance.html#inheritance-toplevel"><span class="std std-ref">클래스 상속 구조 매핑하기</span></a>예제에 나와있는 것과 같다고 가정한다.</p>
+<p>일반적으로 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>가 상속 계층 구조의 베이스 클래스를 지정하면 해당 베이스 클래스에 대해 로컬인 컬럼만 쿼리된다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Employee</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>위의 경우 단일 상속이든 조인 된 상속이든 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>의 내부에 있는 컬럼들만 SELECT 구문에 나타나게 된다. 우리는 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code> 혹은 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>인스턴스들을 가져올 수 있지만, 처음 엑세스 할 때에 게으른 로딩이 방출되기에 우리가 처음 엑세스 할 때까지 추가 속성들이 로드되지 않는다.</p>
+<p>마찬가지로 쿼리에 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>혹은 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>의 매핑된 컬럼을 참조하려는 경우 <code class="docutils literal notranslate"><span class="pre">Employee</span></code> 엔티티가 이런 컬럼들을 참조하지 않기에 단일 혹은 조인된 테이블 상속의 경우직접적으로 위의 컬럼들을 참조할 수 없다.</p>
+<p>이 두 가지 문제를 모두 해결하기 위해 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수는 서브 클래스들에서 컬럼 범위를 나타내 주는 <a class="reference internal" href="query.html#sqlalchemy.orm.util.AliasedClass" title="sqlalchemy.orm.util.AliasedClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">AliasedClass</span></code></a>클래스를 제공한다.이 객체는 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>에서 다른 별칭처럼 사용할 수 있다. 쿼리할때 이 클래스는 주어진 클래스에 있는 모든 컬럼을 나타낸다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">with_polymorphic</span>
+
+<span class="n">eng_plus_manager</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Engineer</span><span class="p">,</span> <span class="n">Manager</span><span class="p">])</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">eng_plus_manager</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>위의 매핑이 조인 된 테이블 상속을 하는 경우 우의 SELECT 구문은 다음과 같다:</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql"></span>
+<span class=" -Sql">SELECT employee.id AS employee_id,</span>
+<span class=" -Sql">    engineer.id AS engineer_id,</span>
+<span class=" -Sql">    manager.id AS manager_id,</span>
+<span class=" -Sql">    employee.name AS employee_name,</span>
+<span class=" -Sql">    employee.type AS employee_type,</span>
+<span class=" -Sql">    engineer.engineer_info AS engineer_engineer_info,</span>
+<span class=" -Sql">    manager.manager_data AS manager_manager_data</span>
+<span class=" -Sql">FROM employee</span>
+<span class=" -Sql">    LEFT OUTER JOIN engineer</span>
+<span class=" -Sql">    ON employee.id = engineer.id</span>
+<span class=" -Sql">    LEFT OUTER JOIN manager</span>
+<span class=" -Sql">    ON employee.id = manager.id</span>
+<span class=" -Sql">[]</span>
+</pre></div>
+</div>
+<p>위의 경우 &quot;engineer&quot; and &quot;manager&quot;에 대한 추가 테이블/컬럼이 포함된다. 단일 테이블 상속의 경우에도 비슷한 동작을 한다.</p>
+<p><a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수는 단일 클래스, 단일 매퍼, 클래스들/매퍼들 목록, 또는 모든 서브클래스들을 지칭하기 위한 <code class="docutils literal notranslate"><span class="pre">'*'</span></code>문자열을 지원한다.</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="c1"># include columns for Engineer</span>
+<span class="n">entity</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="n">Engineer</span><span class="p">)</span>
+
+<span class="c1"># include columns for Engineer, Manager</span>
+<span class="n">entity</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Engineer</span><span class="p">,</span> <span class="n">Manager</span><span class="p">])</span>
+
+<span class="c1"># include columns for all mapped subclasses</span>
+<span class="n">entity</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="using-aliasing-with-with-polymorphic">
+<h3>with_polymorphic 에 앨리어싱(aliasing) 사용<a class="headerlink" href="#using-aliasing-with-with-polymorphic" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수는 또한 다형성 선택 가능 항목(selectable) 자체의 &quot;aliasing&quot;을 제공한다. 즉, 동일한 클래스 계층 구조를 참조하는 두 개의 다른 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>엔티티를 함께 사용할 수 있다. <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic.params.aliased" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">orm.with_polymorphic.aliased</span></code></a>플래그를 설정하면 사용할 수 있다. 여러 테이블에 걸쳐있는 다형성 선택 항목의 경우 기본 동작은 선택 가능 항목을 서브 쿼리 로 줄이는 것이다. 아래의 예제는 동일한 이름을 가진 직원(employee)의 &quot;직원 혹은 매니저&quot;나 &quot;직원 혹은 엔지니어&quot;쌍을 이루는 쿼리를 생성한다.</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="n">engineer_employee</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span>
+    <span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Engineer</span><span class="p">],</span> <span class="n">aliased</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">manager_employee</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span>
+    <span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Manager</span><span class="p">],</span> <span class="n">aliased</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">engineer_employee</span><span class="p">,</span> <span class="n">manager_employee</span><span class="p">)</span><span class="o">.</span>\
+    <span class="n">join</span><span class="p">(</span>
+        <span class="n">manager_employee</span><span class="p">,</span>
+        <span class="n">and_</span><span class="p">(</span>
+            <span class="n">engineer_employee</span><span class="o">.</span><span class="n">id</span> <span class="o">&gt;</span> <span class="n">manager_employee</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">engineer_employee</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">manager_employee</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">q</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql"></span>
+<span class=" -Sql">SELECT</span>
+<span class=" -Sql">    anon_1.employee_id AS anon_1_employee_id,</span>
+<span class=" -Sql">    anon_1.employee_name AS anon_1_employee_name,</span>
+<span class=" -Sql">    anon_1.employee_type AS anon_1_employee_type,</span>
+<span class=" -Sql">    anon_1.engineer_id AS anon_1_engineer_id,</span>
+<span class=" -Sql">    anon_1.engineer_engineer_name AS anon_1_engineer_engineer_name,</span>
+<span class=" -Sql">    anon_2.employee_id AS anon_2_employee_id,</span>
+<span class=" -Sql">    anon_2.employee_name AS anon_2_employee_name,</span>
+<span class=" -Sql">    anon_2.employee_type AS anon_2_employee_type,</span>
+<span class=" -Sql">    anon_2.manager_id AS anon_2_manager_id,</span>
+<span class=" -Sql">    anon_2.manager_manager_name AS anon_2_manager_manager_name</span>
+<span class=" -Sql">FROM (</span>
+<span class=" -Sql">    SELECT</span>
+<span class=" -Sql">        employee.id AS employee_id,</span>
+<span class=" -Sql">        employee.name AS employee_name,</span>
+<span class=" -Sql">        employee.type AS employee_type,</span>
+<span class=" -Sql">        engineer.id AS engineer_id,</span>
+<span class=" -Sql">        engineer.engineer_name AS engineer_engineer_name</span>
+<span class=" -Sql">    FROM employee</span>
+<span class=" -Sql">    LEFT OUTER JOIN engineer ON employee.id = engineer.id</span>
+<span class=" -Sql">) AS anon_1</span>
+<span class=" -Sql">JOIN (</span>
+<span class=" -Sql">    SELECT</span>
+<span class=" -Sql">        employee.id AS employee_id,</span>
+<span class=" -Sql">        employee.name AS employee_name,</span>
+<span class=" -Sql">        employee.type AS employee_type,</span>
+<span class=" -Sql">        manager.id AS manager_id,</span>
+<span class=" -Sql">         manager.manager_name AS manager_manager_name</span>
+<span class=" -Sql">    FROM employee</span>
+<span class=" -Sql">    LEFT OUTER JOIN manager ON employee.id = manager.id</span>
+<span class=" -Sql">) AS anon_2</span>
+<span class=" -Sql">ON anon_1.employee_id &gt; anon_2.employee_id</span>
+<span class=" -Sql">AND anon_1.employee_name = anon_2.employee_name</span>
+</pre></div>
+</div>
+<p>위의 서브쿼리 작성은 매우 장황하다. 두개의 다른 쿼리를 잘 캡슐화 반면 이는 비효율적 일 수 있다. <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수는 이 상황을 해결할 수 있는 추가적인 플래그를 포함 하고 있다. <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic.params.flat" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">orm.with_polymorphic.flat</span></code></a>플래그는 각각의 테이블들에 앨리어싱을 적용하는 대신 서브 쿼리, 조인 조합을 &quot;평평하게&quot; 하여 단순한 조인으로 바꾼다. <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic.params.flat" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">orm.with_polymorphic.flat</span></code></a>설정은 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic.params.aliased" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">orm.with_polymorphic.aliased</span></code></a>을 암시하고 있기 때문에 아래와 같이 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic.params.flat" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">orm.with_polymorphic.flat</span></code></a>설정 하나만 해도 된다.</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="n">engineer_employee</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span>
+    <span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Engineer</span><span class="p">],</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">manager_employee</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span>
+    <span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Manager</span><span class="p">],</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">engineer_employee</span><span class="p">,</span> <span class="n">manager_employee</span><span class="p">)</span><span class="o">.</span>\
+    <span class="n">join</span><span class="p">(</span>
+        <span class="n">manager_employee</span><span class="p">,</span>
+        <span class="n">and_</span><span class="p">(</span>
+            <span class="n">engineer_employee</span><span class="o">.</span><span class="n">id</span> <span class="o">&gt;</span> <span class="n">manager_employee</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">engineer_employee</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">manager_employee</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">q</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql"></span>
+<span class=" -Sql">SELECT</span>
+<span class=" -Sql">    employee_1.id AS employee_1_id,</span>
+<span class=" -Sql">    employee_1.name AS employee_1_name,</span>
+<span class=" -Sql">    employee_1.type AS employee_1_type,</span>
+<span class=" -Sql">    engineer_1.id AS engineer_1_id,</span>
+<span class=" -Sql">    engineer_1.engineer_name AS engineer_1_engineer_name,</span>
+<span class=" -Sql">    employee_2.id AS employee_2_id,</span>
+<span class=" -Sql">    employee_2.name AS employee_2_name,</span>
+<span class=" -Sql">    employee_2.type AS employee_2_type,</span>
+<span class=" -Sql">    manager_1.id AS manager_1_id,</span>
+<span class=" -Sql">    manager_1.manager_name AS manager_1_manager_name</span>
+<span class=" -Sql">FROM employee AS employee_1</span>
+<span class=" -Sql">LEFT OUTER JOIN engineer AS engineer_1</span>
+<span class=" -Sql">ON employee_1.id = engineer_1.id</span>
+<span class=" -Sql">JOIN (</span>
+<span class=" -Sql">    employee AS employee_2</span>
+<span class=" -Sql">    LEFT OUTER JOIN manager AS manager_1</span>
+<span class=" -Sql">    ON employee_2.id = manager_1.id</span>
+<span class=" -Sql">)</span>
+<span class=" -Sql">ON employee_1.id &gt; employee_2.id</span>
+<span class=" -Sql">AND employee_1.name = employee_2.name</span>
+</pre></div>
+</div>
+<p>위의 참고 사항은 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic.params.flat" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">orm.with_polymorphic.flat</span></code></a>를 조인된 테이블 상속과 사용할때 종종 오른쪽-중첩 된 조인을 얻는 경우가 있다. 몇몇의 오래된 데이터베이스에선 문제가 발생할 수 있지만 대부분의 최신 데이터베이스에서는 이 구문을 지원한다.</p>
+<div class="admonition note">
+<p class="first admonition-title">주석</p>
+<p class="last"><a class="reference internal" href="#sqlalchemy.orm.with_polymorphic.params.flat" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">orm.with_polymorphic.flat</span></code></a>플래그는 <strong>조인 된 테이블 상속</strong>의 <code class="xref py py-paramref docutils literal notranslate"><span class="pre">with_polymorphic</span></code>파라미터나 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.with_polymorphic.params.selectable" title="sqlalchemy.orm.query.Query.with_polymorphic"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">with_polymorphic.selectable</span></code></a>인수가 사용되지 <strong>않는</strong> 경우에만 적용될 수 있다.</p>
+</div>
+</div>
+<div class="section" id="referring-to-specific-subclass-attributes">
+<h3>특정 서브클래스 속성 참조<a class="headerlink" href="#referring-to-specific-subclass-attributes" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수에 의해 반환된 엔티티는 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>클래스의 속성에 대한 명명된 속성을 포함하여 다른 앨리어스들과 사용할 수 있는 <a class="reference internal" href="query.html#sqlalchemy.orm.util.AliasedClass" title="sqlalchemy.orm.util.AliasedClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">AliasedClass</span></code></a>객체 이고 이는 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>에 의해 사용될 수 있다. 앞선 예에서 <code class="docutils literal notranslate"><span class="pre">eng_plus_manager</span></code>가 3 가지 외부 조인을 참조하는데 사용한 엔티티가 된다. 또한 이 엔티티에 클래스 목록에 명명된 각 클래스의 네임 스페이스가 포함되어 있으므로 해당 서브 클래스에 대한 특정한 속성도 호출 할 있다. 다음 예제는 <code class="docutils literal notranslate"><span class="pre">eng_plus_manager</span></code>엔티티로 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>과 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>의 특정 속성을 호출하는 것을 보여준다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eng_plus_manager</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Engineer</span><span class="p">,</span> <span class="n">Manager</span><span class="p">])</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">eng_plus_manager</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                <span class="n">or_</span><span class="p">(</span>
+                    <span class="n">eng_plus_manager</span><span class="o">.</span><span class="n">Engineer</span><span class="o">.</span><span class="n">engineer_info</span><span class="o">==</span><span class="s1">&#39;x&#39;</span><span class="p">,</span>
+                    <span class="n">eng_plus_manager</span><span class="o">.</span><span class="n">Manager</span><span class="o">.</span><span class="n">manager_data</span><span class="o">==</span><span class="s1">&#39;y&#39;</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setting-with-polymorphic-at-mapper-configuration-time">
+<span id="with-polymorphic-mapper-config"></span><h3>매퍼 설정시 with_polymorphic 설정<a class="headerlink" href="#setting-with-polymorphic-at-mapper-configuration-time" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수는 서브 클래스 테이블의 속성을 &quot;애거(eager)&quot; 로딩을 허용하고 쿼리 시 서브 클래스 테이블의 속성을 참조하는 기능을 제공한다. 역사적으로 컬럼의 &quot;애거 로딩&quot;은 방정식의 더 중요한 부분이었다. 관계에 대한 애거 로딩을구성 옵션으로 지정할 수 있는 것처럼 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.with_polymorphic" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.with_polymorphic</span></code></a>구성 파라미터를 지정하면 엔티티에서 기본적으로 다형성 로딩을 사용할 수 있다. 우리는 <a class="reference internal" href="inheritance.html#joined-inheritance"><span class="std std-ref">조인 테이블 상속</span></a>에서 처음 소개했었던 것 처럼 파라미터를 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>매핑에 추가할 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;employee&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span><span class="nb">type</span><span class="p">,</span>
+        <span class="s1">&#39;with_polymorphic&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>위의 설정은 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.with_polymorphic" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.with_polymorphic</span></code></a>에 대한 공통 설정으로 <code class="docutils literal notranslate"><span class="pre">'*'</span></code>는 모든 서브 클래스의 컬럼들을 로드하는 의미를 갖는다. 조인 된 테이블 상속의 경우 이 옵션이 항상(혹은 종종 큰) LEFT, OUTER 조인을 많은 테이블에 내보내므로 SQL 관점에서 효율적이지 않기에 이 옵션을 사용하면 안된다.단일 테이블 상속의 경우 단일 테이블에 대해서만 로드하기 때문에 <code class="docutils literal notranslate"><span class="pre">'*'</span></code>를 지정하는 것이 좋지만 서브 클래스의 매핑된 컬럼들의 추가적인 게으른 로드가 실행되지 않을 것이다.</p>
+<p><a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수나 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.with_polymorphic" title="sqlalchemy.orm.query.Query.with_polymorphic"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Query.with_polymorphic()</span></code></a>사용은 래퍼-수준 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.with_polymorphic" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.with_polymorphic</span></code></a>설정을 오버라이드 할 것 입니다.</p>
+<p><a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.with_polymorphic" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.with_polymorphic</span></code></a>옵션은 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수가서브 클래스들을 다형적으로 로드한 것 처럼 클래스들의 목록을 입력받는다.그러나 선언적 시스템(Declarative)를 사용할땐 우리가 추가하고자 하는 서브 클래스는 아직 사용할 수 없으므로 이 목록에 클래스를 직접 제공하는 것은 가능하지 않다. 그대신 각 서브 클래스에서 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.polymorphic_load" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.polymorphic_load</span></code></a>파라미터를 지정함으로서 다형성 로딩을 할 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineer&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;employee.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">engineer_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;engineer&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_load&#39;</span><span class="p">:</span> <span class="s1">&#39;inline&#39;</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;employee.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">manager_data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_load&#39;</span><span class="p">:</span> <span class="s1">&#39;inline&#39;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.polymorphic_load" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.polymorphic_load</span></code></a>파라미터의 <code class="docutils literal notranslate"><span class="pre">&quot;inline&quot;</span></code>의 의미는 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>과 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>클래스들이 기본적으로 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>베이스 클래스의 &quot;다형성 로드&quot;의 일부라는 점을 의미한다. 이는 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.with_polymorphic" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.with_polymorphic</span></code></a>에 클래스 목록을 입력한 것과 동일하다.</p>
+</div>
+<div class="section" id="setting-with-polymorphic-against-a-query">
+<h3>with_polymorphic을 쿼리에 설정<a class="headerlink" href="#setting-with-polymorphic-against-a-query" title="제목 주소">¶</a></h3>
+<p>The <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a> function evolved from a query-level
+method <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.with_polymorphic" title="sqlalchemy.orm.query.Query.with_polymorphic"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Query.with_polymorphic()</span></code></a>.  This method has the same purpose
+as <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>, except is not as
+flexible in its usage patterns in that it only applies to the first entity
+of the <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>.   It then takes effect for all occurrences of
+that entity, so that the entity (and its subclasses) can be referred to
+directly, rather than using an alias object.  For simple cases it might be
+considered to be more succinct:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Employee</span><span class="p">)</span><span class="o">.</span>\
+    <span class="n">with_polymorphic</span><span class="p">([</span><span class="n">Engineer</span><span class="p">,</span> <span class="n">Manager</span><span class="p">])</span><span class="o">.</span>\
+    <span class="nb">filter</span><span class="p">(</span>
+        <span class="n">or_</span><span class="p">(</span>
+            <span class="n">Engineer</span><span class="o">.</span><span class="n">engineer_info</span><span class="o">==</span><span class="s1">&#39;w&#39;</span><span class="p">,</span>
+            <span class="n">Manager</span><span class="o">.</span><span class="n">manager_data</span><span class="o">==</span><span class="s1">&#39;q&#39;</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.with_polymorphic" title="sqlalchemy.orm.query.Query.with_polymorphic"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Query.with_polymorphic()</span></code></a>메소드는 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>과 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>을 적절하게 변환하면서 다른 엔티티와 간섭하지 않아야 하므로 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>보다 더 복잡한 작업이다.유연성이 부족한 경우 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수를 사용하는 것으로 전환한다.</p>
+</div>
+</div>
+<div class="section" id="polymorphic-selectin-loading">
+<span id="polymorphic-selectin"></span><h2>다형성 Selctin 로딩<a class="headerlink" href="#polymorphic-selectin-loading" title="제목 주소">¶</a></h2>
+<p>조인된 테이블 상속 구조에서 추가적인 서브 클래스들을 &quot;애저 로드&quot; 하기 위한 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수 계열들의 다른 대안은 다형석 &quot;selectin&quot; 로딩을 사용하는 것이다. 이는 관계 로드의 <a class="reference internal" href="loading_relationships.html#selectin-eager-loading"><span class="std std-ref">Select IN loading</span></a>기능과 유사하게 작동하는 애저 로드 기능이다. 주어진 예제 매핑에서 우리는 <a class="reference internal" href="#sqlalchemy.orm.selectin_polymorphic" title="sqlalchemy.orm.selectin_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.selectin_polymorphic()</span></code></a>로더 옵션을 사용해 서브 클래스당 추가 SELECT 구문을 발생 시키는 로딩을 지시할 수 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">selectin_polymorphic</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Employee</span><span class="p">)</span><span class="o">.</span><span class="n">options</span><span class="p">(</span>
+    <span class="n">selectin_polymorphic</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Manager</span><span class="p">,</span> <span class="n">Engineer</span><span class="p">])</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>위의 쿼리를 실행하면 두 개의 추가 SELECT 구문이 방출된다.</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql">query.all()</span>
+<span class=" -Sql">SELECT</span>
+<span class=" -Sql">    employee.id AS employee_id,</span>
+<span class=" -Sql">    employee.name AS employee_name,</span>
+<span class=" -Sql">    employee.type AS employee_type</span>
+<span class=" -Sql">FROM employee</span>
+<span class=" -Sql">()</span>
+
+<span class=" -Sql">SELECT</span>
+<span class=" -Sql">    engineer.id AS engineer_id,</span>
+<span class=" -Sql">    employee.id AS employee_id,</span>
+<span class=" -Sql">    employee.type AS employee_type,</span>
+<span class=" -Sql">    engineer.engineer_name AS engineer_engineer_name</span>
+<span class=" -Sql">FROM employee JOIN engineer ON employee.id = engineer.id</span>
+<span class=" -Sql">WHERE employee.id IN (?, ?) ORDER BY employee.id</span>
+<span class=" -Sql">(1, 2)</span>
+
+<span class=" -Sql">SELECT</span>
+<span class=" -Sql">    manager.id AS manager_id,</span>
+<span class=" -Sql">    employee.id AS employee_id,</span>
+<span class=" -Sql">    employee.type AS employee_type,</span>
+<span class=" -Sql">    manager.manager_name AS manager_manager_name</span>
+<span class=" -Sql">FROM employee JOIN manager ON employee.id = manager.id</span>
+<span class=" -Sql">WHERE employee.id IN (?) ORDER BY employee.id</span>
+<span class=" -Sql">(3,)</span>
+</pre></div>
+</div>
+<p>서브 클래스별로 <code class="docutils literal notranslate"><span class="pre">&quot;selectin&quot;</span></code> 을 사용하여 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.polymorphic_load" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.polymorphic_load</span></code></a>매개변수를 지정함으로써 기본적으로 위와 같은 로드 방식을 설정할 수 있따.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;employee&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span> <span class="nb">type</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineer&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;employee.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">engineer_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_load&#39;</span><span class="p">:</span> <span class="s1">&#39;selectin&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;employee.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">manager_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_load&#39;</span><span class="p">:</span> <span class="s1">&#39;selectin&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수를 사용할 떄와는 달리 <a class="reference internal" href="#sqlalchemy.orm.selectin_polymorphic" title="sqlalchemy.orm.selectin_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.selectin_polymorphic()</span></code></a>방식으로 로딩을 하면 우리의 메인 쿼리 안에 있는 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>혹은 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>엔티티들을 filter, order by 등으로 <strong>참조할 수 없다</strong> . 왜냐하면 이 엔티티들은 결과들을 위치시킬때 사용한 초기 쿼리에는 현재 존재하고 있지 않기 때문이다. 그러나  <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>이나 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>에 적용되는 로더 옵션을 설정할 수 있다. 이 옵션은 보조 SELECT가 발생할 때 적용된다. 아래 예제에서 우리는 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>가 추가적인 관계 <code class="docutils literal notranslate"><span class="pre">Manager.paperwork</span></code>를 가지고 있가고 가정한다.이때 우리는 <a class="reference internal" href="loading_relationships.html#sqlalchemy.orm.joinedload" title="sqlalchemy.orm.joinedload"><code class="xref py py-func docutils literal notranslate"><span class="pre">joinedload()</span></code></a>함수를 통해 조인된 애거 로딩이나 어떤 타입의 애거 로딩을사용할 수 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">joinedload</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">selectin_polymorphic</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Employee</span><span class="p">)</span><span class="o">.</span><span class="n">options</span><span class="p">(</span>
+    <span class="n">selectin_polymorphic</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Manager</span><span class="p">,</span> <span class="n">Engineer</span><span class="p">]),</span>
+    <span class="n">joinedload</span><span class="p">(</span><span class="n">Manager</span><span class="o">.</span><span class="n">paperwork</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>위의 쿼리를 사용하면 세 개의 SELECT 구문이 나온다. <code class="docutils literal notranslate"><span class="pre">Manager</span></code>에 대한결과는 다음과 같다</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+    <span class="n">manager</span><span class="p">.</span><span class="n">id</span> <span class="k">AS</span> <span class="n">manager_id</span><span class="p">,</span>
+    <span class="n">employee</span><span class="p">.</span><span class="n">id</span> <span class="k">AS</span> <span class="n">employee_id</span><span class="p">,</span>
+    <span class="n">employee</span><span class="p">.</span><span class="k">type</span> <span class="k">AS</span> <span class="n">employee_type</span><span class="p">,</span>
+    <span class="n">manager</span><span class="p">.</span><span class="n">manager_name</span> <span class="k">AS</span> <span class="n">manager_manager_name</span><span class="p">,</span>
+    <span class="n">paperwork_1</span><span class="p">.</span><span class="n">id</span> <span class="k">AS</span> <span class="n">paperwork_1_id</span><span class="p">,</span>
+    <span class="n">paperwork_1</span><span class="p">.</span><span class="n">manager_id</span> <span class="k">AS</span> <span class="n">paperwork_1_manager_id</span><span class="p">,</span>
+    <span class="n">paperwork_1</span><span class="p">.</span><span class="k">data</span> <span class="k">AS</span> <span class="n">paperwork_1_data</span>
+<span class="k">FROM</span> <span class="n">employee</span> <span class="k">JOIN</span> <span class="n">manager</span> <span class="k">ON</span> <span class="n">employee</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">manager</span><span class="p">.</span><span class="n">id</span>
+<span class="k">LEFT</span> <span class="k">OUTER</span> <span class="k">JOIN</span> <span class="n">paperwork</span> <span class="k">AS</span> <span class="n">paperwork_1</span>
+<span class="k">ON</span> <span class="n">manager</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">paperwork_1</span><span class="p">.</span><span class="n">manager_id</span>
+<span class="k">WHERE</span> <span class="n">employee</span><span class="p">.</span><span class="n">id</span> <span class="k">IN</span> <span class="p">(</span><span class="o">?</span><span class="p">)</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">employee</span><span class="p">.</span><span class="n">id</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">,)</span>
+</pre></div>
+</div>
+<p>Note that selectin polymorphic loading has similar caveats as that of
+selectin relationship loading; for entities that make use of a composite
+primary key, the database in use must support tuples with &quot;IN&quot;, currently
+known to work with MySQL and PostgreSQL.</p>
+<div class="versionadded">
+<p><span class="versionmodified">버전 1.2에 추가.</span></p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">경고</p>
+<p class="last">selectin 다형성 로딩은 초기 1.2 시리즈 초기 릴리즈에선 <strong>실험적</strong> 인 기능으로 고려되어야 한다.</p>
+</div>
+<div class="section" id="combining-selectin-and-with-polymorphic">
+<span id="polymorphic-selectin-and-withpoly"></span><h3>selectin 과 with_polymorphic 결합<a class="headerlink" href="#combining-selectin-and-with-polymorphic" title="제목 주소">¶</a></h3>
+<div class="admonition note">
+<p class="first admonition-title">주석</p>
+<p class="last">1.2.0b3 릴리즈에서 작동함.</p>
+</div>
+<p>With careful planning, selectin loading can be applied against a hierarchy
+that itself uses &quot;with_polymorphic&quot;.  A particular use case is that of
+using selectin loading to load a joined-inheritance subtable, which then
+uses &quot;with_polymorphic&quot; to refer to further sub-classes, which may be
+joined- or single-table inheritance.  If we added a class <code class="docutils literal notranslate"><span class="pre">VicePresident</span></code> that
+extends <code class="docutils literal notranslate"><span class="pre">Manager</span></code> using single-table inheritance, we could ensure that
+a load of <code class="docutils literal notranslate"><span class="pre">Manager</span></code> also fully loads <code class="docutils literal notranslate"><span class="pre">VicePresident</span></code> subtypes at the same time:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># use &quot;Employee&quot; example from the enclosing section</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;employee.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">manager_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_load&#39;</span><span class="p">:</span> <span class="s1">&#39;selectin&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">VicePresident</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
+    <span class="n">vp_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;polymorphic_load&quot;</span><span class="p">:</span> <span class="s2">&quot;inline&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;polymorphic_identity&quot;</span><span class="p">:</span> <span class="s2">&quot;vp&quot;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>위의 예제에서 우리는 <code class="docutils literal notranslate"><span class="pre">VicePresident</span></code>서브클래스 아래에 위치한 <code class="docutils literal notranslate"><span class="pre">vp_info</span></code>컬럼을 <code class="docutils literal notranslate"><span class="pre">manager</span></code> 테이블에 추가했다. 이 서브 클래스는 이 데이터를 가지는 행을 참조하는 다형성 아이덴티티 <code class="docutils literal notranslate"><span class="pre">&quot;vp&quot;</span></code>에 링크된다. 로드 방식을 &quot;inline&quot;으로 설정 하면 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>객체를 로드할때 <code class="docutils literal notranslate"><span class="pre">vp_info</span></code>컬럼의 쿼리가 동일한 SELECT 구문에 담길 것임을 보장한다. <code class="docutils literal notranslate"><span class="pre">Manager</span></code>행에 대한 쿼리는 다음과 비슷하게 나타난다</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">employee</span><span class="p">.</span><span class="n">id</span> <span class="k">AS</span> <span class="n">employee_id</span><span class="p">,</span> <span class="n">employee</span><span class="p">.</span><span class="n">name</span> <span class="k">AS</span> <span class="n">employee_name</span><span class="p">,</span>
+       <span class="n">employee</span><span class="p">.</span><span class="k">type</span> <span class="k">AS</span> <span class="n">employee_type</span>
+<span class="k">FROM</span> <span class="n">employee</span>
+<span class="p">)</span>
+
+<span class="k">SELECT</span> <span class="n">manager</span><span class="p">.</span><span class="n">id</span> <span class="k">AS</span> <span class="n">manager_id</span><span class="p">,</span> <span class="n">employee</span><span class="p">.</span><span class="n">id</span> <span class="k">AS</span> <span class="n">employee_id</span><span class="p">,</span>
+       <span class="n">employee</span><span class="p">.</span><span class="k">type</span> <span class="k">AS</span> <span class="n">employee_type</span><span class="p">,</span>
+       <span class="n">manager</span><span class="p">.</span><span class="n">manager_name</span> <span class="k">AS</span> <span class="n">manager_manager_name</span><span class="p">,</span>
+       <span class="n">manager</span><span class="p">.</span><span class="n">vp_info</span> <span class="k">AS</span> <span class="n">manager_vp_info</span>
+<span class="k">FROM</span> <span class="n">employee</span> <span class="k">JOIN</span> <span class="n">manager</span> <span class="k">ON</span> <span class="n">employee</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">manager</span><span class="p">.</span><span class="n">id</span>
+<span class="k">WHERE</span> <span class="n">employee</span><span class="p">.</span><span class="n">id</span> <span class="k">IN</span> <span class="p">(</span><span class="o">?</span><span class="p">)</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">employee</span><span class="p">.</span><span class="n">id</span>
+<span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+</pre></div>
+</div>
+<p>&quot;selectin&quot;다형성 로딩과 쿼리-시간(query-time) <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수를 결합하는 것도 가능하다(이는 매우 드문 케이스이다). 위의 매핑이 <code class="docutils literal notranslate"><span class="pre">polymorphic_load</span></code>설정이 되지 않았다면 다음과 같은 결과를 얻을 수 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">with_polymorphic</span><span class="p">,</span> <span class="n">selectin_polymorphic</span>
+
+<span class="n">manager_poly</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span><span class="n">Manager</span><span class="p">,</span> <span class="p">[</span><span class="n">VicePresident</span><span class="p">])</span>
+
+<span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Employee</span><span class="p">)</span><span class="o">.</span><span class="n">options</span><span class="p">(</span>
+    <span class="n">selectin_polymorphic</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">manager_poly</span><span class="p">]))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="referring-to-specific-subtypes-on-relationships">
+<span id="inheritance-of-type"></span><h2>관계에 대한 특정 서브타입 참조<a class="headerlink" href="#referring-to-specific-subtypes-on-relationships" title="제목 주소">¶</a></h2>
+<p><a class="reference internal" href="relationship_api.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal notranslate"><span class="pre">relationship()</span></code></a>에 해당하는 매핑된 속성은 두 매핑간 연결을 참조하기 위해 쿼리에 사용된다. 이것의 일반적인 사용방법은 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.join" title="sqlalchemy.orm.query.Query.join"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Query.join()</span></code></a>나 <a class="reference internal" href="loading_relationships.html#sqlalchemy.orm.joinedload" title="sqlalchemy.orm.joinedload"><code class="xref py py-func docutils literal notranslate"><span class="pre">joinedload()</span></code></a>같은 로더 옵션에서 <a class="reference internal" href="relationship_api.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal notranslate"><span class="pre">relationship()</span></code></a>를 참조하는 것이다. 타겟 클래스가 상속 구조 이고 API는 조인, 애거 로드, 혹은 다른 연결을 받아들일때 <a class="reference internal" href="relationship_api.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal notranslate"><span class="pre">relationship()</span></code></a>함수는 특정 상속 계층 구조 클래스를 직접적으로 대상(targeted)하는 것 보다특정 서브 클래스나, 앨리어스, 혹은 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a> 앨리어스을 대상 해야 한다.</p>
+<p><a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.PropComparator.of_type" title="sqlalchemy.orm.interfaces.PropComparator.of_type"><code class="xref py py-func docutils literal notranslate"><span class="pre">of_type()</span></code></a>메서드는 특정 파생 앨리어스나 서브클래스로 기준을 좁히면서 <a class="reference internal" href="relationship_api.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal notranslate"><span class="pre">relationship()</span></code></a>경로를 따라 조인을 구성할 수 있다. <code class="docutils literal notranslate"><span class="pre">employeess</span></code>테이블이 employees들의 컬랙션을 나타내는 테이블이고 이것은 <code class="docutils literal notranslate"><span class="pre">Company</span></code>객체와 관계되어 있다고 가정한다. 아래 예제와 같이 우리는 <code class="docutils literal notranslate"><span class="pre">company_id</span></code>컬럼을 <code class="docutils literal notranslate"><span class="pre">employees</span></code>테이블에 추가할 것이다:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Company</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;company&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">employees</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span>
+                    <span class="n">backref</span><span class="o">=</span><span class="s1">&#39;company&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+    <span class="n">company_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;company.id&#39;</span><span class="p">))</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span><span class="nb">type</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;employee&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineer&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;employee.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">engineer_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;engineer&#39;</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;employee.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">manager_data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;manager&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Company</span></code>위의 <code class="docutils literal notranslate"><span class="pre">Employee</span></code> 관계를 쿼리할때 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.join" title="sqlalchemy.orm.query.Query.join"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Query.join()</span></code></a>메서드나 <a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.PropComparator.any" title="sqlalchemy.orm.interfaces.PropComparator.any"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PropComparator.any()</span></code></a>, <a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.PropComparator.has" title="sqlalchemy.orm.interfaces.PropComparator.has"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PropComparator.has()</span></code></a>메서드는 <code class="docutils literal notranslate"><span class="pre">engineer</span></code>과 <code class="docutils literal notranslate"><span class="pre">manager</span></code>가 포함되지 않은 채로 <code class="docutils literal notranslate"><span class="pre">employee</span></code>와 <code class="docutils literal notranslate"><span class="pre">manager</span></code> 의 조인된결과를 만들 것 입니다. 만약 우리가 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>클래스를 특별히 지정하고 싶다면 <a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.PropComparator.of_type" title="sqlalchemy.orm.interfaces.PropComparator.of_type"><code class="xref py py-meth docutils literal notranslate"><span class="pre">of_type()</span></code></a>연산자를 사용하여 서브 클래스(<code class="docutils literal notranslate"><span class="pre">Engineer</span></code>)의 컬럼 세트를 조인하거나 서브 쿼리할 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Company</span><span class="p">)</span><span class="o">.</span>\
+    <span class="n">join</span><span class="p">(</span><span class="n">Company</span><span class="o">.</span><span class="n">employees</span><span class="o">.</span><span class="n">of_type</span><span class="p">(</span><span class="n">Engineer</span><span class="p">))</span><span class="o">.</span>\
+    <span class="nb">filter</span><span class="p">(</span><span class="n">Engineer</span><span class="o">.</span><span class="n">engineer_info</span><span class="o">==</span><span class="s1">&#39;someinfo&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>앞선 예제와 비슷하게 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>과 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>의 컬럼들을 포함한 <code class="docutils literal notranslate"><span class="pre">Company</span></code> 다형성 엔티티를 조인할 수 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">manager_and_engineer</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span>
+                            <span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Manager</span><span class="p">,</span> <span class="n">Engineer</span><span class="p">])</span>
+
+<span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Company</span><span class="p">)</span><span class="o">.</span>\
+    <span class="n">join</span><span class="p">(</span><span class="n">Company</span><span class="o">.</span><span class="n">employees</span><span class="o">.</span><span class="n">of_type</span><span class="p">(</span><span class="n">manager_and_engineer</span><span class="p">))</span><span class="o">.</span>\
+    <span class="nb">filter</span><span class="p">(</span>
+        <span class="n">or_</span><span class="p">(</span>
+            <span class="n">manager_and_engineer</span><span class="o">.</span><span class="n">Engineer</span><span class="o">.</span><span class="n">engineer_info</span> <span class="o">==</span> <span class="s1">&#39;someinfo&#39;</span><span class="p">,</span>
+            <span class="n">manager_and_engineer</span><span class="o">.</span><span class="n">Manager</span><span class="o">.</span><span class="n">manager_data</span> <span class="o">==</span> <span class="s1">&#39;somedata&#39;</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.PropComparator.any" title="sqlalchemy.orm.interfaces.PropComparator.any"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PropComparator.any()</span></code></a>와 <a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.PropComparator.has" title="sqlalchemy.orm.interfaces.PropComparator.has"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PropComparator.has()</span></code></a>연산자도 <a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.PropComparator.of_type" title="sqlalchemy.orm.interfaces.PropComparator.of_type"><code class="xref py py-func docutils literal notranslate"><span class="pre">of_type()</span></code></a>함수와 같이 사용될 수 있다. 아래 예제와 같이 서브 클래스의 내부에 있는 데이터를 기준으로 쿼리할 때 사용할 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Company</span><span class="p">)</span><span class="o">.</span>\
+        <span class="nb">filter</span><span class="p">(</span>
+            <span class="n">Company</span><span class="o">.</span><span class="n">employees</span><span class="o">.</span><span class="n">of_type</span><span class="p">(</span><span class="n">Engineer</span><span class="p">)</span><span class="o">.</span>
+                <span class="nb">any</span><span class="p">(</span><span class="n">Engineer</span><span class="o">.</span><span class="n">engineer_info</span><span class="o">==</span><span class="s1">&#39;someinfo&#39;</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="eager-loading-of-specific-or-polymorphic-subtypes">
+<span id="eagerloading-polymorphic-subtypes"></span><h3>특정 또는 다형성 서브타입 애거 로딩<a class="headerlink" href="#eager-loading-of-specific-or-polymorphic-subtypes" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="loading_relationships.html#sqlalchemy.orm.joinedload" title="sqlalchemy.orm.joinedload"><code class="xref py py-func docutils literal notranslate"><span class="pre">joinedload()</span></code></a>, <a class="reference internal" href="loading_relationships.html#sqlalchemy.orm.subqueryload" title="sqlalchemy.orm.subqueryload"><code class="xref py py-func docutils literal notranslate"><span class="pre">subqueryload()</span></code></a>, <a class="reference internal" href="loading_relationships.html#sqlalchemy.orm.contains_eager" title="sqlalchemy.orm.contains_eager"><code class="xref py py-func docutils literal notranslate"><span class="pre">contains_eager()</span></code></a>, 그리고 다른 애거로더 옵션들은 <code class="xref py py-func docutils literal notranslate"><span class="pre">of_type()</span></code>함수를 사용할 수 있게 지원한다. 아래 예제에서는 <code class="docutils literal notranslate"><span class="pre">Company</span></code> 행들을 로드하면서 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code> 객체들과, <code class="docutils literal notranslate"><span class="pre">employee</span></code>, <code class="docutils literal notranslate"><span class="pre">engineer</span></code> 테이블들을 동시에 애거 로딩 하고 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Company</span><span class="p">)</span><span class="o">.</span>\
+    <span class="n">options</span><span class="p">(</span>
+        <span class="n">subqueryload</span><span class="p">(</span><span class="n">Company</span><span class="o">.</span><span class="n">employees</span><span class="o">.</span><span class="n">of_type</span><span class="p">(</span><span class="n">Engineer</span><span class="p">))</span><span class="o">.</span>
+        <span class="n">subqueryload</span><span class="p">(</span><span class="n">Engineer</span><span class="o">.</span><span class="n">machines</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>이 경우와 마찬가지로 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.join" title="sqlalchemy.orm.query.Query.join"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Query.join()</span></code></a>, <a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.PropComparator.of_type" title="sqlalchemy.orm.interfaces.PropComparator.of_type"><code class="xref py py-meth docutils literal notranslate"><span class="pre">of_type()</span></code></a>이 애거 로딩과 결합하여, 이를 통해 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>가 모든 참조된 서브타입의 서브-속성(sub-attributes)들을 로드할 수 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">manager_and_engineer</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span>
+                            <span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Manager</span><span class="p">,</span> <span class="n">Engineer</span><span class="p">],</span>
+                            <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Company</span><span class="p">)</span><span class="o">.</span>\
+    <span class="n">options</span><span class="p">(</span>
+        <span class="n">joinedload</span><span class="p">(</span>
+            <span class="n">Company</span><span class="o">.</span><span class="n">employees</span><span class="o">.</span><span class="n">of_type</span><span class="p">(</span><span class="n">manager_and_engineer</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">주석</p>
+<p><a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">with_polymorphic()</span></code></a>함수를 <a class="reference internal" href="loading_relationships.html#sqlalchemy.orm.joinedload" title="sqlalchemy.orm.joinedload"><code class="xref py py-func docutils literal notranslate"><span class="pre">joinedload()</span></code></a>함수와 같이 사용하는 경우  <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">with_polymorphic()</span></code></a>객체는 반드시 <a class="reference internal" href="../core/selectable.html#sqlalchemy.sql.expression.Alias" title="sqlalchemy.sql.expression.Alias"><code class="xref py py-class docutils literal notranslate"><span class="pre">Alias</span></code></a>클래스의 인스턴스인 &quot;aliased&quot; 된 객체를 대상해야 하고 이를 통해 다형성 selectable 이 aliased 되어야 한다.(이런 조건이 만족되지 않을 경우 에러 메시지가 발생한다.)</p>
+<p class="last">이를 수행하는 일방적인 방법은 앨리어싱을 자동으로 적용하는 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.with_polymorphic.params.aliased" title="sqlalchemy.orm.query.Query.with_polymorphic"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">with_polymorphic.aliased</span></code></a>나 <code class="xref py py-paramref docutils literal notranslate"><span class="pre">flat</span></code>플래그를 포함하는 것이다. 그러나 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.with_polymorphic.params.selectable" title="sqlalchemy.orm.query.Query.with_polymorphic"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">with_polymorphic.selectable</span></code></a>인수가 전달된 객체(이미 <a class="reference internal" href="../core/selectable.html#sqlalchemy.sql.expression.Alias" title="sqlalchemy.sql.expression.Alias"><code class="xref py py-class docutils literal notranslate"><span class="pre">Alias</span></code></a>인 객체) 는 이 플래그를 <strong>설정 해선 안된다.</strong> &quot;flat&quot;옵션은 &quot;aliased&quot;옵션을 암시하고, 보다 적은 서브쿼리들을 생성하는 조인된 객체들의 앨리어싱 의 대체적인(alternative) 형태 이다.</p>
+</div>
+<p>애거 로드에 사용된 <a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.PropComparator.of_type" title="sqlalchemy.orm.interfaces.PropComparator.of_type"><code class="xref py py-meth docutils literal notranslate"><span class="pre">of_type()</span></code></a>대상은 원본 클래스 또는 파생 클래스가 아닌 후속 체이닝에 사용될 엔티티이다. 향후 에거-로드된 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>클래스의 컬랙션을 애거 로드 하고 싶다면 우리는 이 클래스를 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>객체의 네임스페이스로부터 접근 할 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Company</span><span class="p">)</span><span class="o">.</span>\
+    <span class="n">options</span><span class="p">(</span>
+        <span class="n">joinedload</span><span class="p">(</span><span class="n">Company</span><span class="o">.</span><span class="n">employees</span><span class="o">.</span><span class="n">of_type</span><span class="p">(</span><span class="n">manager_and_engineer</span><span class="p">))</span><span class="o">.</span>\
+        <span class="n">subqueryload</span><span class="p">(</span><span class="n">manager_and_engineer</span><span class="o">.</span><span class="n">Engineer</span><span class="o">.</span><span class="n">computers</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="loading-objects-with-joined-table-inheritance">
+<span id="loading-joined-inheritance"></span><h2>조인 된 테이블 상속을 사용하여 객체 로딩<a class="headerlink" href="#loading-objects-with-joined-table-inheritance" title="제목 주소">¶</a></h2>
+<p>&quot;상속&quot; 절에서 소개한 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code> 예제처럼 조인 된 테이블 상속을 사용할때 만약 우리가 두 테이블이 조인 된 특정 서브 클래스를 쿼리한다면 방출된 SQL은 조인이다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Engineer</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>위의 쿼리는 아래와 같은 SQL을 발생시킨다:</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql"></span>
+<span class=" -Sql">SELECT employee.id AS employee_id,</span>
+<span class=" -Sql">    employee.name AS employee_name, employee.type AS employee_type,</span>
+<span class=" -Sql">    engineer.name AS engineer_name</span>
+<span class=" -Sql">FROM employee JOIN engineer</span>
+<span class=" -Sql">ON employee.id = engineer.id</span>
+</pre></div>
+</div>
+<p>이는 모든 <code class="docutils literal notranslate"><span class="pre">employee</span></code>컬럼과 <code class="docutils literal notranslate"><span class="pre">engineer</span></code>컬럼이 포함되고 로드되는 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code> 객체들의 컬랙션을 가져 온다.</p>
+<p>그러나 베이스 테이블에 대하여 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>를 방출하는 경우 베이스 테이블에 대해서만 로드된다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Employee</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>위의 예제에서 기본적인 동안은 <code class="docutils literal notranslate"><span class="pre">employee</span></code> 테이블에 대해서만 SELECT하고 어떠한 &quot;서브&quot; 테이블 (앞선 예제에서 나왔던 <code class="docutils literal notranslate"><span class="pre">engineer</span></code> 과 <code class="docutils literal notranslate"><span class="pre">manager</span></code>)은 SELECT 하지 않는다.</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql"></span>
+<span class=" -Sql">SELECT employee.id AS employee_id,</span>
+<span class=" -Sql">    employee.name AS employee_name, employee.type AS employee_type</span>
+<span class=" -Sql">FROM employee</span>
+<span class=" -Sql">[]</span>
+</pre></div>
+</div>
+<p>쿼리를 통해 <code class="docutils literal notranslate"><span class="pre">Employee</span></code> 객체들의 컬랙션이 반한된 후 <code class="docutils literal notranslate"><span class="pre">Employee</span></code> 객체의 속성인 <code class="docutils literal notranslate"><span class="pre">engieer</span></code>이나 <code class="docutils literal notranslate"><span class="pre">manager</span></code>하위 테이블들이 요청 될 경우 요청한 컬럼에 대해 두 번째로드가 실행된다(만약 데이터가 아직 로드되지 않은 첫 번째 요청일 경우). 그래서 위의객체에 엑세스 한 후에는 아래에 나온 것처럼 추가로 발행된 SQL 라인들을 볼 수 있다:</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql"></span>
+<span class=" -Sql">SELECT manager.id AS manager_id,</span>
+<span class=" -Sql">    manager.manager_data AS manager_manager_data</span>
+<span class=" -Sql">FROM manager</span>
+<span class=" -Sql">WHERE ? = manager.id</span>
+<span class=" -Sql">[5]</span>
+<span class=" -Sql">SELECT engineer.id AS engineer_id,</span>
+<span class=" -Sql">    engineer.engineer_info AS engineer_engineer_info</span>
+<span class=" -Sql">FROM engineer</span>
+<span class=" -Sql">WHERE ? = engineer.id</span>
+<span class=" -Sql">[2]</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수와 이와 연관된 구성 옵션들은 <code class="docutils literal notranslate"><span class="pre">employee</span></code>, <code class="docutils literal notranslate"><span class="pre">engineer</span></code>, <code class="docutils literal notranslate"><span class="pre">manager</span></code>에 대한 조건부 조인 로드, 관계에 대한 조인된 애저 로딩, 두번째 엔티티 로드 필요성 제거를 할 수 있게 한다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">with_polymorphic</span>
+
+<span class="n">eng_plus_manager</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="p">[</span><span class="n">Engineer</span><span class="p">,</span> <span class="n">Manager</span><span class="p">])</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">eng_plus_manager</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>위의 코드는 <code class="docutils literal notranslate"><span class="pre">engineer</span></code>과 <code class="docutils literal notranslate"><span class="pre">manager</span></code>테이블이 <code class="docutils literal notranslate"><span class="pre">employee</span></code>테이블과 조인된 다음과 같은 쿼리를 생성한다:</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql"></span>
+<span class=" -Sql">SELECT employee.id AS employee_id,</span>
+<span class=" -Sql">    engineer.id AS engineer_id,</span>
+<span class=" -Sql">    manager.id AS manager_id,</span>
+<span class=" -Sql">    employee.name AS employee_name,</span>
+<span class=" -Sql">    employee.type AS employee_type,</span>
+<span class=" -Sql">    engineer.engineer_info AS engineer_engineer_info,</span>
+<span class=" -Sql">    manager.manager_data AS manager_manager_data</span>
+<span class=" -Sql">FROM employee</span>
+<span class=" -Sql">    LEFT OUTER JOIN engineer</span>
+<span class=" -Sql">    ON employee.id = engineer.id</span>
+<span class=" -Sql">    LEFT OUTER JOIN manager</span>
+<span class=" -Sql">    ON employee.id = manager.id</span>
+<span class=" -Sql">[]</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#with-polymorphic"><span class="std std-ref">with_polymorphic 사용</span></a>절에서 <a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수와 그구성 변형을 설명한다.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p class="last">또한 <a class="reference internal" href="#with-polymorphic"><span class="std std-ref">with_polymorphic 사용</span></a>도 참조 해보면 좋다.</p>
+</div>
+</div>
+<div class="section" id="loading-objects-with-single-table-inheritance">
+<span id="loading-single-inheritance"></span><h2>단일 테이블 상속된 객체 로딩<a class="headerlink" href="#loading-objects-with-single-table-inheritance" title="제목 주소">¶</a></h2>
+<p>현대 선언적 시스템(Declarative)에서 단일 상속 매핑은 서브 테이블에만 매핑되고 수퍼 클래스에서 사용할 수 없는(동일한 테이블에 존재하더라도) <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>객체를 생성한다. 우리의 <a class="reference internal" href="inheritance.html#single-inheritance"><span class="std std-ref">단일 테이블 상속</span></a>예제에서, 예를들어 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>매핑은 하나의 지정된 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>을 갖는다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">manager_data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;manager&#39;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>위의 <code class="docutils literal notranslate"><span class="pre">employee</span></code> 테이블이 <code class="docutils literal notranslate"><span class="pre">manager_data</span></code> 컬럼을 갖고 있더라도 <code class="docutils literal notranslate"><span class="pre">Employee.manager_data</span></code>속성이 없을 것이다. <code class="docutils literal notranslate"><span class="pre">Manager</span></code>에 대한 쿼리는 <code class="docutils literal notranslate"><span class="pre">manager_data</span></code>컬럼을 포함하고 마찬가지로 IN 구문은 <code class="docutils literal notranslate"><span class="pre">Manager</span></code> 객체에 해당하는 행만 포함한다.</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Manager</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql"></span>
+<span class=" -Sql">SELECT</span>
+<span class=" -Sql">    employee.id AS employee_id,</span>
+<span class=" -Sql">    employee.name AS employee_name,</span>
+<span class=" -Sql">    employee.type AS employee_type,</span>
+<span class=" -Sql">    employee.manager_data AS employee_manager_data</span>
+<span class=" -Sql">FROM employee</span>
+<span class=" -Sql">WHERE employee.type IN (?)</span>
+
+<span class=" -Sql">(&#39;manager&#39;,)</span>
+</pre></div>
+</div>
+<p>그러나, 비슷한 방법으로 조인된 테이블 상속의 경우, <code class="docutils literal notranslate"><span class="pre">Employee</span></code>에 대한 쿼리는 단순히 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>에 매핑된 컬럼만을 쿼리할 것이다.</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Employee</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql"></span>
+<span class=" -Sql">SELECT employee.id AS employee_id,</span>
+<span class=" -Sql">    employee.name AS employee_name,</span>
+<span class=" -Sql">    employee.type AS employee_type</span>
+<span class=" -Sql">FROM employee</span>
+</pre></div>
+</div>
+<p>만약 우리가 위의 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>인스턴스에서의 결과를 다시 가져온다면, <code class="docutils literal notranslate"><span class="pre">Manager</span></code>에만 매핑된 컬럼에 엑세스한다면 조인된 상속과 비슷한 방식으로 이 컬럼에 대해 게으른-로딩을 할 것이다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>SELECT employee.manager_data AS employee_manager_data
+FROM employee
+WHERE employee.id = ? AND employee.type IN (?)
+</pre></div>
+</div>
+<p><a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수는 단일 상속의 경우 조인된 상속과 비슷한 기능을 제공한다. 이것은 OUTER JOIN을 사용하는 오버헤드 없이 서브 클래스 속성을 애저 로딩하고 서브 클래스를 지정하여 쿼리하는 것이 가능하다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">employee_poly</span> <span class="o">=</span> <span class="n">with_polymorphic</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">employee_poly</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+    <span class="n">or_</span><span class="p">(</span>
+        <span class="n">employee_poly</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span>
+        <span class="n">employee_poly</span><span class="o">.</span><span class="n">Manager</span><span class="o">.</span><span class="n">manager_data</span> <span class="o">==</span> <span class="s1">&#39;b&#39;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>위의 쿼리는 단일 테이블에 대해 적용되지만, 우리는 &quot;polymorphic&quot;네임스페이스를 사용하여 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>과 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code> 에 있는 컬럼들을 참조 할 수 있다. <code class="docutils literal notranslate"><span class="pre">&quot;*&quot;</span></code>를 지정하면 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>와 <code class="docutils literal notranslate"><span class="pre">Manager</span></code> 엔티티들은 한 번에 로드된다. 방출되는 SQL은 다음과 같다:</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="n">q</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql"></span>
+<span class=" -Sql">SELECT</span>
+<span class=" -Sql">    employee.id AS employee_id, employee.name AS employee_name,</span>
+<span class=" -Sql">    employee.type AS employee_type,</span>
+<span class=" -Sql">    employee.manager_data AS employee_manager_data,</span>
+<span class=" -Sql">    employee.engineer_info AS employee_engineer_info</span>
+<span class=" -Sql">FROM employee</span>
+<span class=" -Sql">WHERE employee.name = :name_1</span>
+<span class=" -Sql">OR employee.manager_data = :manager_data_1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="inheritance-loading-api">
+<h2>상속 로딩 API<a class="headerlink" href="#inheritance-loading-api" title="제목 주소">¶</a></h2>
+<dl class="function">
+<dt id="sqlalchemy.orm.with_polymorphic">
+<code class="descclassname">sqlalchemy.orm.</code><code class="descname">with_polymorphic</code><span class="sig-paren">(</span><em>base</em>, <em>classes</em>, <em>selectable=False</em>, <em>flat=False</em>, <em>polymorphic_on=None</em>, <em>aliased=False</em>, <em>innerjoin=False</em>, <em>_use_mapper_path=False</em>, <em>_existing_alias=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.orm.with_polymorphic" title="정의 주소">¶</a></dt>
+<dd><p>Produce an <a class="reference internal" href="query.html#sqlalchemy.orm.util.AliasedClass" title="sqlalchemy.orm.util.AliasedClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">AliasedClass</span></code></a> construct which specifies
+columns for descendant mappers of the given base.</p>
+<p>Using this method will ensure that each descendant mapper's
+tables are included in the FROM clause, and will allow filter()
+criterion to be used against those tables.  The resulting
+instances will also have those columns already loaded so that
+no &quot;post fetch&quot; of those columns will be required.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p class="last"><a class="reference internal" href="#with-polymorphic"><span class="std std-ref">with_polymorphic 사용</span></a> - full discussion of
+<a class="reference internal" href="#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><ul class="first last simple">
+<li><span class="target" id="sqlalchemy.orm.with_polymorphic.params.base"></span><strong>base</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.with_polymorphic.params.base">¶</a> -- Base class to be aliased.</li>
+<li><span class="target" id="sqlalchemy.orm.with_polymorphic.params.classes"></span><strong>classes</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.with_polymorphic.params.classes">¶</a> -- a single class or mapper, or list of
+class/mappers, which inherit from the base class.
+Alternatively, it may also be the string <code class="docutils literal notranslate"><span class="pre">'*'</span></code>, in which case
+all descending mapped classes will be added to the FROM clause.</li>
+<li><span class="target" id="sqlalchemy.orm.with_polymorphic.params.aliased"></span><strong>aliased</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.with_polymorphic.params.aliased">¶</a> -- when True, the selectable will be wrapped in an
+alias, that is <code class="docutils literal notranslate"><span class="pre">(SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">&lt;fromclauses&gt;)</span> <span class="pre">AS</span> <span class="pre">anon_1</span></code>.
+This can be important when using the with_polymorphic()
+to create the target of a JOIN on a backend that does not
+support parenthesized joins, such as SQLite and older
+versions of MySQL.   However if the
+<a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.with_polymorphic.params.selectable" title="sqlalchemy.orm.query.Query.with_polymorphic"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">with_polymorphic.selectable</span></code></a> parameter is in use
+with an existing <a class="reference internal" href="../core/selectable.html#sqlalchemy.sql.expression.Alias" title="sqlalchemy.sql.expression.Alias"><code class="xref py py-class docutils literal notranslate"><span class="pre">Alias</span></code></a> construct, then you should not
+set this flag.</li>
+<li><span class="target" id="sqlalchemy.orm.with_polymorphic.params.flat"></span><strong>flat</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.with_polymorphic.params.flat">¶</a> -- <p>Boolean, will be passed through to the
+<a class="reference internal" href="../core/selectable.html#sqlalchemy.sql.expression.FromClause.alias" title="sqlalchemy.sql.expression.FromClause.alias"><code class="xref py py-meth docutils literal notranslate"><span class="pre">FromClause.alias()</span></code></a> call so that aliases of <a class="reference internal" href="../core/selectable.html#sqlalchemy.sql.expression.Join" title="sqlalchemy.sql.expression.Join"><code class="xref py py-class docutils literal notranslate"><span class="pre">Join</span></code></a>
+objects don't include an enclosing SELECT.  This can lead to more
+efficient queries in many circumstances.  A JOIN against a nested JOIN
+will be rewritten as a JOIN against an aliased SELECT subquery on
+backends that don't support this syntax.</p>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">flat</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> implies the <code class="docutils literal notranslate"><span class="pre">aliased</span></code> flag is
+also <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">버전 0.9.0에 추가.</span></p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p class="last"><a class="reference internal" href="../core/selectable.html#sqlalchemy.sql.expression.Join.alias" title="sqlalchemy.sql.expression.Join.alias"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Join.alias()</span></code></a></p>
+</div>
+</li>
+<li><span class="target" id="sqlalchemy.orm.with_polymorphic.params.selectable"></span><strong>selectable</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.with_polymorphic.params.selectable">¶</a> -- a table or select() statement that will
+be used in place of the generated FROM clause. This argument is
+required if any of the desired classes use concrete table
+inheritance, since SQLAlchemy currently cannot generate UNIONs
+among tables automatically. If used, the <code class="docutils literal notranslate"><span class="pre">selectable</span></code> argument
+must represent the full set of tables and columns mapped by every
+mapped class. Otherwise, the unaccounted mapped columns will
+result in their table being appended directly to the FROM clause
+which will usually lead to incorrect results.</li>
+<li><span class="target" id="sqlalchemy.orm.with_polymorphic.params.polymorphic_on"></span><strong>polymorphic_on</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.with_polymorphic.params.polymorphic_on">¶</a> -- a column to be used as the &quot;discriminator&quot;
+column for the given selectable. If not given, the polymorphic_on
+attribute of the base classes' mapper will be used, if any. This
+is useful for mappings that don't have polymorphic loading
+behavior by default.</li>
+<li><span class="target" id="sqlalchemy.orm.with_polymorphic.params.innerjoin"></span><strong>innerjoin</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.with_polymorphic.params.innerjoin">¶</a> -- if True, an INNER JOIN will be used.  This should
+only be specified if querying for one specific subtype only</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sqlalchemy.orm.selectin_polymorphic">
+<code class="descclassname">sqlalchemy.orm.</code><code class="descname">selectin_polymorphic</code><span class="sig-paren">(</span><em>base_cls</em>, <em>classes</em><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.orm.selectin_polymorphic" title="정의 주소">¶</a></dt>
+<dd><p>Indicate an eager load should take place for all attributes
+specific to a subclass.</p>
+<p>This uses an additional SELECT with IN against all matched primary
+key values, and is the per-query analogue to the <code class="docutils literal notranslate"><span class="pre">&quot;selectin&quot;</span></code>
+setting on the <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.polymorphic_load" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.polymorphic_load</span></code></a> parameter.</p>
+<div class="versionadded">
+<p><span class="versionmodified">버전 1.2에 추가.</span></p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p class="last"><span class="xref std std-ref">inheritance_polymorphic_load</span></p>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="constructors.html" class="btn btn-neutral float-right" title="Constructors and Object Initialization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="loading_relationships.html" class="btn btn-neutral" title="Relationship Loading Techniques" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+      최종 업데이트: 06/07/2019 11:12:12
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.3.0b1',
+            LANGUAGE:'ko',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

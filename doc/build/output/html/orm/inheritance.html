@@ -1,0 +1,933 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="ko" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ko" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>클래스 상속 구조 매핑하기 &mdash; SQLAlchemy 1.3.0b1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="색인" href="../genindex.html" />
+    <link rel="search" title="검색" href="../search.html" />
+    <link rel="copyright" title="저작권" href="../copyright.html" />
+    <link rel="next" title="비 전통적인 매핑" href="nonstandard_mappings.html" />
+    <link rel="prev" title="복합 열 유형(Composite Column Types)" href="composites.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">개요</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">SQLAlchemy ORM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html">ORM 튜토리얼</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="mapper_config.html">매퍼 설정</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="mapping_styles.html">매핑 유형</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scalar_mapping.html">컬럼 표현식 매핑</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">클래스 상속 구조 매핑하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nonstandard_mappings.html">비 전통적인 매핑</a></li>
+<li class="toctree-l3"><a class="reference internal" href="versioning.html">버전 카운터 설정</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mapping_api.html">Class Mapping API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="relationships.html">릴레이션십 설정</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_objects.html">객체 로딩</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session.html">세션 사용하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending.html">Events and Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extensions/index.html">ORM Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">ORM Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">SQLAlchemy Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index.html">Dialects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors.html">Error Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index.html">Changes and Migration</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+          <li><a href="mapper_config.html">매퍼 설정</a> &raquo;</li>
+        
+      <li>클래스 상속 구조 매핑하기</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy//docs-korean/doc/build/orm/inheritance.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mapping-class-inheritance-hierarchies">
+<span id="inheritance-toplevel"></span><h1>클래스 상속 구조 매핑하기<a class="headerlink" href="#mapping-class-inheritance-hierarchies" title="제목 주소">¶</a></h1>
+<p>SQLAlchemy는 세가지 형태의 상속을 지원한다. <strong>단일 테이블(single table) 상속</strong>은 여러 유형의 클래스를 하나의 테이블로 대표하는 방식이다. <strong>구체 테이블(concrete table) 상속</strong>은 각각의 클래스 유형이 독립적인 테이블로 대표되는 방식이다. <strong>조인 테이블(joined table) 상속</strong>은 클래스 상하관계를 이용하여 테이블을 분해하고 각각의 테이블은 해당 클래스에서만 필요한 속성으로만 구성하는 방법이다.</p>
+<p>가장 흔히 사용되는 방식은 단독 테이블 방식과 조인 테이블 방식이다. 구체 테이블 방식은 설정이 더 어렵다.</p>
+<p>상속관계에 있는 매퍼를 설정하면 SQLAlchemy가 데이터를 다형적으로(<a class="reference internal" href="../glossary.html#term-polymorphically"><span class="xref std std-term">polymorphically</span></a>) 로드할 수 있다. 즉 하나의 쿼리로 여러가지 유형의 객체를 반환할 수 있다.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p class="last"><a class="reference internal" href="examples.html#examples-inheritance"><span class="std std-ref">Inheritance Mapping Recipes</span></a> - complete examples of joined, single and
+concrete inheritance</p>
+</div>
+<div class="section" id="joined-table-inheritance">
+<span id="joined-inheritance"></span><h2>조인 테이블 상속<a class="headerlink" href="#joined-table-inheritance" title="제목 주소">¶</a></h2>
+<p>조인 테이블 상속 방식에서는 클래스의 상속관계에 있는 각각의 테이블은 모두 별개의 테이블로 표현된다. 상속관계 안의 특정 클래스에 대해 쿼리를 하면 해당 상속 경로에 있는 모든 테이블에 대해 SQL JOIN 연산을 하게 된다. 만약 질의 결과가 베이스 클래스면 SELECT 문안에 베이스 테이블만 포함하는게 기본 동작이다. 모든 경우에 각 행에 대해 실제로 구현될 클래스는 구분자(discriminator) 컬럼이나 베이스 테이블에 대한 연산식에 의해 결정된다. 서브클래스를 베이스 테이블에 대해서만 로드하면 그 결과로 나오는 객체는 우선 베이스 속성만 가진다. 해당 서브 클래스에만 있는 국지적 속성은 실제로 접근하는 순간에 <a class="reference internal" href="../glossary.html#term-lazy-load"><span class="xref std std-term">lazy load</span></a> 방식으로 로드된다. 이러한 기본 동작 방식을 바꿀 수 있는 옵션도 있다. 그렇게 되면 쿼리를 했을 때 여러개의 테이블/서브클래스에 대응하는 컬럼을 바로 얻을 수 있다.</p>
+<p>조인된 상속 계층에서 베이스 클래스는 다형 구분자(polymorphic discriminator) 컬럼과 베이스 클래스에 대한 지시자(identifier)를 참조한다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;employee&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span><span class="nb">type</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>위 코드에서 <code class="docutils literal notranslate"><span class="pre">type</span></code>컬럼이 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.polymorphic_on" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.polymorphic_on</span></code></a>파라미터를 사용하는 지시자 역할을 하도록 설정되었다. 이 컬럼은 해당 행이 표현하는 객체의 유형을 나타내는 값을 저장한다. 이 컬럼은 어떤 자료형이어도 상관없지만 주로 문자열 또는 정수 자료형을 많이 사용한다.</p>
+<p>다형적 로딩을 원한다면 다형성 구분자 표현식이 반드시 필요하다. 베이스 테이블에서 컬럼 하나를 만드는게 가장 간단한 방법이지만 상속구조가 복잡하면 SQL 표현식에 CASE 문 등을 다형석 지시자로 넣어야 할 수도 있다.</p>
+<div class="admonition note">
+<p class="first admonition-title">주석</p>
+<p class="last">현재는 상속 구조에서 가장 베이스에 있는 클래스에 단 하나만의 지시자 컬럼이나 SQL 표현식을 넣고 전체 상속 구조를 설정할 수 있다. 캐스케이딩(Cascading) 방식의 다형성 지시자 표현식은 아직 지원하지 않는다.</p>
+</div>
+<p>다음으로 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>클래스의 서브 클래스인 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>클래스와 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>클래스를 정의한다. 각 클래스는 해당 서브클래스에만 있는 속성을 나타내는 컬럼을 가진다. 또 각 클래스는 프라이머리 키와 부모 테이블을 참조하는 외부 키 참조인 키를 가진다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineer&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;employee.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">engineer_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;engineer&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;employee.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">manager_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>외부 키 조건은 프라이머리 키 컬럼에 직접 넣는 것이 보통이지만 반드시 그래야 하는 것은 아니다. 외부 키를 참조하는 별도의 컬럼을 만들어도 된다. 이렇게 하면 베이스 테이블과 서브 클래스를 조인하는 방식을 사용자 마음대로 바꿀 수 있지만 이런게 필요한 경우는 실제로는 드믈다.</p>
+<div class="topic">
+<p class="topic-title first">조인 상속 프라이머리 키</p>
+<p>조인 테이블 상속 설정 방식을 쓰면 모든 객체는 베이스 테이블의 행들 중에 있게 된다. 이렇게 되었을 때의 장점은 조인된 상속 클래스의 프라이머리 키가 곧 베이스 클래스의 프라이머리 키가 된다. 즉, <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>혹은 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>객체를 참조할 때 <code class="docutils literal notranslate"><span class="pre">engineer</span></code>테이블과 <code class="docutils literal notranslate"><span class="pre">manager</span></code>테이블이 필요하지 않다. <code class="docutils literal notranslate"><span class="pre">employee.id</span></code> 값만 있으면 된다. 물론 부모 테이블에서 행을 결정한 이후에는 조인된 테이블의 행을 결정하는데 <code class="docutils literal notranslate"><span class="pre">engineer.id</span></code>와 <code class="docutils literal notranslate"><span class="pre">manager.id</span></code>가 여전히 필요하다.</p>
+</div>
+<p>조인 상속 매핑 설정이 끝나면 <code class="docutils literal notranslate"><span class="pre">Employee</span></code> 테이블에 대해 쿼리를 하면 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>, <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>, <code class="docutils literal notranslate"><span class="pre">Manager</span></code> 객체가 섞여서 반환된다. 이 객체들은 <code class="docutils literal notranslate"><span class="pre">employee.type</span></code>  지시자 컬럼에 자동적으로 해당하는 지시자 값 즉 <code class="docutils literal notranslate"><span class="pre">&quot;engineer&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;manager&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;employee&quot;</span></code>가 들어가게 된다.</p>
+<div class="section" id="relationships-with-joined-inheritance">
+<h3>조인 상속에서의 릴레이션쉽<a class="headerlink" href="#relationships-with-joined-inheritance" title="제목 주소">¶</a></h3>
+<p>조인 테이블 상속에서도 릴레이션쉽을 완벽히 지원한다. 조인 상속 클래스를 포함하는 릴레이션은 외부 키 조건에 대응하는 클래스를 상속 구조 안에서 찾아야 한다. 예를 들어 다음 코드에서 <code class="docutils literal notranslate"><span class="pre">employee</span></code> 테이블은  <code class="docutils literal notranslate"><span class="pre">company</span></code> 테이블에 대한 외부 키 조건이 있기 때문에 <code class="docutils literal notranslate"><span class="pre">Company</span></code> 테이블과 <code class="docutils literal notranslate"><span class="pre">Employee</span></code> 테이블 간의 릴레이션쉽이 생긴다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Company</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;company&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">employees</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;company&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">company_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;company.id&#39;</span><span class="p">))</span>
+    <span class="n">company</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Company&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;employees&quot;</span><span class="p">)</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;employee&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span><span class="nb">type</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+</pre></div>
+</div>
+<p>만약 외부 키 조건이 서브클래스에 있으면 그 릴레이션쉽은 서브클래스와 생기게 된다. 다음 예에서 <code class="docutils literal notranslate"><span class="pre">manager</span></code>에서 <code class="docutils literal notranslate"><span class="pre">company</span></code>로 가는 외부 키 조건이 있으므로 <code class="docutils literal notranslate"><span class="pre">Manager</span></code> 클래스와 <code class="docutils literal notranslate"><span class="pre">Company</span></code> 클래스간의 릴레이션쉽에 생성되었다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Company</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;company&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">managers</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Manager&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;company&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;employee&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span><span class="nb">type</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;employee.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">manager_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+
+    <span class="n">company_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;company.id&#39;</span><span class="p">))</span>
+    <span class="n">company</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Company&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;managers&quot;</span><span class="p">)</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+</pre></div>
+</div>
+<p>위 코드에서는 <code class="docutils literal notranslate"><span class="pre">Manager</span></code> 클래스는 <code class="docutils literal notranslate"><span class="pre">Manager.company</span></code> 속성을 가진다. <code class="docutils literal notranslate"><span class="pre">Company</span></code> 클래스도 <code class="docutils literal notranslate"><span class="pre">employee</span></code> 테이블과 <code class="docutils literal notranslate"><span class="pre">manager</span></code> 테이블을 조인한 결과를 로드하는  <code class="docutils literal notranslate"><span class="pre">Company.managers</span></code> 속성을 가진다.</p>
+</div>
+<div class="section" id="loading-joined-inheritance-mappings">
+<h3>조인 상속 매핑 로딩하기<a class="headerlink" href="#loading-joined-inheritance-mappings" title="제목 주소">¶</a></h3>
+<p>매핑 설정 시점과 쿼리 시점에 모두 쿼리가 가능하게 하려면 객체 로딩에 대해 설명한 <a class="reference internal" href="inheritance_loading.html#inheritance-loading-toplevel"><span class="std std-ref">상속 구조 로딩</span></a> 절과 <a class="reference internal" href="inheritance_loading.html#loading-joined-inheritance"><span class="std std-ref">조인 된 테이블 상속을 사용하여 객체 로딩</span></a> 절을 참조한다.</p>
+</div>
+</div>
+<div class="section" id="single-table-inheritance">
+<span id="single-inheritance"></span><h2>단일 테이블 상속<a class="headerlink" href="#single-table-inheritance" title="제목 주소">¶</a></h2>
+<p>단일 테이블 상속 방식은 모든 클래스의 모든 속성을 하나의 테이블로 나타내는 것이다. 특정 서브클래스에만 있는 속성의 경우에는 해당 컬럼의 값을 사용하고 다른 클래스에서는 이 컬럼의 값이 NULL이 된다.</p>
+<p>특정 서브클래스에 대해 쿼리를 하면 모두 베이스 클래스에 대한 쿼리가 된다. 다만 WHERE 절을 써서 구분자 컬럼/표현식에 특정한 값을 가진 행만 쿼리하게 만든다.</p>
+<p>단일 테이블 상속은 조인 테이블 상속 방식에 비해 단순하다는 장점이 있다. 쿼리가 하나의 테이블에 대해서만 행해지므로 훨씬 효율적이다.</p>
+<p>단일 테이블 상속 방식의 설정도 조인 테이블 상속과 비슷하다. 다만 베이스 클래스만  <code class="docutils literal notranslate"><span class="pre">__tablename__</span></code> 속성을 가진다. 클래스를 구분하는 구분자 컬럼도 베이스 테이블에 있어야 한다.</p>
+<p>서브클래스들이 베이스클래스를 공유하지만 테이블 선언시 서브클래스의 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> 객체는 해당 서브클래스에서만 지정한다. 실제로는 모든 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> 컬럼이 베이스 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> 객체에 적용된다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span><span class="nb">type</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;employee&#39;</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">manager_data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;manager&#39;</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">engineer_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;engineer&#39;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>상속 클래스인 Manager, Engineer의 매퍼는 <code class="docutils literal notranslate"><span class="pre">__tablename__</span></code>가 없다는 점에 주의하라. 이 클래스는 자신만의 테이블을 가지지 않기 때문이다.</p>
+<div class="section" id="relationships-with-single-table-inheritance">
+<h3>단일 테이블 상속에서의 릴레이션쉽<a class="headerlink" href="#relationships-with-single-table-inheritance" title="제목 주소">¶</a></h3>
+<p>단일 테이블 상속에서도 릴레이션쉽은 완벽하게 지원된다. 조인 상속과 같은 방식으로 설정하면 된다. 외부 키 속성은 릴레이션쉽의 &quot;외부&quot; 측에 정의해야 한다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Company</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;company&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">employees</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;company&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">company_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;company.id&#39;</span><span class="p">))</span>
+    <span class="n">company</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Company&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;employees&quot;</span><span class="p">)</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;employee&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span><span class="nb">type</span>
+    <span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">manager_data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;manager&#39;</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">engineer_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;engineer&#39;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>또한 조인 상속의 경우와 마찬가지로 특정 서브클래스에 대한 릴레이션쉽도 만들 수 있다. 쿼리를 하면 SELECT 명령에 서브클래스를 제한하는 WHERE 절이 포함되게 된다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Company</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;company&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">managers</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Manager&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;company&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;employee&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span><span class="nb">type</span>
+    <span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">manager_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+
+    <span class="n">company_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;company.id&#39;</span><span class="p">))</span>
+    <span class="n">company</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Company&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;managers&quot;</span><span class="p">)</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">engineer_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;engineer&#39;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>위 코드에서 <code class="docutils literal notranslate"><span class="pre">Manager</span></code> 클래스는 <code class="docutils literal notranslate"><span class="pre">Manager.company</span></code> 속성을 가진다. <code class="docutils literal notranslate"><span class="pre">Company</span></code> 클래스도 <code class="docutils literal notranslate"><span class="pre">Company.managers</span></code> 속성을 가진다. 이 속성에는 <code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">=</span> <span class="pre">'manager'</span></code> 조건의 WHERE 절이 추가되어 <code class="docutils literal notranslate"><span class="pre">employee</span></code> 테이블을 쿼리하게 된다.</p>
+</div>
+<div class="section" id="loading-single-inheritance-mappings">
+<h3>단일 상속 매핑에서 로딩하기<a class="headerlink" href="#loading-single-inheritance-mappings" title="제목 주소">¶</a></h3>
+<p>단일 테이블 상속에서의 로딩 기법은 조인 테이블 상속의 경우와 거의 같다. 두 가지 매핑 유형을 쉽게 바꾸거나 하나의 상속 관계를 구현하는데 두가지 유형을 같이 사용할 수 있도록 고수준의 추상화가 제공된다. (서브클래스에서 <code class="docutils literal notranslate"><span class="pre">__tablename__</span></code> 속성만 빼면 단일 상속 형태가 된다.) 상속 로딩 기법에 대한 문서는 <a class="reference internal" href="inheritance_loading.html#inheritance-loading-toplevel"><span class="std std-ref">상속 구조 로딩</span></a> 절과 <a class="reference internal" href="inheritance_loading.html#loading-single-inheritance"><span class="std std-ref">단일 테이블 상속된 객체 로딩</span></a> 절에서 제공한다. 여기에는 매핑 시점과 쿼리 시점에 둘 다 쿼리할 수 있도록 클래스를 설정하는 방법도 나와 있다.</p>
+</div>
+</div>
+<div class="section" id="concrete-table-inheritance">
+<span id="concrete-inheritance"></span><h2>구체 테이블 상속<a class="headerlink" href="#concrete-table-inheritance" title="제목 주소">¶</a></h2>
+<p>구체 상속에서는 각각의 서브클래스를 별도의 테이블로 구현하면서 각 테이블은 해당 클래스의 인스턴스를 만드는데 필요한 모든 컬럼을 포함하도록 한다. 구체 상속 설정은 기본적으로 다형적 쿼리를 지원하지 않는다. 특정 클래스에 대한 쿼리는 실제로 해당 클래스 테이블에 대한 쿼리가 되며 해당 클래스의 객체만 반환한다. 구체 상속에서 다형성 로딩을 하려면 매퍼 안에 모든 테이블의 UNION을 만드는 특별한 SELECT 명령을 넣어야 한다.</p>
+<div class="admonition warning">
+<p class="first admonition-title">경고</p>
+<p class="last">구체 테이블 상속은 조인 테이블 상속이나 단일 테이블 상속보다 훨신 복잡하고 기능도 훨씬 제한된다. 특히 릴레이션쉽을 쓰거나 eager 로딩, 다형적 로딩이 제한된다. 다형 로딩을 하려고 하면 단일 조인으로 불가능하고 UNIONS에 대해 쿼리를 해야 한다. 만약 릴레이션쉽 로딩, 다형성 로딩이 필요하면 가능한한 조인 상속이나 단일 테이블 상속을 사용할 것을 강력하게 권장한다. 만약 다형성 로딩이 필요없으면 그냥 비-상속 미핑을 해서 하나의 클래스가 하나의 테이블에 매핑되도록 하면 된다.</p>
+</div>
+<p>조인과 단일 테이블 상속은 &quot;poloymorphic&quot; 로딩이 비교적 자유롭지만, 구체 상속에서는 복잡하다. 이러한 이유로, 구체 상속은 <strong>다형성 로딩이 필요하지 않을때</strong>  더 적절하다. 또한 구체 상속 클래스간 릴레이션쉽을 설정하는 것은 지양해야 한다.</p>
+<p>구체 상속을 사용하여 클래스를 설정하려면, <code class="docutils literal notranslate"><span class="pre">__mapper_args__</span></code>안에 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.concrete" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.concrete</span></code></a> 파라미터를 추가해야한다. 이것은 선언적(Declarative) 뿐만 아니라 매핑에서도 슈퍼 클래스 테이블이 매핑의 일부로 간주되어서는 안된다는 점을 알려준다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">manager_data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineer&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">engineer_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>두 가지 중요한 점을 주목해야 한다:</p>
+<ul class="simple">
+<li>각 서브클래스의 <strong>모든 컬럼들의 이름들이 모두 같더라도 명시적으로 정의</strong> 해야 한다. <code class="docutils literal notranslate"><span class="pre">Employee.name</span></code> 컬럼은 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>혹은 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>으로 매핑된 테이블로복사되어져선 <strong>안된다</strong>.</li>
+<li>이전 예제에서 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>과 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>클래스들은 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>의 상속 관계로 매핑되어있따.이들은 <strong>여전히 다형성 로딩이</strong> 되지 않다. 이 의미는, <code class="docutils literal notranslate"><span class="pre">Employee</span></code> 객체들을 쿼리했을때, <code class="docutils literal notranslate"><span class="pre">manager</span></code>과 <code class="docutils literal notranslate"><span class="pre">engineer</span></code>테이블들은 전혀 쿼리되지 않는다.</li>
+</ul>
+<div class="section" id="concrete-polymorphic-loading-configuration">
+<span id="concrete-polymorphic"></span><h3>구체 다형성 로딩 설정<a class="headerlink" href="#concrete-polymorphic-loading-configuration" title="제목 주소">¶</a></h3>
+<p>구체 상속을 통한 polymorphic 로딩은 각각의 기본 클래스에 대해 정의된 SELECT가 구성되어야 한다.이 SELECT는 매핑된 모든 테이블에 개별적으로 접근 가능 해야 하며, 일반적으로 SQLAlchemy helper <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.util.polymorphic_union" title="sqlalchemy.orm.util.polymorphic_union"><code class="xref py py-func docutils literal notranslate"><span class="pre">polymorphic_union()</span></code></a>을 사용한 UNION문 이다.</p>
+<p><a class="reference internal" href="inheritance_loading.html#inheritance-loading-toplevel"><span class="std std-ref">상속 구조 로딩</span></a>에서 설명했듯이, 모든 유형의 매퍼 상속 구성은 기본적으로 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.with_polymorphic" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.with_polymorphic</span></code></a>을 사용하여 특정한 선택자(special selectable)를 불러옴으로서 구성할 수 있다. 현재 공용 API는 처음 구성되어질때 이 인자를 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.Mapper" title="sqlalchemy.orm.mapper.Mapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapper</span></code></a>에 설정해야 한다.</p>
+<p>그러나 선언적일(Declarative) 경우, 매핑된 클래스가 정의되는 순간에 매퍼와 매핑된 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>가 동시시에 작성된다.이것은 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> 객체에 해당하는 서브클래스들이 아직 정의되지 않음으로 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.with_polymorphic" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.with_polymorphic</span></code></a>인자가 제공되어질 수 없다는 것을 의미한다.</p>
+<p>이 주기를 해결하는 몇가지 방법이 존재하지만, 선언 시스템은 핼퍼 클래스 <a class="reference internal" href="extensions/declarative/api.html#sqlalchemy.ext.declarative.ConcreteBase" title="sqlalchemy.ext.declarative.ConcreteBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConcreteBase</span></code></a> 와:class:<cite>.AbstractConcreteBase</cite> 를 제공하여 해결하고 있습니다. 이 부분은 아래에서 더 자세하게 다루겠다.</p>
+<p><a class="reference internal" href="extensions/declarative/api.html#sqlalchemy.ext.declarative.ConcreteBase" title="sqlalchemy.ext.declarative.ConcreteBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConcreteBase</span></code></a>클래스를 사용하면 우리는 다른 매핑 방식과 거의 같은 방식으로 구체 매핑을 설정할 수 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">ConcreteBase</span>
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">ConcreteBase</span><span class="p">,</span> <span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;employee&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">manager_data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineer&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">engineer_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>위 코드에서 선언 시스템은 매퍼를 초기화 할때 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>클래스에 다형성 선택자를 설정한다.이것은 다른 종속 매퍼들을 해결하는 매퍼를 위한 늦은-구성(late-configuration) 단계 이다. <a class="reference internal" href="extensions/declarative/api.html#sqlalchemy.ext.declarative.ConcreteBase" title="sqlalchemy.ext.declarative.ConcreteBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConcreteBase</span></code></a>핼퍼 클래스는 다른 모든 클래스들이 설정 완료되었을때 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.util.polymorphic_union" title="sqlalchemy.orm.util.polymorphic_union"><code class="xref py py-func docutils literal notranslate"><span class="pre">polymorphic_union()</span></code></a>함수를 사용하여 먼저 구체-매핑 된 모든 테이블들의 UNION 문을 생성하고, 그 다음 이미 존재하는 베이스-클래스 매퍼들과 함께 이 UNION 문을 완성한다.</p>
+<p>SELECT 시, 다형성 UNION 은 다음과 같은 쿼리를 생성한다:</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Employee</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Open">{opensql}</span><span class=" -Sql"></span>
+<span class=" -Sql">SELECT</span>
+<span class=" -Sql">    pjoin.id AS pjoin_id,</span>
+<span class=" -Sql">    pjoin.name AS pjoin_name,</span>
+<span class=" -Sql">    pjoin.type AS pjoin_type,</span>
+<span class=" -Sql">    pjoin.manager_data AS pjoin_manager_data,</span>
+<span class=" -Sql">    pjoin.engineer_info AS pjoin_engineer_info</span>
+<span class=" -Sql">FROM (</span>
+<span class=" -Sql">    SELECT</span>
+<span class=" -Sql">        employee.id AS id,</span>
+<span class=" -Sql">        employee.name AS name,</span>
+<span class=" -Sql">        CAST(NULL AS VARCHAR(50)) AS manager_data,</span>
+<span class=" -Sql">        CAST(NULL AS VARCHAR(50)) AS engineer_info,</span>
+<span class=" -Sql">        &#39;employee&#39; AS type</span>
+<span class=" -Sql">    FROM employee</span>
+<span class=" -Sql">    UNION ALL</span>
+<span class=" -Sql">    SELECT</span>
+<span class=" -Sql">        manager.id AS id,</span>
+<span class=" -Sql">        manager.name AS name,</span>
+<span class=" -Sql">        manager.manager_data AS manager_data,</span>
+<span class=" -Sql">        CAST(NULL AS VARCHAR(50)) AS engineer_info,</span>
+<span class=" -Sql">        &#39;manager&#39; AS type</span>
+<span class=" -Sql">    FROM manager</span>
+<span class=" -Sql">    UNION ALL</span>
+<span class=" -Sql">    SELECT</span>
+<span class=" -Sql">        engineer.id AS id,</span>
+<span class=" -Sql">        engineer.name AS name,</span>
+<span class=" -Sql">        CAST(NULL AS VARCHAR(50)) AS manager_data,</span>
+<span class=" -Sql">        engineer.engineer_info AS engineer_info,</span>
+<span class=" -Sql">        &#39;engineer&#39; AS type</span>
+<span class=" -Sql">    FROM engineer</span>
+<span class=" -Sql">) AS pjoin</span>
+</pre></div>
+</div>
+<p>위의 UNION 쿼리는 해당 하위 클래스의 구성원이 아닌 컬럼을 수용하기 위해 각 하위 테이블에 대해 &quot;NULL&quot; 컬럼을 만들어야 한다.</p>
+</div>
+<div class="section" id="abstract-concrete-classes">
+<h3>추상 구체 클래스<a class="headerlink" href="#abstract-concrete-classes" title="제목 주소">¶</a></h3>
+<p>지금까지 설명한 구체 매핑은 개별 테이블에 매핑된 기본 클래스는 물론 하위 클래스들 까지 보여준다.구체 상속 사용 사례에서는 기본 클래스가 데이터 베이스 내에서 표현되지 않고 하위 클래스만 표현하는 것이 일반적이다. 다른말로 베이스 클래스는 &quot;추상적&quot; 이다.</p>
+<p>일반적으로 서로다른 두 서브 클래스들을 개별적인 테이블들에 매핑시키고, 베이스 클래스를 언매핑된 상태로 두고 싶다면 이것은매우 쉽게 달성 될 수 있다. 선언적 시스템을 사용할때, 베이스 클래스에 <code class="docutils literal notranslate"><span class="pre">__abstract__</span></code> 를 선언한다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__abstract__</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">manager_data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineer&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">engineer_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>위 코드에서 우리는 실제로 SQLAlchemy의 상속 매핑 기능을 사용하고 있지 않다. 하지만 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>인스턴스와 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>인스턴스를 로딩하고 영속(persist) 할 수는 있다.그러나 다형성으로 쿼리해야하는 상황이 바뀌며, 즉 <code class="docutils literal notranslate"><span class="pre">session.query(Employee)</span></code>를 내보내고 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>및 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>인스턴스 컬렉션을 되찾으려할때 우리는 <code class="docutils literal notranslate"><span class="pre">Employee</span></code> 에 대한 매퍼를 만들어야 한다.</p>
+<div class="topic">
+<p class="topic-title first">매퍼는 항상 SELECT 문을 쓸수 있음</p>
+<p>SQLAlchemy, 클래스 매퍼는 항상 &quot;selectable&quot;을 참조해야 하는데, 이는 보통 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>이거나 혹은 <a class="reference internal" href="../core/selectable.html#sqlalchemy.sql.expression.select" title="sqlalchemy.sql.expression.select"><code class="xref py py-func docutils literal notranslate"><span class="pre">select()</span></code></a> 객체  이다. &quot;단일 테이블 상속&quot;매퍼가 테이블에 매핑되지 않는 것처럼 보이지만, 실제로 이러한 매퍼는 수퍼 클래스에 의해 매핑된 테이블을 암시적으로 참조한다.</p>
+</div>
+<p>다형성 로딩을 할 수 있는 &quot;추상&quot; 베이스 클래스를 설명하기 위해 우리의 구상 상속 예제를 변경한다.우리는 단지 <code class="docutils literal notranslate"><span class="pre">engineer</span></code>과 <code class="docutils literal notranslate"><span class="pre">manager</span></code>테이블을 갖고있고 <code class="docutils literal notranslate"><span class="pre">employee</span></code>테이블은 없습니다. 하지만, <code class="docutils literal notranslate"><span class="pre">Employee</span></code> 매퍼가 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.with_polymorphic" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.with_polymorphic</span></code></a> 파라미터를 지정하지 않고 &quot;다형성 UNION&quot;에 직접적으로 매핑된다.</p>
+<p>이것을 돕기 위해, 선언적 시스템은 <a class="reference internal" href="extensions/declarative/api.html#sqlalchemy.ext.declarative.AbstractConcreteBase" title="sqlalchemy.ext.declarative.AbstractConcreteBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractConcreteBase</span></code></a> 라고 불리는 다양한 <a class="reference internal" href="extensions/declarative/api.html#sqlalchemy.ext.declarative.ConcreteBase" title="sqlalchemy.ext.declarative.ConcreteBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConcreteBase</span></code></a> 클래스를 제공한다. 이 클래스를 통해 위의 과정을 자동적으로 달성한다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">AbstractConcreteBase</span>
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">AbstractConcreteBase</span><span class="p">,</span> <span class="n">Base</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">manager_data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineer&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">engineer_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="extensions/declarative/api.html#sqlalchemy.ext.declarative.AbstractConcreteBase" title="sqlalchemy.ext.declarative.AbstractConcreteBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractConcreteBase</span></code></a> helper class has a more complex internal
+process than that of <a class="reference internal" href="extensions/declarative/api.html#sqlalchemy.ext.declarative.ConcreteBase" title="sqlalchemy.ext.declarative.ConcreteBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConcreteBase</span></code></a>, in that the entire mapping
+of the base class must be delayed until all the subclasses have been declared.
+With a mapping like the above, only instances of <code class="docutils literal notranslate"><span class="pre">Manager</span></code> and <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>
+may be persisted; querying against the <code class="docutils literal notranslate"><span class="pre">Employee</span></code> class will always produce
+<code class="docutils literal notranslate"><span class="pre">Manager</span></code> and <code class="docutils literal notranslate"><span class="pre">Engineer</span></code> objects.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p class="last"><a class="reference internal" href="extensions/declarative/inheritance.html#declarative-concrete-table"><span class="std std-ref">Concrete Table Inheritance</span></a> - 선언적 시스템에 대한 참조 문서</p>
+</div>
+</div>
+<div class="section" id="classical-and-semi-classical-concrete-polymorphic-configuration">
+<h3>고전적, 반-고전적 구체 다형성 구성<a class="headerlink" href="#classical-and-semi-classical-concrete-polymorphic-configuration" title="제목 주소">¶</a></h3>
+<p>선언적 구성은(Declarative configurations)는 <a class="reference internal" href="extensions/declarative/api.html#sqlalchemy.ext.declarative.ConcreteBase" title="sqlalchemy.ext.declarative.ConcreteBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConcreteBase</span></code></a>과:class:<cite>.AbstractConcreteBase</cite>으로 명시되어 있으며, <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.util.polymorphic_union" title="sqlalchemy.orm.util.polymorphic_union"><code class="xref py py-func docutils literal notranslate"><span class="pre">polymorphic_union()</span></code></a>을 명시적으로 사용하는 두 가지 구성 형태와 동일하다. 이러한 구성 형식은 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>객체를 명시적으로 사용하기에 &quot;다형성 유니온(polymorphic union)&quot;을 먼저 생성하고, 매핑을 적용한다. 아래 예제는 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.util.polymorphic_union" title="sqlalchemy.orm.util.polymorphic_union"><code class="xref py py-func docutils literal notranslate"><span class="pre">polymorphic_union()</span></code></a> 함수의 역활을 매핑의 측면에서 명확히 하는 것을 보여준다.</p>
+<p>선언적 시스템의 <strong>반-고전적 매핑</strong> 예제. 하지만 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>객체가 각각 분리되서 선언 되었다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span> <span class="o">=</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span>
+
+<span class="n">employees_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
+    <span class="s1">&#39;employee&#39;</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+<span class="p">)</span>
+
+<span class="n">managers_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
+    <span class="s1">&#39;manager&#39;</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;manager_data&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+<span class="p">)</span>
+
+<span class="n">engineers_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
+    <span class="s1">&#39;engineer&#39;</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;engineer_info&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>다음으로, <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.util.polymorphic_union" title="sqlalchemy.orm.util.polymorphic_union"><code class="xref py py-func docutils literal notranslate"><span class="pre">polymorphic_union()</span></code></a>을 사용하여 결합(UNION)을 만들어 낸다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">polymorphic_union</span>
+
+<span class="n">pjoin</span> <span class="o">=</span> <span class="n">polymorphic_union</span><span class="p">({</span>
+    <span class="s1">&#39;employee&#39;</span><span class="p">:</span> <span class="n">employees_table</span><span class="p">,</span>
+    <span class="s1">&#39;manager&#39;</span><span class="p">:</span> <span class="n">managers_table</span><span class="p">,</span>
+    <span class="s1">&#39;engineer&#39;</span><span class="p">:</span> <span class="n">engineers_table</span>
+<span class="p">},</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;pjoin&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>위의 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> 객체를 사용하면, &quot;반-고전적&quot;스타일로 매핑이 만들어 진다.여기서 우리는 선언적 시스템을 <code class="docutils literal notranslate"><span class="pre">__table__</span></code> 인자와 같이 사용할 수 있다.위의 다형성 결합(UNION)은 <code class="docutils literal notranslate"><span class="pre">__mapper_args__</span></code>인자를 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.with_polymorphic" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.with_polymorphic</span></code></a>의 파라미터로 넘겨준다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">employee_table</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span> <span class="n">pjoin</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+        <span class="s1">&#39;with_polymorphic&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">pjoin</span><span class="p">),</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">engineer_table</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">manager_table</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>또다른 방법으로, 같은 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> 객체를 선언적 시스템의 사용 없이 완전히 &quot;고전적인&quot;스타일로 사용할 수 있다.선언적 시스템에서 사용했던 것과 비슷한 생성자(constructor)가 제공된다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">kw</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">employee_mapper</span> <span class="o">=</span> <span class="n">mapper</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="n">pjoin</span><span class="p">,</span>
+                                    <span class="n">with_polymorphic</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">pjoin</span><span class="p">),</span>
+                                    <span class="n">polymorphic_on</span><span class="o">=</span><span class="n">pjoin</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+<span class="n">manager_mapper</span> <span class="o">=</span> <span class="n">mapper</span><span class="p">(</span><span class="n">Manager</span><span class="p">,</span> <span class="n">managers_table</span><span class="p">,</span>
+                                    <span class="n">inherits</span><span class="o">=</span><span class="n">employee_mapper</span><span class="p">,</span>
+                                    <span class="n">concrete</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">polymorphic_identity</span><span class="o">=</span><span class="s1">&#39;manager&#39;</span><span class="p">)</span>
+<span class="n">engineer_mapper</span> <span class="o">=</span> <span class="n">mapper</span><span class="p">(</span><span class="n">Engineer</span><span class="p">,</span> <span class="n">engineers_table</span><span class="p">,</span>
+                                    <span class="n">inherits</span><span class="o">=</span><span class="n">employee_mapper</span><span class="p">,</span>
+                                    <span class="n">concrete</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">polymorphic_identity</span><span class="o">=</span><span class="s1">&#39;engineer&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>&quot;추상적&quot; 예제는 &quot;반-고전적&quot; 스타일이나 &quot;고전적&quot; 스타이로 매핑될 수 있다.차이점은 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.params.with_polymorphic" title="sqlalchemy.orm.mapper"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">mapper.with_polymorphic</span></code></a>의 파라메터에 &quot;다형성 결합(UNION)&quot;을 적용하는 대신 base-most 매퍼에서 매핑된 선택 가능 항목(mapped selectable)을 적용하는 것 이다.아래에 반-고전적 매핑에 대한 예제가 나와 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">polymorphic_union</span>
+
+<span class="n">pjoin</span> <span class="o">=</span> <span class="n">polymorphic_union</span><span class="p">({</span>
+    <span class="s1">&#39;manager&#39;</span><span class="p">:</span> <span class="n">managers_table</span><span class="p">,</span>
+    <span class="s1">&#39;engineer&#39;</span><span class="p">:</span> <span class="n">engineers_table</span>
+<span class="p">},</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;pjoin&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">pjoin</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span> <span class="n">pjoin</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+        <span class="s1">&#39;with_polymorphic&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">engineer_table</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">manager_table</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>위에서 우리는 <code class="docutils literal notranslate"><span class="pre">employee</span></code>테이블을 생략한다는 것을 제외하곤, <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.util.polymorphic_union" title="sqlalchemy.orm.util.polymorphic_union"><code class="xref py py-func docutils literal notranslate"><span class="pre">polymorphic_union()</span></code></a>을 이전과 같은 방식으로 사용한다.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p class="last"><a class="reference internal" href="mapping_styles.html#classical-mapping"><span class="std std-ref">고전적 매핑(Classical Mappings)</span></a> - &quot;고전적&quot; 매핑에 대한 추가 정보</p>
+</div>
+</div>
+<div class="section" id="relationships-with-concrete-inheritance">
+<h3>구체(Concrete) 상속과 관계(Relationships)<a class="headerlink" href="#relationships-with-concrete-inheritance" title="제목 주소">¶</a></h3>
+<p>구체 상속을 사용하는 상황에서, 별개의 클래스들이 테이블을 공유하지 않기 때문에관계 매핑이 쉽지 않다. 만약 이전 예제들의 <code class="docutils literal notranslate"><span class="pre">Company</span></code>과 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>관계처럼관계가 몇몇 특정한 클래스들만 포함한다면 별다른 추가적인 작업이 필요하지 않다.</p>
+<p>하지만, <code class="docutils literal notranslate"><span class="pre">Company</span></code>가 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>와 일-대-다(one-to-many) 관계를 갖어야 한다면(이때 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>는 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>과 <code class="docutils literal notranslate"><span class="pre">Manager</span></code>를 포함함), 이는 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>가 반드시 다형성 로딩 기능이 있어야 하며, 각각의 관계된 각각의 테이블들이 <code class="docutils literal notranslate"><span class="pre">company</span></code> 테이블로 돌아올 수 있는외래키가 필요하다. 이러한 구성에 대한 예제가 아래에 나와 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">ConcreteBase</span>
+
+
+<span class="k">class</span> <span class="nc">Company</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;company&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">employees</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Employee&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">ConcreteBase</span><span class="p">,</span> <span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">company_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;company.id&#39;</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;employee&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">manager_data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+    <span class="n">company_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;company.id&#39;</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineer&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">engineer_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+    <span class="n">company_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;company.id&#39;</span><span class="p">))</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>다음 복잡한 구체 상속과 관계 예제에서는 만약 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>, <code class="docutils literal notranslate"><span class="pre">Manager</span></code>, <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>전부 혹은 하나가, 그들 스스로 <code class="docutils literal notranslate"><span class="pre">Company</span></code>를 참조하는 경우를 다룬다.이러한 케이스에서, SQLAlchemy는 인스턴스 레벨에서 실행될때 <a class="reference internal" href="relationship_api.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal notranslate"><span class="pre">relationship()</span></code></a>에 배치된 <code class="docutils literal notranslate"><span class="pre">Employee</span></code>가 <code class="docutils literal notranslate"><span class="pre">Company</span></code>에 연결(links)될 수 있도록 하는 특별한 동작( <code class="docutils literal notranslate"><span class="pre">Manager</span></code>와 <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>은 <strong>연결되지 않음</strong>)을 한다. 이 특별한 동작을 하는 대신, 개별적인 <a class="reference internal" href="relationship_api.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal notranslate"><span class="pre">relationship()</span></code></a>함수가 각각의 클래스에 적용되어야 한다.아래의 예제를 보면, 3개의 분리된 관계들의 양방향 동작(bi-directional)을 적용시키기 위해 <a class="reference internal" href="relationship_api.html#sqlalchemy.orm.relationship.params.back_populates" title="sqlalchemy.orm.relationship"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">relationship.back_populates</span></code></a>파라미터가 각각의 관계에 사용된다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">ConcreteBase</span>
+
+
+<span class="k">class</span> <span class="nc">Company</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;company&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">employees</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;company&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">ConcreteBase</span><span class="p">,</span> <span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">company_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;company.id&#39;</span><span class="p">))</span>
+    <span class="n">company</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Company&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;employees&quot;</span><span class="p">)</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;employee&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;manager&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">manager_data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+    <span class="n">company_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;company.id&#39;</span><span class="p">))</span>
+    <span class="n">company</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Company&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;employees&quot;</span><span class="p">)</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineer&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">engineer_info</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+    <span class="n">company_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;company.id&#39;</span><span class="p">))</span>
+    <span class="n">company</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Company&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;employees&quot;</span><span class="p">)</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;concrete&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>위의 제한은 현재 구현과 관계되어 있다. 구체 상속 클래스들은 슈퍼 클래스들의 어떠한 속성(attributes)를 공유하지 않으므로 위의 예제처럼 개별적인 관계가 필요하다.</p>
+</div>
+<div class="section" id="loading-concrete-inheritance-mappings">
+<h3>구체 상속 매핑 불러오기<a class="headerlink" href="#loading-concrete-inheritance-mappings" title="제목 주소">¶</a></h3>
+<p>구체 상속을 불러오는 선택지는 제한 되어 있다. 일반적으로, 선언적 구체 믹스인(declarative concrete mixins)을 사용하여 다형성 로딩을 매퍼에 구성하였다면 현재 SQLAlechmy 버전을 기준으로 쿼리 시간(query time)에는 변경되지 않습니다. <a class="reference internal" href="inheritance_loading.html#sqlalchemy.orm.with_polymorphic" title="sqlalchemy.orm.with_polymorphic"><code class="xref py py-func docutils literal notranslate"><span class="pre">orm.with_polymorphic()</span></code></a>함수는 구체 상속에서 사용하는 로딩 스타일을덮어 쓸 수(override) 있다. 하지만 현재 제한 사항으로 인해 아직 지원하지 않고 있다.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="nonstandard_mappings.html" class="btn btn-neutral float-right" title="비 전통적인 매핑" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="composites.html" class="btn btn-neutral" title="복합 열 유형(Composite Column Types)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+      최종 업데이트: 06/07/2019 11:12:12
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.3.0b1',
+            LANGUAGE:'ko',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

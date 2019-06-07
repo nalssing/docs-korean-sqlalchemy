@@ -1,0 +1,479 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="ko" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ko" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>테이블 컬럼 매핑 &mdash; SQLAlchemy 1.3.0b1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="색인" href="../genindex.html" />
+    <link rel="search" title="검색" href="../search.html" />
+    <link rel="copyright" title="저작권" href="../copyright.html" />
+    <link rel="next" title="매핑된 속성으로서 SQL 표현식" href="mapped_sql_expr.html" />
+    <link rel="prev" title="컬럼 표현식 매핑" href="scalar_mapping.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">개요</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">SQLAlchemy ORM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html">ORM 튜토리얼</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="mapper_config.html">매퍼 설정</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="mapping_styles.html">매핑 유형</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="scalar_mapping.html">컬럼 표현식 매핑</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">테이블 컬럼 매핑</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mapped_sql_expr.html">매핑된 속성으로서 SQL 표현식</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mapped_attributes.html">속성 동작 변경</a></li>
+<li class="toctree-l4"><a class="reference internal" href="composites.html">복합 열 유형(Composite Column Types)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="inheritance.html">클래스 상속 구조 매핑하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nonstandard_mappings.html">비 전통적인 매핑</a></li>
+<li class="toctree-l3"><a class="reference internal" href="versioning.html">버전 카운터 설정</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mapping_api.html">Class Mapping API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="relationships.html">릴레이션십 설정</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_objects.html">객체 로딩</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session.html">세션 사용하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending.html">Events and Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extensions/index.html">ORM Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">ORM Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">SQLAlchemy Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index.html">Dialects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors.html">Error Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index.html">Changes and Migration</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+          <li><a href="mapper_config.html">매퍼 설정</a> &raquo;</li>
+        
+          <li><a href="scalar_mapping.html">컬럼 표현식 매핑</a> &raquo;</li>
+        
+      <li>테이블 컬럼 매핑</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy//docs-korean/doc/build/orm/mapping_columns.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-sqlalchemy.orm"></span><div class="section" id="mapping-table-columns">
+<h1>테이블 컬럼 매핑<a class="headerlink" href="#mapping-table-columns" title="제목 주소">¶</a></h1>
+<p><a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">mapper()</span></code></a>의 기본 동작은 매핑된 객체 속성을 매핑된 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>의 모든컬럼에 결합시키는 것이다. 각 객체는 컬럼 자체의 이름에 따라 명명된다(구체적으론, <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>의 <code class="docutils literal notranslate"><span class="pre">key</span></code> 속성에 따라서 명명됨). 이 동작은 다른 방법들을 통해 변형될 수 있다.</p>
+<div class="section" id="naming-columns-distinctly-from-attribute-names">
+<span id="mapper-column-distinct-names"></span><h2>속성 이름과 다르게 컬럼 이름 만들기(Naming Columns Distinctly from Attribute Names)<a class="headerlink" href="#naming-columns-distinctly-from-attribute-names" title="제목 주소">¶</a></h2>
+<p>기본적인 매핑에서 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>은 매핑된 속성과 동일한 이름을 공유한다. 구체적으론 <code class="xref py py-attr docutils literal notranslate"><span class="pre">Column.key</span></code>는 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>의 기본값인 <code class="xref py py-attr docutils literal notranslate"><span class="pre">Column.name</span></code>과 일치한다.</p>
+<p><a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>과 매핑되는 파이썬 속성에 할당되는 이름은 <code class="xref py py-attr docutils literal notranslate"><span class="pre">Column.name</span></code>이나 <code class="xref py py-attr docutils literal notranslate"><span class="pre">Column.key</span></code>와 다를 수 있다. 아래 예제에 이런 방식으로 작성한 선언적 매핑이 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;user_name&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>위의 예제 <code class="docutils literal notranslate"><span class="pre">User.id</span></code>는 컬럼 이름 <code class="docutils literal notranslate"><span class="pre">user_id</span></code>와 매칭되고, <code class="docutils literal notranslate"><span class="pre">User.name</span></code>은 컬럼 이름 <code class="docutils literal notranslate"><span class="pre">user_name</span></code>과 매칭된다.</p>
+<p>이미 존재하는 테이블과 매칭시킬때, <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>객체를 직접 참조할 수 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">user_table</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">user_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">user_id</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">user_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">user_name</span>
+</pre></div>
+</div>
+<p>또한 고전적 매핑(classical mapping)에서 <code class="docutils literal notranslate"><span class="pre">properties</span></code> 사전을 원하는 키가 있는곳에 배치 할 수 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mapper</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">user_table</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">{</span>
+   <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">user_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span>
+   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">user_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>다음 섹션에서 우리는 <code class="docutils literal notranslate"><span class="pre">.key</span></code>에 대해 좀 더 자세히 알아보겠다.</p>
+</div>
+<div class="section" id="automating-column-naming-schemes-from-reflected-tables">
+<span id="mapper-automated-reflection-schemes"></span><h2>반영된 테이블에서 컬럼 이름 체계 자동화(Automating Column Naming Schemes from Reflected Tables)<a class="headerlink" href="#automating-column-naming-schemes-from-reflected-tables" title="제목 주소">¶</a></h2>
+<p>이전 섹션 <a class="reference internal" href="#mapper-column-distinct-names"><span class="std std-ref">속성 이름과 다르게 컬럼 이름 만들기(Naming Columns Distinctly from Attribute Names)</span></a>에서, 우리는 컬럼이름과 속성 이름이 다른 경우 어떻게 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>을 명시적으로 매핑시키는지 알아보았다. 그러나 우리가 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>객체를 명시적으로 나타내지 않고 대신에 반영(reflection) 을사용하여 자동적으로 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>을 생성시킬 수 있을까 ? (예: <a class="reference internal" href="../core/reflection.html#metadata-reflection-toplevel"><span class="std std-ref">Reflecting Database Objects</span></a>)이번 케이스에서 우리는 <a class="reference internal" href="../core/events.html#sqlalchemy.events.DDLEvents.column_reflect" title="sqlalchemy.events.DDLEvents.column_reflect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DDLEvents.column_reflect()</span></code></a>을 사용하여 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>의 생성을 가로채고 사용자가 선택한 <code class="xref py py-attr docutils literal notranslate"><span class="pre">Column.key</span></code>를 제공하는지 알아보겠다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@event</span><span class="o">.</span><span class="n">listens_for</span><span class="p">(</span><span class="n">Table</span><span class="p">,</span> <span class="s2">&quot;column_reflect&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">column_reflect</span><span class="p">(</span><span class="n">inspector</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">column_info</span><span class="p">):</span>
+    <span class="c1"># set column.key = &quot;attr_&lt;lower_case_name&gt;&quot;</span>
+    <span class="n">column_info</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;attr_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">column_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>위의 이벤트를 사용하면, <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>객체들의 반영(reflection)을 가로채서, 새로운 &quot;.key&quot; 요소를 생성하는 사용자의 이벤트로 바꿀 수 있다</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s2">&quot;some_table&quot;</span><span class="p">,</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+                <span class="n">autoload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoload_with</span><span class="o">=</span><span class="n">some_engine</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>만약 어떤 특정한 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.MetaData" title="sqlalchemy.schema.MetaData"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a>에서만 사용자의 이벤트로 바꾸고 싶다면, 우리는 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.MetaData" title="sqlalchemy.schema.MetaData"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a>를 확인한 후 사용자 이벤트로 바꾸는 방법도 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@event</span><span class="o">.</span><span class="n">listens_for</span><span class="p">(</span><span class="n">Table</span><span class="p">,</span> <span class="s2">&quot;column_reflect&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">column_reflect</span><span class="p">(</span><span class="n">inspector</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">column_info</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">table</span><span class="o">.</span><span class="n">metadata</span> <span class="ow">is</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
+        <span class="c1"># set column.key = &quot;attr_&lt;lower_case_name&gt;&quot;</span>
+        <span class="n">column_info</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;attr_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">column_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="naming-all-columns-with-a-prefix">
+<span id="column-prefix"></span><h2>모든 컬럼이 접두사를 갖게 명명하기(Naming All Columns with a Prefix)<a class="headerlink" href="#naming-all-columns-with-a-prefix" title="제목 주소">¶</a></h2>
+<p>빠르게 컬럼 이름 접두사를 사용하려면, 일반적으로 존재하는 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>객체에 <code class="docutils literal notranslate"><span class="pre">column_prefix</span></code>를 사용하여 매핑한다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">user_table</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;column_prefix&#39;</span><span class="p">:</span><span class="s1">&#39;_&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>위의 접두사 설정하기 예제를 통해 속성 이름에 <code class="docutils literal notranslate"><span class="pre">_user_id</span></code>, <code class="docutils literal notranslate"><span class="pre">_user_name</span></code>, <code class="docutils literal notranslate"><span class="pre">_password</span></code>을 매핑시켰다.</p>
+<p>이런 방식은 잘 사용되지 않다. 테이블에 반영을 다루기 위해선, <a class="reference internal" href="#mapper-automated-reflection-schemes"><span class="std std-ref">반영된 테이블에서 컬럼 이름 체계 자동화(Automating Column Naming Schemes from Reflected Tables)</span></a>에 나와있는 것 처럼 좀 더 탄력있는방식이 잘 사용된다.</p>
+</div>
+<div class="section" id="using-column-property-for-column-level-options">
+<h2>컬럼 레벨 옵션에 컬럼 프로퍼티 사용하기(Using column_property for column level options)<a class="headerlink" href="#using-column-property-for-column-level-options" title="제목 주소">¶</a></h2>
+<p>Options can be specified when mapping a <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> using the
+<a class="reference internal" href="#sqlalchemy.orm.column_property" title="sqlalchemy.orm.column_property"><code class="xref py py-func docutils literal notranslate"><span class="pre">column_property()</span></code></a> function.  This function
+explicitly creates the <a class="reference internal" href="internals.html#sqlalchemy.orm.properties.ColumnProperty" title="sqlalchemy.orm.properties.ColumnProperty"><code class="xref py py-class docutils literal notranslate"><span class="pre">ColumnProperty</span></code></a> used by the
+<a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">mapper()</span></code></a> to keep track of the <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>; normally, the
+<a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">mapper()</span></code></a> creates this automatically.   Using <a class="reference internal" href="#sqlalchemy.orm.column_property" title="sqlalchemy.orm.column_property"><code class="xref py py-func docutils literal notranslate"><span class="pre">column_property()</span></code></a>,
+we can pass additional arguments about how we'd like the <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>
+to be mapped.   Below, we pass an option <code class="docutils literal notranslate"><span class="pre">active_history</span></code>,
+which specifies that a change to this column's value should
+result in the former value being loaded first:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">column_property</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">column_property</span><span class="p">(</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span> <span class="n">active_history</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#sqlalchemy.orm.column_property" title="sqlalchemy.orm.column_property"><code class="xref py py-func docutils literal notranslate"><span class="pre">column_property()</span></code></a> 는 또한 단일 속성을 많은 컬럼들에 매핑할때 사용된다. 서로 같은 속성을 가진 <a class="reference internal" href="../core/selectable.html#sqlalchemy.sql.expression.join" title="sqlalchemy.sql.expression.join"><code class="xref py py-func docutils literal notranslate"><span class="pre">join()</span></code></a>을 매핑시킬때 사용할 수 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+
+    <span class="c1"># assign &quot;user.id&quot;, &quot;address.user_id&quot; to the</span>
+    <span class="c1"># &quot;id&quot; attribute</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">column_property</span><span class="p">(</span><span class="n">user_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">address_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>이 사용방법에 대해 더 많은 예제들을 보시려면 <a class="reference internal" href="nonstandard_mappings.html#maptojoin"><span class="std std-ref">여러 테이블에 대한 매핑 클래스</span></a>을 참조하라.</p>
+<p><a class="reference internal" href="#sqlalchemy.orm.column_property" title="sqlalchemy.orm.column_property"><code class="xref py py-func docutils literal notranslate"><span class="pre">column_property()</span></code></a>가 필요한 또 다른 경우는 SQL 표현식을 매핑된 속성으로 지정할 때 이다.아래 예제에서 우리는 <code class="docutils literal notranslate"><span class="pre">firstname</span></code>컬럼과 <code class="docutils literal notranslate"><span class="pre">lastname</span></code> 컬럼의 문자열 결합한 <code class="docutils literal notranslate"><span class="pre">fullname</span></code> 속성을 만들었다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">firstname</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">lastname</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">fullname</span> <span class="o">=</span> <span class="n">column_property</span><span class="p">(</span><span class="n">firstname</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">lastname</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>더 많은 예제를 보시려면 <a class="reference internal" href="mapped_sql_expr.html#mapper-sql-expressions"><span class="std std-ref">매핑된 속성으로서 SQL 표현식</span></a>를 참조하라.</p>
+<dl class="function">
+<dt id="sqlalchemy.orm.column_property">
+<code class="descclassname">sqlalchemy.orm.</code><code class="descname">column_property</code><span class="sig-paren">(</span><em>*columns</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.orm.column_property" title="정의 주소">¶</a></dt>
+<dd><p>Provide a column-level property for use with a Mapper.</p>
+<p>컬럼-기반 프로퍼티(properties)는 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> 요소를 직접적으로 사용하여 매퍼의 <code class="docutils literal notranslate"><span class="pre">properties</span></code>사전에 적용되어질 수 있다. 주어진 컬럼이 매퍼(mapper)의 선택항목(selectable)에 직접 존재하지 않을때 이 함수를 사용한다. 예를 들어 SQL 표현식들, 함수들, scalar SELECT 쿼리들이 여기에 해당된다.</p>
+<p>매퍼(mapper)의 선택항목(selectable)에 없는 컬럼일 경우 그 컬럼은 매퍼에 의해 유지(persisted) 되지 않을 것이고, &quot;읽기 전용&quot; 속성 이다.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><ul class="first last simple">
+<li><span class="target" id="sqlalchemy.orm.column_property.params.*cols"></span><strong>*cols</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.column_property.params.*cols">¶</a> -- list of Column objects to be mapped.</li>
+<li><span class="target" id="sqlalchemy.orm.column_property.params.active_history"></span><strong>active_history=False</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.column_property.params.active_history">¶</a> -- When <code class="docutils literal notranslate"><span class="pre">True</span></code>, indicates that the &quot;previous&quot; value for a
+scalar attribute should be loaded when replaced, if not
+already loaded. Normally, history tracking logic for
+simple non-primary-key scalar values only needs to be
+aware of the &quot;new&quot; value in order to perform a flush. This
+flag is available for applications that make use of
+<a class="reference internal" href="session_api.html#sqlalchemy.orm.attributes.get_history" title="sqlalchemy.orm.attributes.get_history"><code class="xref py py-func docutils literal notranslate"><span class="pre">attributes.get_history()</span></code></a> or <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.is_modified" title="sqlalchemy.orm.session.Session.is_modified"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Session.is_modified()</span></code></a>
+which also need to know
+the &quot;previous&quot; value of the attribute.</li>
+<li><span class="target" id="sqlalchemy.orm.column_property.params.comparator_factory"></span><strong>comparator_factory</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.column_property.params.comparator_factory">¶</a> -- a class which extends
+<a class="reference internal" href="internals.html#sqlalchemy.orm.properties.ColumnProperty.Comparator" title="sqlalchemy.orm.properties.ColumnProperty.Comparator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ColumnProperty.Comparator</span></code></a> which provides custom SQL
+clause generation for comparison operations.</li>
+<li><span class="target" id="sqlalchemy.orm.column_property.params.group"></span><strong>group</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.column_property.params.group">¶</a> -- a group name for this property when marked as deferred.</li>
+<li><span class="target" id="sqlalchemy.orm.column_property.params.deferred"></span><strong>deferred</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.column_property.params.deferred">¶</a> -- when True, the column property is &quot;deferred&quot;, meaning that
+it does not load immediately, and is instead loaded when the
+attribute is first accessed on an instance.  See also
+<a class="reference internal" href="loading_columns.html#sqlalchemy.orm.deferred" title="sqlalchemy.orm.deferred"><code class="xref py py-func docutils literal notranslate"><span class="pre">deferred()</span></code></a>.</li>
+<li><span class="target" id="sqlalchemy.orm.column_property.params.doc"></span><strong>doc</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.column_property.params.doc">¶</a> -- optional string that will be applied as the doc on the
+class-bound descriptor.</li>
+<li><span class="target" id="sqlalchemy.orm.column_property.params.expire_on_flush"></span><strong>expire_on_flush=True</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.column_property.params.expire_on_flush">¶</a> -- Disable expiry on flush.   A column_property() which refers
+to a SQL expression (and not a single table-bound column)
+is considered to be a &quot;read only&quot; property; populating it
+has no effect on the state of data, and it can only return
+database state.   For this reason a column_property()'s value
+is expired whenever the parent object is involved in a
+flush, that is, has any kind of &quot;dirty&quot; state within a flush.
+Setting this parameter to <code class="docutils literal notranslate"><span class="pre">False</span></code> will have the effect of
+leaving any existing value present after the flush proceeds.
+Note however that the <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> with default expiration
+settings still expires
+all attributes after a <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.commit" title="sqlalchemy.orm.session.Session.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Session.commit()</span></code></a> call, however.</li>
+<li><span class="target" id="sqlalchemy.orm.column_property.params.info"></span><strong>info</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.column_property.params.info">¶</a> -- Optional data dictionary which will be populated into the
+<a class="reference internal" href="internals.html#sqlalchemy.orm.interfaces.MapperProperty.info" title="sqlalchemy.orm.interfaces.MapperProperty.info"><code class="xref py py-attr docutils literal notranslate"><span class="pre">MapperProperty.info</span></code></a> attribute of this object.</li>
+<li><span class="target" id="sqlalchemy.orm.column_property.params.extension"></span><strong>extension</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.orm.column_property.params.extension">¶</a> -- <p>an <a class="reference internal" href="deprecated.html#sqlalchemy.orm.interfaces.AttributeExtension" title="sqlalchemy.orm.interfaces.AttributeExtension"><code class="xref py py-class docutils literal notranslate"><span class="pre">AttributeExtension</span></code></a> instance, or list of extensions,
+which will be prepended to the list of attribute listeners for the
+resulting descriptor placed on the class.</p>
+<div class="deprecated">
+<p><span class="versionmodified">버전 0.7 폐지: </span><a class="reference internal" href="deprecated.html#sqlalchemy.orm.interfaces.AttributeExtension" title="sqlalchemy.orm.interfaces.AttributeExtension"><code class="xref py py-class docutils literal notranslate"><span class="pre">AttributeExtension</span></code></a> is deprecated in favor of the <a class="reference internal" href="events.html#sqlalchemy.orm.events.AttributeEvents" title="sqlalchemy.orm.events.AttributeEvents"><code class="xref py py-class docutils literal notranslate"><span class="pre">AttributeEvents</span></code></a> listener interface.  The <a class="reference internal" href="#sqlalchemy.orm.column_property.params.extension" title="sqlalchemy.orm.column_property"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">column_property.extension</span></code></a> parameter will be removed in a future release.</p>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="mapping-a-subset-of-table-columns">
+<span id="include-exclude-cols"></span><h2>테이블 컬럼들의 서브셋 매핑(Mapping a Subset of Table Columns)<a class="headerlink" href="#mapping-a-subset-of-table-columns" title="제목 주소">¶</a></h2>
+<p>때때로 <a class="reference internal" href="../core/reflection.html#metadata-reflection"><span class="std std-ref">Reflecting Database Objects</span></a>에 설명된 반영 프로세스(reflection process)를 사용하여 데이터베이스에서 테이블 구조를 불러올때 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>객체가 사용 가능할수 있게 될 때가 있다. 이처럼 많은 컬럼을 가지고 있지만 실제 어플리케이션에서 참조될 필요가없는 테이블이 있을 때 우리는 <code class="docutils literal notranslate"><span class="pre">include_properties</span></code>혹은 <code class="docutils literal notranslate"><span class="pre">exclude_properties</span></code>인자를 사용하여 언제 컬럼들의 서브셋이 매핑되어져야 할지 지정할 수 있다. 예:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">user_table</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;include_properties&#39;</span> <span class="p">:[</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;user_name&#39;</span><span class="p">]</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>... <code class="docutils literal notranslate"><span class="pre">user_id</span></code>컬럼과 <code class="docutils literal notranslate"><span class="pre">user_name</span></code>컬럼을 포함하여 <code class="docutils literal notranslate"><span class="pre">User</span></code>클래스는 <code class="docutils literal notranslate"><span class="pre">user_table</span></code>테이블에 매핑되어지고, 나머지들은 참조되지 않는다. 비슷한 예로:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Address</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">address_table</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;exclude_properties&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;street&#39;</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;zip&#39;</span><span class="p">]</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>... <code class="docutils literal notranslate"><span class="pre">street</span></code>, <code class="docutils literal notranslate"><span class="pre">city</span></code>, <code class="docutils literal notranslate"><span class="pre">state</span></code>, <code class="docutils literal notranslate"><span class="pre">zip</span></code>을 제외한 모든 컬럼들을 포함하여 <code class="docutils literal notranslate"><span class="pre">Address</span></code>클래스는 <code class="docutils literal notranslate"><span class="pre">address_table</span></code>에 매핑 되어 진다.</p>
+<p>이러한 매핑들이 사용하면 참조되어 지지않은 열들은 SELECT 명령에서 어떠한 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>도 배출하지 않으며, 열을 나타내는 매핑된 클래스에 어떠만 매핑된 속성이 없다.그 이름의 속성을 할당하면 그것은 일반적인 파이선 속성 할당과 같다.</p>
+<p>때때로, 이름을 공유하는 두개 이상의 테이블의 조인을 매핑할 경우처럼 여러 컬럼들이 모두 같은 이름을 갖을 수 있다. <code class="docutils literal notranslate"><span class="pre">include_properties</span></code>와 <code class="docutils literal notranslate"><span class="pre">exclude_properties</span></code>는 어떤 컬럼들이 포함되고 제외되어야 할지 더 정확하게 기술 하기 위해 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>객체를 수용한다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">UserAddress</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">user_table</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">addresses_table</span><span class="p">)</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;exclude_properties&#39;</span> <span class="p">:[</span><span class="n">address_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+        <span class="s1">&#39;primary_key&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="n">user_table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">주석</p>
+<p class="last">insert and update defaults configured on individual <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a>
+objects, i.e. those described at <a class="reference internal" href="../core/defaults.html#metadata-defaults"><span class="std std-ref">Column Insert/Update Defaults</span></a> including those
+configured by the <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column.params.default" title="sqlalchemy.schema.Column"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">Column.default</span></code></a>,
+<a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column.params.onupdate" title="sqlalchemy.schema.Column"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">Column.onupdate</span></code></a>, <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column.params.server_default" title="sqlalchemy.schema.Column"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">Column.server_default</span></code></a> and
+<a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column.params.server_onupdate" title="sqlalchemy.schema.Column"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">Column.server_onupdate</span></code></a> parameters, will continue to function
+normally even if those <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> objects are not mapped. This is
+because in the case of <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column.params.default" title="sqlalchemy.schema.Column"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">Column.default</span></code></a> and
+<a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column.params.onupdate" title="sqlalchemy.schema.Column"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">Column.onupdate</span></code></a>, the <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> object is still present
+on the underlying <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>, thus allowing the default functions to
+take place when the ORM emits an INSERT or UPDATE, and in the case of
+<a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column.params.server_default" title="sqlalchemy.schema.Column"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">Column.server_default</span></code></a> and <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Column.params.server_onupdate" title="sqlalchemy.schema.Column"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">Column.server_onupdate</span></code></a>,
+the relational database itself emits these defaults as a server side
+behavior.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="mapped_sql_expr.html" class="btn btn-neutral float-right" title="매핑된 속성으로서 SQL 표현식" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="scalar_mapping.html" class="btn btn-neutral" title="컬럼 표현식 매핑" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+      최종 업데이트: 06/07/2019 11:12:12
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.3.0b1',
+            LANGUAGE:'ko',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

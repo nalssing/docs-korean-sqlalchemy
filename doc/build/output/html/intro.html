@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="ko" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ko" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>개요 &mdash; SQLAlchemy 1.3.0b1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/changelog.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="색인" href="genindex.html" />
+    <link rel="search" title="검색" href="search.html" />
+    <link rel="copyright" title="저작권" href="copyright.html" />
+    <link rel="next" title="SQLAlchemy ORM" href="orm/index.html" />
+    <link rel="prev" title="목차" href="contents.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="contents.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orm/index.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core/index.html">SQLAlchemy Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialects/index.html">Dialects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq/index.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog/index.html">Changes and Migration</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents.html">Docs</a> &raquo;</li>
+        
+      <li>개요</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy//docs-korean/doc/build/intro.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="overview">
+<span id="overview-toplevel"></span><span id="id1"></span><h1>개요<a class="headerlink" href="#overview" title="제목 주소">¶</a></h1>
+<p>SQLAlchemy SQL Toolkit과 ORM(Object Relational Mapper)은 파이썬으로 데이터베이스 작업을 하기 위한 복잡한 도구들이다. 이 도구들의 기능은 몇가지 영역으로 나눌 수 있는데 이를 따로따로 사용할 수도 있고 같이 사용할 수도 있다.</p>
+<img alt="_images/sqla_arch_small.png" src="_images/sqla_arch_small.png" />
+<p>SQLAlchemy에서 가장 앞단의 중요한 기능은 <strong>ORM(Object Relational Mapper)</strong>과 <strong>SQL 표현식 언어(Expression Language)</strong>다. SQL 표현식은 ORM과 독립적으로 사용할 수 있다. ORM을 쓸 때는 객체-릴레이션 설정이나 쿼리 내부에서 SQL 표현식이 공개 API로써 사용된다.</p>
+<div class="section" id="documentation-overview">
+<span id="doc-overview"></span><h2>문서의 구조<a class="headerlink" href="#documentation-overview" title="제목 주소">¶</a></h2>
+<p>이 문서는 3개의 절로 구성된다..</p>
+<p><a class="reference internal" href="orm/index.html#orm-toplevel"><span class="std std-ref">SQLAlchemy ORM</span></a>에서는 ORM을 소개하고 자세히 설명한다. ORM을 처음 사용하는 사람은 <a class="reference internal" href="orm/tutorial.html#ormtutorial-toplevel"><span class="std std-ref">ORM 튜토리얼</span></a> 문서부터 읽어야 한다. 실제로 어떻게 고수준 SQL을 자동으로 만들고 파이썬 객체와 데이터베이스를 연동하는지 알고싶으면 이 튜토리얼을 학습한다.</p>
+<p><a class="reference internal" href="core/index.html#core-toplevel"><span class="std std-ref">SQLAlchemy Core</span></a> 절에서는 SQLAlchemy의 SQL, 데이터베이스 통합, 데이터베이스 서술 서비스에 대해 다룬다. 이 서비스의 핵심은 SQL 표현식 언어다. SQL 표현식 언어는 ORM 패키지와는 독립적인 별개의 도구다. SQL 표현식 언어를 사용하면 프로그램으로 SQL을 만들고, 수정하고, 실행하고, 결과 집합을 반환할 수 있다. ORM의 도메인 중심 사용법과 달리 표현식 언어는 스키마 중심 사용 패러다임을 지향한다. SQL 표현식 언어를 처음 사용하는 사람은 <a class="reference internal" href="core/tutorial.html#sqlexpression-toplevel"><span class="std std-ref">SQL 표현식 언어 튜토리얼</span></a> 문서부터 읽어야 한다. SQLAlchemy의 엔진, 컨넥션, 풀링 서비스는 <a class="reference internal" href="core/index.html#core-toplevel"><span class="std std-ref">SQLAlchemy Core</span></a> 문서에서 설명하였다.</p>
+<p><a class="reference internal" href="dialects/index.html#dialect-toplevel"><span class="std std-ref">Dialects</span></a> 절에서는 모든 데이터베이스 및 DBAPI 백엔드에 대한 참조 문서를 제공한다.</p>
+</div>
+<div class="section" id="code-examples">
+<h2>코드 예제<a class="headerlink" href="#code-examples" title="제목 주소">¶</a></h2>
+<p>SQLAlchemy 배포본에는 ORM 위주의 코드 예제가 포함되어 있다. 예제에 대한 설명은 <a class="reference internal" href="orm/examples.html#examples-toplevel"><span class="std std-ref">ORM Examples</span></a> 문서를 참조한다.</p>
+<p>위키에도 ORM 및 SQLAlchemy 코어에 대한 수많은 예제가 있다. <a class="reference external" href="http://www.sqlalchemy.org/trac/wiki/UsageRecipes">Theatrum Chemicum</a>를 참조한다.</p>
+</div>
+<div class="section" id="installation-guide">
+<span id="installation"></span><h2>설치 안내서<a class="headerlink" href="#installation-guide" title="제목 주소">¶</a></h2>
+<div class="section" id="supported-platforms">
+<h3>지원하는 플랫폼<a class="headerlink" href="#supported-platforms" title="제목 주소">¶</a></h3>
+<p>SQLAlchemy는 다음 플랫폼에서 테스트하였다.:</p>
+<ul class="simple">
+<li>cPython 2.7</li>
+<li>cPython 3.4 이상</li>
+<li><a class="reference external" href="http://pypy.org/">PyPy</a> 2.1 or greater</li>
+</ul>
+<div class="versionchanged">
+<p><span class="versionmodified">버전 1.2으로 변경: </span>Python 2.7 버전이 지원가능한 최소버전이다.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">버전 1.3으로 변경: </span>Python 3 시리즈에서는 3.4가 지원가능한 최소버전이다.</p>
+</div>
+<p>현재 Jython과 IronPython은 지원하지 않는다. Jython은 과거에 지원한 적이 있었고 상황에 따라 앞으로 지원할 수도 있다.</p>
+</div>
+<div class="section" id="supported-installation-methods">
+<h3>지원하는 설치 방법<a class="headerlink" href="#supported-installation-methods" title="제목 주소">¶</a></h3>
+<p>SQLAlchemy는 <a class="reference external" href="http://pypi.python.org/pypi/setuptools/">setuptools</a>에 기반한 표준 파이썬 방법으로 설치할 수 있다. 또는 <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> 파일을 실행하거나 <a class="reference external" href="http://pypi.python.org/pypi/pip/">pip</a> 또는 이와 동등한 방법으로 설치한다.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">버전 1.1으로 변경: </span>setuptools를 사용하려면 setup.py 파일이 있어야 한다. distutils 설치는 이제 지원하지 않는다.</p>
+</div>
+</div>
+<div class="section" id="install-via-pip">
+<h3>pip로 설치<a class="headerlink" href="#install-via-pip" title="제목 주소">¶</a></h3>
+<p>When <code class="docutils literal notranslate"><span class="pre">pip</span></code> is available, the distribution can be
+downloaded from PyPI and installed in one step:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">SQLAlchemy</span>
+</pre></div>
+</div>
+<p>This command will download the latest <strong>released</strong> version of SQLAlchemy from the <a class="reference external" href="http://pypi.python.org/pypi/SQLAlchemy">Python
+Cheese Shop</a> and install it to your system.</p>
+<p>In order to install the latest <strong>prerelease</strong> version, such as <code class="docutils literal notranslate"><span class="pre">1.3.0b1</span></code>,
+pip requires that the <code class="docutils literal notranslate"><span class="pre">--pre</span></code> flag be used:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">pre</span> <span class="n">SQLAlchemy</span>
+</pre></div>
+</div>
+<p>Where above, if the most recent version is a prerelease, it will be installed
+instead of the latest released version.</p>
+</div>
+<div class="section" id="installing-using-setup-py">
+<h3>setup.py 파일로 설치<a class="headerlink" href="#installing-using-setup-py" title="제목 주소">¶</a></h3>
+<p>Otherwise, you can install from the distribution using the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="installing-the-c-extensions">
+<span id="c-extensions"></span><h3>C 확장 프로그램 설치<a class="headerlink" href="#installing-the-c-extensions" title="제목 주소">¶</a></h3>
+<p>SQLAlchemy includes C extensions which provide an extra speed boost for
+dealing with result sets.   The extensions are supported on both the 2.xx
+and 3.xx series of cPython.</p>
+<p><code class="docutils literal notranslate"><span class="pre">setup.py</span></code> will automatically build the extensions if an appropriate platform is
+detected. If the build of the C extensions fails due to a missing compiler or
+other issue, the setup process will output a warning message and re-run the
+build without the C extensions upon completion, reporting final status.</p>
+<p>To run the build/install without even attempting to compile the C extensions,
+the <code class="docutils literal notranslate"><span class="pre">DISABLE_SQLALCHEMY_CEXT</span></code> environment variable may be specified.  The
+use case for this is either for special testing circumstances, or in the rare
+case of compatibility/build issues not overcome by the usual &quot;rebuild&quot;
+mechanism:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">DISABLE_SQLALCHEMY_CEXT</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">버전 1.1으로 변경: </span>The legacy <code class="docutils literal notranslate"><span class="pre">--without-cextensions</span></code> flag has been
+removed from the installer as it relies on deprecated features of
+setuptools.</p>
+</div>
+</div>
+<div class="section" id="installing-a-database-api">
+<h3>데이터베이스 API 설치<a class="headerlink" href="#installing-a-database-api" title="제목 주소">¶</a></h3>
+<p>SQLAlchemy is designed to operate with a <a class="reference internal" href="glossary.html#term-dbapi"><span class="xref std std-term">DBAPI</span></a> implementation built for a
+particular database, and includes support for the most popular databases.
+The individual database sections in <a class="reference internal" href="dialects/index.html"><span class="doc">Dialects</span></a> enumerate
+the available DBAPIs for each database, including external links.</p>
+</div>
+<div class="section" id="checking-the-installed-sqlalchemy-version">
+<h3>설치된 SQLAlchemy 버전 확인<a class="headerlink" href="#checking-the-installed-sqlalchemy-version" title="제목 주소">¶</a></h3>
+<p>This documentation covers SQLAlchemy version 1.3. If you're working on a
+system that already has SQLAlchemy installed, check the version from your
+Python prompt like this:</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">sqlalchemy</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">__version__</span> <span class="c1"># doctest: +SKIP</span>
+<span class="mf">1.3</span><span class="o">.</span><span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="to-1-3-migration">
+<span id="migration"></span><h2>1.2에서 1.3으로의 마이그레이션<a class="headerlink" href="#to-1-3-migration" title="제목 주소">¶</a></h2>
+<p>Notes on what's changed from 1.2 to 1.3 is available here at <a class="reference internal" href="changelog/migration_13.html"><span class="doc">What's New in SQLAlchemy 1.3?</span></a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="orm/index.html" class="btn btn-neutral float-right" title="SQLAlchemy ORM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="contents.html" class="btn btn-neutral" title="목차" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+      최종 업데이트: 06/07/2019 11:12:12
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.3.0b1',
+            LANGUAGE:'ko',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

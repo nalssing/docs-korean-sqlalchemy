@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="ko" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ko" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>매핑 유형 &mdash; SQLAlchemy 1.3.0b1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="색인" href="../genindex.html" />
+    <link rel="search" title="검색" href="../search.html" />
+    <link rel="copyright" title="저작권" href="../copyright.html" />
+    <link rel="next" title="컬럼 표현식 매핑" href="scalar_mapping.html" />
+    <link rel="prev" title="매퍼 설정" href="mapper_config.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">개요</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">SQLAlchemy ORM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html">ORM 튜토리얼</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="mapper_config.html">매퍼 설정</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">매핑 유형</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scalar_mapping.html">컬럼 표현식 매핑</a></li>
+<li class="toctree-l3"><a class="reference internal" href="inheritance.html">클래스 상속 구조 매핑하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nonstandard_mappings.html">비 전통적인 매핑</a></li>
+<li class="toctree-l3"><a class="reference internal" href="versioning.html">버전 카운터 설정</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mapping_api.html">Class Mapping API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="relationships.html">릴레이션십 설정</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_objects.html">객체 로딩</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session.html">세션 사용하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending.html">Events and Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extensions/index.html">ORM Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">ORM Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">SQLAlchemy Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index.html">Dialects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors.html">Error Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index.html">Changes and Migration</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+          <li><a href="mapper_config.html">매퍼 설정</a> &raquo;</li>
+        
+      <li>매핑 유형</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy//docs-korean/doc/build/orm/mapping_styles.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="types-of-mappings">
+<h1>매핑 유형<a class="headerlink" href="#types-of-mappings" title="제목 주소">¶</a></h1>
+<p>최신 SQLAlechmy 에서는 두가지 별개의 매퍼 구성 스타일이 있다.  &quot;고전(Classical)&quot; 스타일과, &quot;선언적(Declarative)&quot; 스타일이 존재하며, &quot;고전(Classical)&quot; 스타일은 SQLAlchemy 의 기존의 매핑 API 이다. &quot;선언적(Declarative)&quot; 스타일은 &quot;고전(Classical)&quot; 스타일 위에 구축된 더 풍부하고 간결한 시스템이다. 두 스타일 모두 서로 바꿔서 사용할 수 있으며, 두 과정의 최종결과는 같다. 사용자 정의 클래스는 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">mapper()</span></code></a>함수에 의해 매핑되고 일반적으로 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>라는 선택 가능 단위(selectable unit) 이다</p>
+<div class="section" id="declarative-mapping">
+<h2>선언적 매핑(Declarative Mapping)<a class="headerlink" href="#declarative-mapping" title="제목 주소">¶</a></h2>
+<p>선언적 매핑(Declarative Mapping)은 최신 SQLAlchemy에서 구현되는 전형적인 방법이다. <a class="reference internal" href="extensions/declarative/index.html#declarative-toplevel"><span class="std std-ref">Declarative</span></a>시스템을 사용하면 사용자 정의 클래스의 구성요소와 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>가 매핑되는 메타 데이터가 한번에 정의된다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">ForeignKey</span>
+
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">fullname</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">nickname</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>위 예제는 단순하게 4개의 컬럼들과 하나의 테이블이다. 다른 클래스들과 매핑되는 관계(relationships)와 같이 추가적인 속성들(attributes)또한 클래스 내에서 정의된다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">fullname</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">nickname</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+
+    <span class="n">addresses</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Address&quot;</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="s2">&quot;Address.id&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Address</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;address&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;user.id&#39;</span><span class="p">))</span>
+    <span class="n">email_address</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="tutorial.html#ormtutorial-toplevel"><span class="std std-ref">ORM 튜토리얼</span></a>에 선언적 매핑 시스템(declarative mapping system)이 잘 소개되어 있다. 이 시스템의 작동방식 대한 더 자세한 정보들은 <a class="reference internal" href="extensions/declarative/index.html#declarative-toplevel"><span class="std std-ref">Declarative</span></a>에 자세히 나와있다.</p>
+</div>
+<div class="section" id="classical-mappings">
+<span id="classical-mapping"></span><h2>고전적 매핑(Classical Mappings)<a class="headerlink" href="#classical-mappings" title="제목 주소">¶</a></h2>
+<p>고전적 매핑(Classical Mappings)은 선언적 시스템(Declarative system) 사용 없이 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">mapper()</span></code></a>을 사용하여 클래스 매핑을 구성하는것을 말한다.이것은 SQLAlchemy의 기존에 클래스를 매핑시키는 API였으며 아직도 ORM에 의해 제공되어지고있는 기본적인 매핑 시스템이다.</p>
+<p>&quot;고전적(classical)&quot; 스타일에서 테이블 메타 데이터는 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">mapper()</span></code></a> 함수를 통해 각각 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>이 만들어지고, <code class="docutils literal notranslate"><span class="pre">User</span></code>클래스가 만들어 진 뒤 생성되었다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Table</span><span class="p">,</span> <span class="n">MetaData</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">ForeignKey</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">mapper</span>
+
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">MetaData</span><span class="p">()</span>
+
+<span class="n">user</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span>
+            <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+            <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;fullname&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+            <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;nickname&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
+        <span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fullname</span><span class="p">,</span> <span class="n">nickname</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fullname</span> <span class="o">=</span> <span class="n">fullname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nickname</span> <span class="o">=</span> <span class="n">nickname</span>
+
+<span class="n">mapper</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>다른 클래스들과 관계(relationships)와 같은 매핑된 속성들에 대한 정보는 <code class="docutils literal notranslate"><span class="pre">properties</span></code>사전(dictionary)에 의해 제공되어집니다. 밑에 예를 보면, <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>객체를 만들어 <code class="docutils literal notranslate"><span class="pre">Address</span></code>클래스가 매핑되고, <a class="reference internal" href="relationship_api.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal notranslate"><span class="pre">relationship()</span></code></a>함수를 통해 <code class="docutils literal notranslate"><span class="pre">Address</span></code>클래스와 <code class="docutils literal notranslate"><span class="pre">User</span></code>클래스를 연결(link) 시키고 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">address</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span>
+            <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;user.id&#39;</span><span class="p">)),</span>
+            <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;email_address&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+            <span class="p">)</span>
+
+<span class="n">mapper</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;addresses&#39;</span> <span class="p">:</span> <span class="n">relationship</span><span class="p">(</span><span class="n">Address</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="n">address</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="n">mapper</span><span class="p">(</span><span class="n">Address</span><span class="p">,</span> <span class="n">address</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>고전적 매핑을 쓸때, 선언적 매핑에서 제공하는 &quot;string lookup&quot;시스템을 사용하지않고 직접적으로 클래스를 제공해야 한다. SQL 표현식은 일반적으로 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>에 명시되어  있는 객체들(예를들어 위의 <code class="docutils literal notranslate"><span class="pre">Address</span></code>관계에서 <code class="docutils literal notranslate"><span class="pre">address.c.id</span></code>)에 의해 구성된다.그리고 위의 <code class="docutils literal notranslate"><span class="pre">Address</span></code>의 <code class="docutils literal notranslate"><span class="pre">Address.id</span></code>는 아직 테이블 메타 데이터에 연결되어 있지 않으며, 여기에 문자열을 지정할 수 있다.</p>
+<p>문서 안에 있는 몇몇 예제들은 아직도 고전적 매핑 시스템을 사용하고 있다, 하지만고전적 매핑 시스템은 선언적 매핑 시스템과 완전히 변환가능(interchangeable) 하다.두 시스템 모두 궁극적으로 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">mapper()</span></code></a>과 함께 링크된 사용자 정의 클래스로 만들어진동일한 구성을 제공한다.</p>
+</div>
+<div class="section" id="runtime-introspection-of-mappings-objects">
+<h2>매핑과 객체의 런타임 검사(Runtime Introspection of Mappings, Objects)<a class="headerlink" href="#runtime-introspection-of-mappings-objects" title="제목 주소">¶</a></h2>
+<p><a class="reference internal" href="../core/inspection.html#core-inspection-toplevel"><span class="std std-ref">Runtime Inspection API</span></a>을 사용중일때 어떤 메소드든 상관없이 매핑된 클래스 안에서  라면 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.Mapper" title="sqlalchemy.orm.mapper.Mapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapper</span></code></a>객체는 언제든지 사용가능하다. <a class="reference internal" href="../core/inspection.html#sqlalchemy.inspection.inspect" title="sqlalchemy.inspection.inspect"><code class="xref py py-func docutils literal notranslate"><span class="pre">inspect()</span></code></a>함수를 사용하면, 매핑된 클래스로부터 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.Mapper" title="sqlalchemy.orm.mapper.Mapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapper</span></code></a>을 얻을 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">inspect</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insp</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>다음을 포함하여 더 자세한 정보를 얻을 수 있다 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.Mapper.columns" title="sqlalchemy.orm.mapper.Mapper.columns"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Mapper.columns</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">insp</span><span class="o">.</span><span class="n">columns</span>
+<span class="go">&lt;sqlalchemy.util._collections.OrderedProperties object at 0x102f407f8&gt;</span>
+</pre></div>
+</div>
+<p>이것은 목록혹은 개별 이름들을 볼 수 있는 네임스페이스(namespace)이다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">insp</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="go">[Column(&#39;id&#39;, Integer(), table=&lt;user&gt;, primary_key=True, nullable=False), Column(&#39;name&#39;, String(length=50), table=&lt;user&gt;), Column(&#39;fullname&#39;, String(length=50), table=&lt;user&gt;), Column(&#39;nickname&#39;, String(length=50), table=&lt;user&gt;)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insp</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span>
+<span class="go">Column(&#39;name&#39;, String(length=50), table=&lt;user&gt;)</span>
+</pre></div>
+</div>
+<p>다른 네임스페이스는 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.Mapper.all_orm_descriptors" title="sqlalchemy.orm.mapper.Mapper.all_orm_descriptors"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Mapper.all_orm_descriptors</span></code></a>을 포함하고 있다. 이것은 하이브리드(hybrids), 프록시(association proxies)들과 같이 모든 매핑된 속성들이 포함하고 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">insp</span><span class="o">.</span><span class="n">all_orm_descriptors</span>
+<span class="go">&lt;sqlalchemy.util._collections.ImmutableProperties object at 0x1040e2c68&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insp</span><span class="o">.</span><span class="n">all_orm_descriptors</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;fullname&#39;, &#39;nickname&#39;, &#39;name&#39;, &#39;id&#39;]</span>
+</pre></div>
+</div>
+<p>이것 뿐만 아니라 <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.Mapper.all_orm_descriptors" title="sqlalchemy.orm.mapper.Mapper.all_orm_descriptors"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Mapper.all_orm_descriptors</span></code></a>도 모든 매핑된 속성들을 포함하고 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">insp</span><span class="o">.</span><span class="n">column_attrs</span><span class="p">)</span>
+<span class="go">[&lt;ColumnProperty at 0x10403fde0; id&gt;, &lt;ColumnProperty at 0x10403fce8; name&gt;, &lt;ColumnProperty at 0x1040e9050; fullname&gt;, &lt;ColumnProperty at 0x1040e9148; nickname&gt;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insp</span><span class="o">.</span><span class="n">column_attrs</span><span class="o">.</span><span class="n">name</span>
+<span class="go">&lt;ColumnProperty at 0x10403fce8; name&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insp</span><span class="o">.</span><span class="n">column_attrs</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">expression</span>
+<span class="go">Column(&#39;name&#39;, String(length=50), table=&lt;user&gt;)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p><a class="reference internal" href="../core/inspection.html#core-inspection-toplevel"><span class="std std-ref">Runtime Inspection API</span></a></p>
+<p><a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.Mapper" title="sqlalchemy.orm.mapper.Mapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapper</span></code></a></p>
+<p class="last"><a class="reference internal" href="internals.html#sqlalchemy.orm.state.InstanceState" title="sqlalchemy.orm.state.InstanceState"><code class="xref py py-class docutils literal notranslate"><span class="pre">InstanceState</span></code></a></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="scalar_mapping.html" class="btn btn-neutral float-right" title="컬럼 표현식 매핑" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mapper_config.html" class="btn btn-neutral" title="매퍼 설정" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+      최종 업데이트: 06/07/2019 11:12:12
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.3.0b1',
+            LANGUAGE:'ko',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

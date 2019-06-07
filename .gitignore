@@ -33,3 +33,5 @@ test/test_schema.db
 
 *.mo
 /.history/
+!/doc/build/output/
+!/build/

@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="ko" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ko" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>상속 설정 &mdash; SQLAlchemy 1.3.0b1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/changelog.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="색인" href="../../../genindex.html" />
+    <link rel="search" title="검색" href="../../../search.html" />
+    <link rel="copyright" title="저작권" href="../../../copyright.html" />
+    <link rel="next" title="Mixin and Custom Base Classes" href="mixins.html" />
+    <link rel="prev" title="Table Configuration" href="table_config.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../contents.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">개요</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">SQLAlchemy ORM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial.html">ORM 튜토리얼</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../mapper_config.html">매퍼 설정</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../relationships.html">릴레이션십 설정</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../loading_objects.html">객체 로딩</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../session.html">세션 사용하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending.html">Events and Internals</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">ORM Extensions</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../associationproxy.html">Association Proxy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../automap.html">Automap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../baked.html">Baked Queries</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Declarative</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="basic_use.html">Basic Use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="relationships.html">Configuring Relationships</a></li>
+<li class="toctree-l4"><a class="reference internal" href="table_config.html">Table Configuration</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">상속 설정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mixins.html">Mixin and Custom Base Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html">Declarative API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../mutable.html">Mutation Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../orderinglist.html">Ordering List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../horizontal_shard.html">Horizontal Sharding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hybrid.html">Hybrid Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../indexable.html">Indexable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../instrumentation.html">Alternate Class Instrumentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples.html">ORM Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core/index.html">SQLAlchemy Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dialects/index.html">Dialects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq/index.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../errors.html">Error Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog/index.html">Changes and Migration</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../contents.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../contents.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+          <li><a href="../index.html">ORM Extensions</a> &raquo;</li>
+        
+          <li><a href="index.html">Declarative</a> &raquo;</li>
+        
+      <li>상속 설정</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy//docs-korean/doc/build/orm/extensions/declarative/inheritance.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="inheritance-configuration">
+<span id="declarative-inheritance"></span><h1>상속 설정<a class="headerlink" href="#inheritance-configuration" title="제목 주소">¶</a></h1>
+<p>선언(Declarative) 확장기능은 세가지 유형의 상속을 모두 직관적으로 지원한다. 선언 확장기능이 클래스 내에서 상속에 대한 결정을 내리기 때문에 <code class="docutils literal notranslate"><span class="pre">inherits</span></code> 매퍼 키워드 인수가 필요하지 않다. 다형성에 관련된 키워드 인수는 <code class="docutils literal notranslate"><span class="pre">__mapper_args__</span></code>를 사용하여 지정한다.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p class="last">이 절에서는 선언 확장기능 시스템이 어떻게 SQLAlchmey ORM의 상속 설정과 상호작용하는지 자세히 설명한다. 상속 매핑 자체의 소개에 대해서는 <a class="reference internal" href="../../inheritance.html#inheritance-toplevel"><span class="std std-ref">클래스 상속 구조 매핑하기</span></a>  절을 참조한다.</p>
+</div>
+<div class="section" id="joined-table-inheritance">
+<h2>조인 테이블 상속<a class="headerlink" href="#joined-table-inheritance" title="제목 주소">¶</a></h2>
+<p>조인 테이블 상속 방식에서는 해당 테이블을 서브클래스로 정의한다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;people&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">discriminator</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span> <span class="n">discriminator</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineers&#39;</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">}</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;people.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">primary_language</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>위 코드에서 <code class="docutils literal notranslate"><span class="pre">Engineer.id</span></code> 속성이 <code class="docutils literal notranslate"><span class="pre">Person.id</span></code> 속성과 이름이 같기 때문에 실제로는 <code class="docutils literal notranslate"><span class="pre">people.id</span></code> 컬럼과 <code class="docutils literal notranslate"><span class="pre">engineers.id</span></code> 컬럼을 모두 대표하고 있다. 직접 쿼리를 할 때는 &quot;Engineer.id&quot; 컬럼이 더 우선순위가 높다. <code class="docutils literal notranslate"><span class="pre">Engineer</span></code> 클래스에 <code class="docutils literal notranslate"><span class="pre">engineers.id</span></code> 컬럼만을 대표하는 속성을 넣고 싶으면 다른 속성 이름을 사용해야 한다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineers&#39;</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">}</span>
+    <span class="n">engineer_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;people.id&#39;</span><span class="p">),</span>
+                                                <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">primary_language</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="single-table-inheritance">
+<span id="declarative-single-table"></span><h2>Single Table Inheritance<a class="headerlink" href="#single-table-inheritance" title="제목 주소">¶</a></h2>
+<p>Single table inheritance is defined as a subclass that does not have
+its own table; you just leave out the <code class="docutils literal notranslate"><span class="pre">__table__</span></code> and <code class="docutils literal notranslate"><span class="pre">__tablename__</span></code>
+attributes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;people&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">discriminator</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span> <span class="n">discriminator</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">}</span>
+    <span class="n">primary_language</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>When the above mappers are configured, the <code class="docutils literal notranslate"><span class="pre">Person</span></code> class is mapped
+to the <code class="docutils literal notranslate"><span class="pre">people</span></code> table <em>before</em> the <code class="docutils literal notranslate"><span class="pre">primary_language</span></code> column is
+defined, and this column will not be included in its own mapping.
+When <code class="docutils literal notranslate"><span class="pre">Engineer</span></code> then defines the <code class="docutils literal notranslate"><span class="pre">primary_language</span></code> column, the
+column is added to the <code class="docutils literal notranslate"><span class="pre">people</span></code> table so that it is included in the
+mapping for <code class="docutils literal notranslate"><span class="pre">Engineer</span></code> and is also part of the table's full set of
+columns.  Columns which are not mapped to <code class="docutils literal notranslate"><span class="pre">Person</span></code> are also excluded
+from any other single or joined inheriting classes using the
+<code class="docutils literal notranslate"><span class="pre">exclude_properties</span></code> mapper argument.  Below, <code class="docutils literal notranslate"><span class="pre">Manager</span></code> will have
+all the attributes of <code class="docutils literal notranslate"><span class="pre">Person</span></code> and <code class="docutils literal notranslate"><span class="pre">Manager</span></code> but <em>not</em> the
+<code class="docutils literal notranslate"><span class="pre">primary_language</span></code> attribute of <code class="docutils literal notranslate"><span class="pre">Engineer</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">}</span>
+    <span class="n">golf_swing</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The attribute exclusion logic is provided by the
+<code class="docutils literal notranslate"><span class="pre">exclude_properties</span></code> mapper argument, and declarative's default
+behavior can be disabled by passing an explicit <code class="docutils literal notranslate"><span class="pre">exclude_properties</span></code>
+collection (empty or otherwise) to the <code class="docutils literal notranslate"><span class="pre">__mapper_args__</span></code>.</p>
+<div class="section" id="resolving-column-conflicts">
+<span id="declarative-column-conflicts"></span><h3>Resolving Column Conflicts<a class="headerlink" href="#resolving-column-conflicts" title="제목 주소">¶</a></h3>
+<p>Note above that the <code class="docutils literal notranslate"><span class="pre">primary_language</span></code> and <code class="docutils literal notranslate"><span class="pre">golf_swing</span></code> columns
+are &quot;moved up&quot; to be applied to <code class="docutils literal notranslate"><span class="pre">Person.__table__</span></code>, as a result of their
+declaration on a subclass that has no table of its own.   A tricky case
+comes up when two subclasses want to specify <em>the same</em> column, as below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;people&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">discriminator</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span> <span class="n">discriminator</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">}</span>
+    <span class="n">start_date</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">}</span>
+    <span class="n">start_date</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Above, the <code class="docutils literal notranslate"><span class="pre">start_date</span></code> column declared on both <code class="docutils literal notranslate"><span class="pre">Engineer</span></code> and <code class="docutils literal notranslate"><span class="pre">Manager</span></code>
+will result in an error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sqlalchemy.exc.ArgumentError: Column &#39;start_date&#39; on class
+&lt;class &#39;__main__.Manager&#39;&gt; conflicts with existing
+column &#39;people.start_date&#39;
+</pre></div>
+</div>
+<p>In a situation like this, Declarative can't be sure
+of the intent, especially if the <code class="docutils literal notranslate"><span class="pre">start_date</span></code> columns had, for example,
+different types.   A situation like this can be resolved by using
+<a class="reference internal" href="api.html#sqlalchemy.ext.declarative.declared_attr" title="sqlalchemy.ext.declarative.declared_attr"><code class="xref py py-class docutils literal notranslate"><span class="pre">declared_attr</span></code></a> to define the <a class="reference internal" href="../../../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> conditionally, taking
+care to return the <strong>existing column</strong> via the parent <code class="docutils literal notranslate"><span class="pre">__table__</span></code> if it
+already exists:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declared_attr</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;people&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">discriminator</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span> <span class="n">discriminator</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">}</span>
+
+    <span class="nd">@declared_attr</span>
+    <span class="k">def</span> <span class="nf">start_date</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="s2">&quot;Start date column, if not present already.&quot;</span>
+        <span class="k">return</span> <span class="n">Person</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">}</span>
+
+    <span class="nd">@declared_attr</span>
+    <span class="k">def</span> <span class="nf">start_date</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="s2">&quot;Start date column, if not present already.&quot;</span>
+        <span class="k">return</span> <span class="n">Person</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Above, when <code class="docutils literal notranslate"><span class="pre">Manager</span></code> is mapped, the <code class="docutils literal notranslate"><span class="pre">start_date</span></code> column is
+already present on the <code class="docutils literal notranslate"><span class="pre">Person</span></code> class.  Declarative lets us return
+that <a class="reference internal" href="../../../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> as a result in this case, where it knows to skip
+re-assigning the same column. If the mapping is mis-configured such
+that the <code class="docutils literal notranslate"><span class="pre">start_date</span></code> column is accidentally re-assigned to a
+different table (such as, if we changed <code class="docutils literal notranslate"><span class="pre">Manager</span></code> to be joined
+inheritance without fixing <code class="docutils literal notranslate"><span class="pre">start_date</span></code>), an error is raised which
+indicates an existing <a class="reference internal" href="../../../core/metadata.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> is trying to be re-assigned to
+a different owning <a class="reference internal" href="../../../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>.</p>
+<p>The same concept can be used with mixin classes (see
+<a class="reference internal" href="mixins.html#declarative-mixins"><span class="std std-ref">Mixin and Custom Base Classes</span></a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;people&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">discriminator</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span> <span class="n">discriminator</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">HasStartDate</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="nd">@declared_attr</span>
+    <span class="k">def</span> <span class="nf">start_date</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">HasStartDate</span><span class="p">,</span> <span class="n">Person</span><span class="p">):</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;engineer&#39;</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">HasStartDate</span><span class="p">,</span> <span class="n">Person</span><span class="p">):</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The above mixin checks the local <code class="docutils literal notranslate"><span class="pre">__table__</span></code> attribute for the column.
+Because we're using single table inheritance, we're sure that in this case,
+<code class="docutils literal notranslate"><span class="pre">cls.__table__</span></code> refers to <code class="docutils literal notranslate"><span class="pre">Person.__table__</span></code>.  If we were mixing joined-
+and single-table inheritance, we might want our mixin to check more carefully
+if <code class="docutils literal notranslate"><span class="pre">cls.__table__</span></code> is really the <a class="reference internal" href="../../../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> we're looking for.</p>
+</div>
+</div>
+<div class="section" id="concrete-table-inheritance">
+<span id="declarative-concrete-table"></span><h2>Concrete Table Inheritance<a class="headerlink" href="#concrete-table-inheritance" title="제목 주소">¶</a></h2>
+<p>Concrete is defined as a subclass which has its own table and sets the
+<code class="docutils literal notranslate"><span class="pre">concrete</span></code> keyword argument to <code class="docutils literal notranslate"><span class="pre">True</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;people&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;engineers&#39;</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;concrete&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">}</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">primary_language</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Usage of an abstract base class is a little less straightforward as it
+requires usage of <a class="reference internal" href="../../mapping_api.html#sqlalchemy.orm.util.polymorphic_union" title="sqlalchemy.orm.util.polymorphic_union"><code class="xref py py-func docutils literal notranslate"><span class="pre">polymorphic_union()</span></code></a>,
+which needs to be created with the <a class="reference internal" href="../../../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> objects
+before the class is built:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">engineers</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s1">&#39;engineers&#39;</span><span class="p">,</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+                <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+                <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;primary_language&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+            <span class="p">)</span>
+<span class="n">managers</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s1">&#39;managers&#39;</span><span class="p">,</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+                <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+                <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;golf_swing&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+            <span class="p">)</span>
+
+<span class="n">punion</span> <span class="o">=</span> <span class="n">polymorphic_union</span><span class="p">({</span>
+    <span class="s1">&#39;engineer&#39;</span><span class="p">:</span><span class="n">engineers</span><span class="p">,</span>
+    <span class="s1">&#39;manager&#39;</span><span class="p">:</span><span class="n">managers</span>
+<span class="p">},</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;punion&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">punion</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_on&#39;</span><span class="p">:</span><span class="n">punion</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">type</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Engineer</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">engineers</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;engineer&#39;</span><span class="p">,</span> <span class="s1">&#39;concrete&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="n">managers</span>
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;polymorphic_identity&#39;</span><span class="p">:</span><span class="s1">&#39;manager&#39;</span><span class="p">,</span> <span class="s1">&#39;concrete&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The helper classes <a class="reference internal" href="api.html#sqlalchemy.ext.declarative.AbstractConcreteBase" title="sqlalchemy.ext.declarative.AbstractConcreteBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractConcreteBase</span></code></a> and <a class="reference internal" href="api.html#sqlalchemy.ext.declarative.ConcreteBase" title="sqlalchemy.ext.declarative.ConcreteBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConcreteBase</span></code></a>
+provide automation for the above system of creating a polymorphic union.
+See the documentation for these helpers as well as the main ORM documentation
+on concrete inheritance for details.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p><a class="reference internal" href="../../inheritance.html#concrete-inheritance"><span class="std std-ref">구체 테이블 상속</span></a></p>
+<p class="last"><span class="xref std std-ref">inheritance_concrete_helpers</span></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="mixins.html" class="btn btn-neutral float-right" title="Mixin and Custom Base Classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="table_config.html" class="btn btn-neutral" title="Table Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+      최종 업데이트: 06/07/2019 11:12:12
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.3.0b1',
+            LANGUAGE:'ko',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+      <script type="text/javascript" src="../../../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

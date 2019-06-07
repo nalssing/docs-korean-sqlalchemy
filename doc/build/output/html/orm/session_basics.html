@@ -1,0 +1,642 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="ko" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ko" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>세션의 기초 &mdash; SQLAlchemy 1.3.0b1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="색인" href="../genindex.html" />
+    <link rel="search" title="검색" href="../search.html" />
+    <link rel="copyright" title="저작권" href="../copyright.html" />
+    <link rel="next" title="State Management" href="session_state_management.html" />
+    <link rel="prev" title="세션 사용하기" href="session.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">개요</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">SQLAlchemy ORM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html">ORM 튜토리얼</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapper_config.html">매퍼 설정</a></li>
+<li class="toctree-l2"><a class="reference internal" href="relationships.html">릴레이션십 설정</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_objects.html">객체 로딩</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="session.html">세션 사용하기</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">세션의 기초</a></li>
+<li class="toctree-l3"><a class="reference internal" href="session_state_management.html">State Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cascades.html">Cascades</a></li>
+<li class="toctree-l3"><a class="reference internal" href="session_transaction.html">Transactions and Connection Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="persistence_techniques.html">Additional Persistence Techniques</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contextual.html">컨텍스트/스레드-로컬 세션</a></li>
+<li class="toctree-l3"><a class="reference internal" href="session_events.html">Tracking Object and Session Changes with Events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="session_api.html">Session API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="extending.html">Events and Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extensions/index.html">ORM Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">ORM Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">SQLAlchemy Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index.html">Dialects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors.html">Error Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index.html">Changes and Migration</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+          <li><a href="session.html">세션 사용하기</a> &raquo;</li>
+        
+      <li>세션의 기초</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy//docs-korean/doc/build/orm/session_basics.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="session-basics">
+<h1>세션의 기초<a class="headerlink" href="#session-basics" title="제목 주소">¶</a></h1>
+<div class="section" id="what-does-the-session-do">
+<h2>세션은 무슨일을 하는가?<a class="headerlink" href="#what-does-the-session-do" title="제목 주소">¶</a></h2>
+<p>대부분의 경우에 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>은 데이터베이스와의 모든 대화를 연결하고 세션이 살아있는 동안 사용자가 로드한 객체 또는 로드한 객체와 연결된 객체를 담고 있는 저장소가 된다. 세션은 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a> 객체를 얻을 수 있는 엔트리포인트를 제공한다. 이 엔트리포인트는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 객체의 현재 데이터베이스 컨넥션을 이용하여 데이터베이스에 쿼리를 보낸다. 그리고 그 결과를 객체로 만들어서 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 내부의 <a class="reference external" href="http://martinfowler.com/eaaCatalog/identityMap.html">Identity Map</a> (각 객체의 유니크한 복사본을 담고 있는 데이터 구조. 여기서 유니크하다는 것은 하나의 프라이머리 키에 대해 객체가 하나만 있다는 뜻이다) 구조에 저장한다.</p>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>는 시작시에는 상태가 없다. 일단 쿼리가 발생하거나 내부에 다른 객체가 존재하면 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 자신이나 혹은 대상이 되는 <a class="reference internal" href="../core/metadata.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> 객체와 연관된 <a class="reference internal" href="../core/connections.html#sqlalchemy.engine.Engine" title="sqlalchemy.engine.Engine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Engine</span></code></a> 객체에 컨넥션 리소스를 요청한다. 이 컨넥션은 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 객체가 커밋 또는 롤백 지시를 받기 전까지는 트랜잭션이 진행중인 것과 같다.</p>
+<p>데이터베이스를 다시 쿼리하거나 현재의 트랜잭션이 커밋되기 전까지는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이 관리하는 객체의 모든 변화가 추적된다. 일단 커밋을 하면 현재까지의 모든 변화를 데이터베이스에 플러쉬(flush)한다. 이를 <a class="reference external" href="http://martinfowler.com/eaaCatalog/unitOfWork.html">Unit of Work</a> 패턴이라고 한다.</p>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 사용할 때는 연관된 객체가 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이 잡고 있는 트랜잭션에 대한 프락시 객체라는 점에 주의해야 한다. 두 객체의 싱크를 맞추기 위해 데이터베이스를 다시 접근해야 하는 여러가지 이벤트가 존재한다. <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>에서 객체를 떼어내서(detach) 사용하는 것도 변칙이지만 가능하다. 주로 떼어낸 객체를 다른 세션에 다시 붙여서 데이터베이스 상태를 다시 나타내고 싶을 때 사용한다.</p>
+</div>
+<div class="section" id="getting-a-session">
+<span id="session-getting"></span><h2>세션 획득하기<a class="headerlink" href="#getting-a-session" title="제목 주소">¶</a></h2>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>은 직접 객체화할 수 있는 파이썬 클래스이다. 하지만 세션을 설정하고 획득하는 과정을 표준화하기 위해 보통은 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a> 클래스로 탑 레벨 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>  설정을 만들어서 사용한다. 이렇게 하면 같은 설정 인수를 여러번 반복해서 쓸 필요가 없다.</p>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a> 사용법을 아래에 설명하였다.:</p>
+<div class="highlight-python+sql notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">sessionmaker</span>
+
+<span class="c1"># an Engine, which the Session will use for connection</span>
+<span class="c1"># resources</span>
+<span class="n">some_engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;postgresql://scott:tiger@localhost/&#39;</span><span class="p">)</span>
+
+<span class="c1"># create a configured &quot;Session&quot; class</span>
+<span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">some_engine</span><span class="p">)</span>
+
+<span class="c1"># create a Session</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+
+<span class="c1"># work with sess</span>
+<span class="n">myobject</span> <span class="o">=</span> <span class="n">MyObject</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">myobject</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a> 함수를 호출하면 <code class="docutils literal notranslate"><span class="pre">Session</span></code>이라 이름붙인 팩토리 클래스를 생성한다. 이 팩토리 클래스를 호출하면 우리가 팩토리에 주었던 설정을 이용하여 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 객체를 생성한다. 이 때 보통은 특정 <a class="reference internal" href="../core/connections.html#sqlalchemy.engine.Engine" title="sqlalchemy.engine.Engine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Engine</span></code></a> 객체를 연결하도록 설정하게 된다.</p>
+<p>이렇게 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a>와 <a class="reference internal" href="../core/connections.html#sqlalchemy.engine.Engine" title="sqlalchemy.engine.Engine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Engine</span></code></a>을 연결시켜 놓으면 각각의 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>은 이 <a class="reference internal" href="../core/connections.html#sqlalchemy.engine.Engine" title="sqlalchemy.engine.Engine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Engine</span></code></a>을 써서 컨넥션 리소스를 얻는다. 연결할 때는 위의 예제처럼 <code class="docutils literal notranslate"><span class="pre">bind</span></code> 인수를 사용한다.</p>
+<p>애플리케이션을 만들 때는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a> 팩토리는 전역으로 만든다. 이 팩토리 클래스는 애플리케이션의 다른 코드에서 새로운 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 객체를 만들 때 사용된다. 이렇게 하면 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 객체를 만드는 설정을 한 곳에 모을 수 있다.</p>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a> 팩토리는 다른 헬퍼 함수와 같이 사용할 수 있다. 헬퍼 함수는 인수로 넣는데 이렇게 하면 헬퍼 함수가 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a>를 관리한다. <a class="reference internal" href="#session-faq-whentocreate"><span class="std std-ref">언제 Session을 만들고 커밋을 하고 닫아야 하는가?</span></a> 절에서 몇가지 헬퍼함수를 설명한다.</p>
+<div class="section" id="adding-additional-configuration-to-an-existing-sessionmaker">
+<h3>현존하는 sessionmaker()에 설정을 추가하기<a class="headerlink" href="#adding-additional-configuration-to-an-existing-sessionmaker" title="제목 주소">¶</a></h3>
+<p>모듈 임포트 시점에 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a>를 만들고 바로 세션을 만드는게 보통지만 <a class="reference internal" href="../core/connections.html#sqlalchemy.engine.Engine" title="sqlalchemy.engine.Engine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Engine</span></code></a> 인스턴스에 연결하는 것은 나중에 하는 경우도 있다. 이 때를 대비하여 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a>는  <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker.configure" title="sqlalchemy.orm.session.sessionmaker.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sessionmaker.configure()</span></code></a> 메서드를 제공한다. 이 메서드를 사용하면 이미 만들어진 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a>에 설정을 추가하여 나중에 세션을 만들 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">sessionmaker</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">create_engine</span>
+
+<span class="c1"># configure Session class with desired options</span>
+<span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">()</span>
+
+<span class="c1"># later, we create the engine</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;postgresql://...&#39;</span><span class="p">)</span>
+
+<span class="c1"># associate it with our custom Session class</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+
+<span class="c1"># work with the session</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-ad-hoc-session-objects-with-alternate-arguments">
+<h3>인수를 변경하여 바로 세션 객체 생성하기<a class="headerlink" href="#creating-ad-hoc-session-objects-with-alternate-arguments" title="제목 주소">¶</a></h3>
+<p>애플리케이션이 평소에 사용하는 것과 다른 특별한 인수를 사용하여 새로운 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 만들어야 하는 경우가 있다. 예를 들어 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 다른 데이터베이스에 연결하거나 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이 <code class="docutils literal notranslate"><span class="pre">expire_on_commit</span></code> 같은 특수한 인수를 사용하는 경우이다. 이 때는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a> 팩토리의 <code class="xref py py-meth docutils literal notranslate"><span class="pre">sessionmaker.__call__()</span></code>  메서드로 해당 인수를 넣어준다. 이 인수 값은 기존 인수를 덮어쓰게 된다. 다음 예에서는 특정 <a class="reference internal" href="../core/connections.html#sqlalchemy.engine.Connection" title="sqlalchemy.engine.Connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Connection</span></code></a>을 가진 새로운 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>가 만들어진다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># at the module level, the global sessionmaker,</span>
+<span class="c1"># bound to a specific Engine</span>
+<span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+
+<span class="c1"># later, some unit of code wants to create a</span>
+<span class="c1"># Session that is bound to a specific Connection</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 특정 <a class="reference internal" href="../core/connections.html#sqlalchemy.engine.Connection" title="sqlalchemy.engine.Connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Connection</span></code></a>과 연동시키는 이유 중의 하나는 외부 트랜잭션을 유지하는 테스트 픽스처의 경우이다. 이 예에 대해서는 <a class="reference internal" href="session_transaction.html#session-external-transaction"><span class="std std-ref">Joining a Session into an External Transaction (such as for test suites)</span></a> 절을 참조하라.</p>
+</div>
+</div>
+<div class="section" id="session-frequently-asked-questions">
+<span id="session-faq"></span><h2>세션에 대해 많이 묻는 질문들<a class="headerlink" href="#session-frequently-asked-questions" title="제목 주소">¶</a></h2>
+<p>여기까지 읽은 독자들은 여러가지 의문점이 있을 것이다. 이 절에서는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 사용에 있어 가장 기본적인 사항을 정리하는 미니 FAQ(<a class="reference internal" href="../faq/index.html"><span class="doc">진짜 FAQ</span></a>는 따로 있다.)를 마련하였다.</p>
+<div class="section" id="when-do-i-make-a-sessionmaker">
+<h3><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a>는 언제 만들어야 하는가?<a class="headerlink" href="#when-do-i-make-a-sessionmaker" title="제목 주소">¶</a></h3>
+<p>딱 한번, 애플리케이션의 전역 스코프에 만들어야 한다. 이는 애플리케이션의 설정의 일부로 봐야 한다.예를 들어 애플리케이션이 패키지 않에 3개의 .py 파일을 가지고 있다면 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a> 코드는 <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> 파일에 있어야 한다. 이 지점으로부터 다른 모듈들이 &quot;from mypackage import Session&quot; 형태로 임포트한다. 다른 모듈들도 이런 방식으로 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session()</span></code></a>를 사용하고 세션의 설정도 중앙 지점에서 제어되어야 한다.</p>
+<p>만약 애플리케이션이 가동을 시작하고 임포트를 했는데 어떤 데이터베이스에 연결해야 할 지 모른다면 클래스 레벨에 있는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 나중에 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker.configure" title="sqlalchemy.orm.session.sessionmaker.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sessionmaker.configure()</span></code></a> 메서드로 엔진과 연결해도 된다.</p>
+<p>이 절에 있는 예제는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a> 생성 후 바로 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 호출을 했지만 반드시 이렇게 해아하는 것은 아니다. 현실에서는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a>가 모듈 레벨 어딘가에 있고 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 인스턴스를 만드는 호출은 데이터베이스와의 연결이 시작되는 근처에 있게 된다.</p>
+</div>
+<div class="section" id="when-do-i-construct-a-session-when-do-i-commit-it-and-when-do-i-close-it">
+<span id="session-faq-whentocreate"></span><h3>언제 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 만들고 커밋을 하고 닫아야 하는가?<a class="headerlink" href="#when-do-i-construct-a-session-when-do-i-commit-it-and-when-do-i-close-it" title="제목 주소">¶</a></h3>
+<div class="topic">
+<p class="topic-title first">tl;dr;</p>
+<ol class="arabic simple">
+<li>일반적으로 세션의 생애 주기는 그 세션이 다루는 함수나 객체, 또는 데이터베이스의 데이터와는 별도로 잡아야 한다. 이렇게 하면 트랜잭션 범위를 일관성있고 예측가능하게 할 수 있다.</li>
+<li>언제 트랜잭션이 시작되고 끝나는지를 명확하게 하고 트랜잭션은 가능한한 짧게 만든다. 즉, 일련의 연산으로 끝나야 하지 무한정 열어두어서는 안된다.</li>
+</ol>
+</div>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 객체는 보통 데이터베이스에 접근해야 하는 논리적인 시작점에서 생성한다.</p>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>는 데이터베이스와 통신을 시작하자마자 바로 트랜잭션을 시작한다. 만약 권장하는대로 <code class="docutils literal notranslate"><span class="pre">autocommit</span></code> 플래그가 디폴트인 <code class="docutils literal notranslate"><span class="pre">False</span></code> 값으로 되어 있다면 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이 롤백, 커밋 또는 닫히게 될때까지 트랜잭션은 진행중이다. 만약 트랜잭션 종료 후 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 다시 사용하면 트랜잭션이 다시 시작된다. 이 사실로부터 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이 한번에 하나씩이긴 하지만 복수의 트랜잭션을 다룰 수 있다는 것을 알 수 있다. 이를 구별하여 트랜잭션 스코프 그리고 세션 스코프라고 부른다.</p>
+<p>SQLAlchemy ORM은 개발자가 이 두가지 스코프를 확정하도록 한다. 개발자는 스코프가 어디에서 시작하여 어디에서 끝나는지 뿐 아니라 하나의 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 인스턴스가 하나의 함수나 메서드 내의 실행 플로우에 국한될지 전체 애플리케이션에 대해 전역적이 될지 아니면 이 두 가지의 중간쯤이 될지 정해야 한다.</p>
+<p>개발자가 직접 스코프를 정하는 부담을 지는 것은 데이터베이스 사용 방식에 대해 SQLAlchmey ORM이 지향하는 정책이다. <a class="reference internal" href="../glossary.html#term-unit-of-work"><span class="xref std std-term">unit of work</span></a> 패턴은 시간이 지나면서 누적된 변화를 주기적으로 flush하여 로컬 트랜잭션에 존재하는 내용과 인메모리 상태를 일치시키는 방식이다. 이 방식은 의미있는 트랜잭션 스코프들이 같이 있을 때 유효하다.</p>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 스코프의 시작과 끝을 잘 정하는 것은 보통 크게 어려운 일이 아니지만 다양한 애플리케이션 구조로 인해 여러가지 어려운 상황들이 생길 수 있다.</p>
+<p>일반적인 선택은 트랜잭션이 끝나는 순간 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>도 없애서 트랜잭션 스코프와 세션 스코프를 같게 만드는 것이다. 이 방법은 세션 스코프를 트랜잭션 스코프와 분리할 필요가 없으므로초보자에게 좋은 선택이다.</p>
+<p>트랜잭션 스코프를 어떻게 정하는 가에 대한 만능 답안은 없지만 많이 쓰는 패턴은 존재한다. 특히 웹 애플리케이션의 경우에는 거의 확정되어 있다.</p>
+<p>웹 애플리케이션은 리쿼스트라는 브라우저의 요청이 들어와 처리되고 리스폰스를 이루어 클라이언트로 나가는 하나의 스코프가 존재하는 애플리케이션이므로 가장 간단한 경우라고 할 수 있다. 웹 애플리케이션에 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 통합한다는 것은 결국 이 리퀘스트 스코프에 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 스코프를 맞추는 작업이다. 리퀘스트가 시작할 때 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 만들 수도 있고 필요한 시점에 가서 만드는 <span class="xref std std-term">lazy initialization</span> 패턴을 쓸 수도 있다. 리쿼스트를 시스템 로직에서 처리하면서 리퀘스트 처리에 따라 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>도 접근해야 한다. 처리가 끝나면 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>도 웹 프레임워크가 제공하는 이벤트 후크를 이용하여 같이 없앤다. <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이 사용한 트랜잭션은 이 시점에 커밋할 수도 있고 그 전에 명시적으로 커밋할 수도 있다. 하지만 최종적으로는 무조건 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 없애야 한다.</p>
+<p>어떤 웹 프레임워크는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 생명주기를 웹 리쿼스트와 일치시키기 위한 작업을 도와주는 인프라스트럭처를 포함하고 있다. Flask와 같이 사용되는 <a class="reference external" href="http://flask-sqlalchemy.pocoo.org">Flask-SQLAlchemy</a> 프레임워크나 Pyramid와 같이 사용되는 <a class="reference external" href="http://pypi.python.org/pypi/zope.sqlalchemy">Zope-SQLAlchemy</a> 등이 이에 포함된다. SQLAlchemy는 이러한 제품을 사용하기를 권장한다.</p>
+<p>통합용 라이브러리가 없거나 기능이 충분하지 않은 경우를 대비하여 SQLAlchemy는 <a class="reference internal" href="contextual.html#sqlalchemy.orm.scoping.scoped_session" title="sqlalchemy.orm.scoping.scoped_session"><code class="xref py py-class docutils literal notranslate"><span class="pre">scoped_session</span></code></a>이라는 보조 클래스를 포함한다. 이 객체 사용법에 대한 튜토리얼은 <a class="reference internal" href="contextual.html#unitofwork-contextual"><span class="std std-ref">컨텍스트/스레드-로컬 세션</span></a> 부분을 참조한다. 이 클래스는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 객체를 현재 쓰레드와 연동시키는 방법 뿐 아니라 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 객체를 여러가지 종류의 스코프와 연관시키는 패턴을 제공한다.</p>
+<p>앞에서도 언급했지만 웹 애플리케이션이 아니면 애플리케이션마다 구조가 다르기 때문에 명확한 패턴이 없다. 최선의 전략은 특정 스레드가 어느 시점에 일련의 작업을 시작하고 어느 시점에 끝내는지 작업 영역을 정하는 방법이다. 몇가지 예를 들면 다음과 같다:</p>
+<ul class="simple">
+<li>자식 프로세스를 가지는 백그라운드 데몬에서는 각 자식 프로세스마다 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 객체를 만들고 그 프로세스의 생애동안 해당 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 객체를 사용하다가 작업이 완료되면 세션을 없앤다.</li>
+<li>명령줄 스크립트에서는 애플리케이션이 하나의 전역 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 객체를 만들어서 프로그램이 작업하는 동안 가지고 있다가 작업을 마칠 때 커밋을 할 수 있다.</li>
+<li>GUI 인터페이스 애플리케이션에서는 사용자가 버튼을 누른다든가 해서 생성한 이벤트 처리 구간이 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a> 스코프가 되는 것이 좋다. 아니면 예를 들어 사용자가 어떤 레코드를 열고 이를 저장하는 구간과 같은 명시적인 사용자 상호작용이 스코프가 될 수 도 있다.</li>
+</ul>
+<p>일반적인 규칙은 애플리케이션이 세션의 주기를 특정 데이터를 다루는 함수 외부에서 관리해야 한다는 것이다. 이렇게 하는 이유는 데이터 작업이 그 데이터에 접근하고 조작하는 컨텍스트에 무관하게 분리하기 위해서이다.</p>
+<p>이렇게 만들면 안된다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">### this is the **wrong way to do it** ###</span>
+
+<span class="k">class</span> <span class="nc">ThingOne</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">go</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">FooBar</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+            <span class="k">raise</span>
+
+<span class="k">class</span> <span class="nc">ThingTwo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">go</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Widget</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">})</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+            <span class="k">raise</span>
+
+<span class="k">def</span> <span class="nf">run_my_program</span><span class="p">():</span>
+    <span class="n">ThingOne</span><span class="p">()</span><span class="o">.</span><span class="n">go</span><span class="p">()</span>
+    <span class="n">ThingTwo</span><span class="p">()</span><span class="o">.</span><span class="n">go</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>세션(과 트랜잭션)의 생애주기를 분리하고 외부에 놓아야 한다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">### this is a **better** (but not the only) way to do it ###</span>
+
+<span class="k">class</span> <span class="nc">ThingOne</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">go</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">FooBar</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
+
+<span class="k">class</span> <span class="nc">ThingTwo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">go</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Widget</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">})</span>
+
+<span class="k">def</span> <span class="nf">run_my_program</span><span class="p">():</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ThingOne</span><span class="p">()</span><span class="o">.</span><span class="n">go</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="n">ThingTwo</span><span class="p">()</span><span class="o">.</span><span class="n">go</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+
+        <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="k">raise</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>대부분의 중요한 애플리케이션에 추천하는 가장 복잡한 방식은 세션, 트랜잭션, 그리고 명시적 관리의 세부 사항을 가능한한 작업을 하는 프로그램의 세부 사항과 분리하는 것이다. 예들 들어 <a class="reference external" href="http://docs.python.org/3/library/contextlib.html#contextlib.contextmanager">컨텍스트 매니저</a>를 사용할 수 있다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">### another way (but again *not the only way*) to do it ###</span>
+
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
+
+<span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">session_scope</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Provide a transactional scope around a series of operations.&quot;&quot;&quot;</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">session</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="k">raise</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">run_my_program</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+        <span class="n">ThingOne</span><span class="p">()</span><span class="o">.</span><span class="n">go</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="n">ThingTwo</span><span class="p">()</span><span class="o">.</span><span class="n">go</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-the-session-a-cache">
+<h3>세션은 캐시인가?<a class="headerlink" href="#is-the-session-a-cache" title="제목 주소">¶</a></h3>
+<p>아니다. <a class="reference internal" href="../glossary.html#term-identity-map"><span class="xref std std-term">identity map</span></a>패턴을 구현하고 기본 키에 키 객체를 저장 한다는 점에서 다소 캐시로 사용된다. 하지만, 어떠한 유형의 쿼리 캐싱을 사용하고 있지 않다.예를들어 만약 <code class="docutils literal notranslate"><span class="pre">session.query(Foo).filter_by(name='bar')</span></code>를 사용했을때 <code class="docutils literal notranslate"><span class="pre">Foo(name='bar')</span></code>가 identity map 에 있더라도, 세션은 그것을 알아차리지 못한다. 이것은 당신이 <code class="docutils literal notranslate"><span class="pre">query.get({some</span> <span class="pre">primary</span> <span class="pre">key})</span></code>를 했더라도 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>은 어떠한 쿼리도 발생하지 않는다.</p>
+<p>추가적으로 세션은 기본적으로 약한 참조(weak reference)를 사용하여 객체 인스턴스를 저장한다.이런 이유 또한 세션을 캐시로 사용하는 목적을 방해한다.</p>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>은 모든 사람이 객체의 &quot;레지스트리&quot;로서 참조하는 글로벌 객체가 되도록 설계되지 않았다. 이것이 <strong>2차 수준 캐시의 역활</strong> 이다. SQLAlchemy는 <a class="reference external" href="https://dogpilecache.readthedocs.io/">dogpile.cache</a> 를 사용하여 2차 수준 캐싱 패턴을 제공한다. 좀 더 자세한 내용은 <a class="reference internal" href="examples.html#examples-caching"><span class="std std-ref">Dogpile Caching</span></a>참조한다.</p>
+</div>
+<div class="section" id="how-can-i-get-the-session-for-a-certain-object">
+<h3>특정 객체의 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 어떻게 얻을 수 있습니까?<a class="headerlink" href="#how-can-i-get-the-session-for-a-certain-object" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>에서 사용할 수 있는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.object_session" title="sqlalchemy.orm.session.Session.object_session"><code class="xref py py-meth docutils literal notranslate"><span class="pre">object_session()</span></code></a>클래스 메소드를 사용한다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="o">.</span><span class="n">object_session</span><span class="p">(</span><span class="n">someobject</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>새로운 <a class="reference internal" href="../core/inspection.html#core-inspection-toplevel"><span class="std std-ref">Runtime Inspection API</span></a>시스템을 사용할 수 있다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">inspect</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">(</span><span class="n">someobject</span><span class="p">)</span><span class="o">.</span><span class="n">session</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-the-session-thread-safe">
+<span id="session-faq-threadsafe"></span><h3>세션은 스레드-세이프 인가?<a class="headerlink" href="#is-the-session-thread-safe" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>은 <strong>비-동시성(non-concurrent)</strong> 방식으로 사용되도록 설계되었다. 이는 한 번에 하나의 스레드에서만 작동한다.</p>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>은 단일 트랜잭션 내에서 일련의 작업이 있는 하나의 인스턴스에서 작동해야 한다. 이 효과를 얻는 한 가지 편리한 방법은 현재 스레드와 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 연결시키는(<a class="reference internal" href="contextual.html#unitofwork-contextual"><span class="std std-ref">컨텍스트/스레드-로컬 세션</span></a>참조) 것이다. 다른 방법은 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>가 함수간에 전달되는 패턴을 사용하는 것이고, 그렇지 않으면 다른 스레드와 공유되지 않는 패턴을 사용하는 것이다.</p>
+<p>더 큰 문제는 당신이 여러 개의 스레드와 세션을 사용하는 것을 원하지  말아야 한다는 것이다. 여러 개의 스레드와 세션을 사용한다는 것은 마치 식당에 있는 모든 사람들이 모두 같은 접시에서 음식을 먹는 것과 같을 것이다. 세션은 특정 작업 집합에서 사용하는 로컬 &quot;로컬 작업영역(workspace)&quot;이다.다른 작업을 하고 있는 다른 스레드와 세션을 공유 하지 말아야 하며, 공유할 필요가 없다.</p>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이 한 단위시간동안 단일 스레드에서 사용되는 것을 &quot;아무것도 공유하지않음(share nothing)&quot;이라 불리고 이것은 동시성에 접근하는 방법 중 하나 이다. 그러나 실제로 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 공유하지 않는 것은 더 중요한 패턴을 암시한다. 즉, <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>객체 자체뿐만 아니라 <strong>해당 Session과 연관된 모든 객체가</strong> 단일 스레드의 범위(scope) 내에 있어야 한다는 점이다. <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>과 연관된 모든 매핑된 객체들의 집합은 본질적으로 데이터베이스와 연결되어 데이터베이스 내부의 행(row)들과의 프록시들이다, 그래서 모든 객체의 집합인 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이 자체는 실제로 단지 데이터베이스와 연결된 large-scale 프록시일 뿐이다.궁극적으로, DBAPI 연결 자체가 우리를 동시성 엑세스(concurrent access)로 부터 멀어지게 하고있다.그러나 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>과 그와 관련된 모든 객체가 해당 DBAPI 연결에 대한 모든 프록시이기 때문에, 전체적인 그래프는 동시성 엑세스(concurrent access)에 안전하지 않다.</p>
+<p>만약 같은 작업에 다수의 스레드들이 참여하고 있다면, 해당 스레드간에 세션 및 그 객체를 공유하는 것이 좋다. 그라나 이런 극히 드분 시나리오에서 어플리케이션은 반드시 적절한 스레드-락 스키마를 구현하여 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이나 그 상태에 동시성 엑세스(concurrent access)가 없도록 해야 한다.이러한 시나리오에서 더 일반적인 접근방법은 스레드당 단일 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>을 관리하는 것입니다. 그러나 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>객체들을 복사하는 것보다 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.merge" title="sqlalchemy.orm.session.Session.merge"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Session.merge()</span></code></a>메소드를 사용하여 한 객체의 상태를 다른 로컬 작업영역에 있는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>에복사하는 것이 좋다.</p>
+</div>
+</div>
+<div class="section" id="basics-of-using-a-session">
+<h2>세션의 기초<a class="headerlink" href="#basics-of-using-a-session" title="제목 주소">¶</a></h2>
+<p>가장 기초적인 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>사용 패턴은 다음과 같다.</p>
+<div class="section" id="querying">
+<h3>쿼리(Querying)<a class="headerlink" href="#querying" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.query" title="sqlalchemy.orm.session.Session.query"><code class="xref py py-meth docutils literal notranslate"><span class="pre">query()</span></code></a>함수는 하나 혹은 하나 이상의 <em>엔티티(entities)</em> 를 사용하고 이 세션 컨텍스트 내에서 매퍼 쿼리를 발행하는 새 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a> 객체를 반환한다. 엔티티(entities)는 매핑 된 클래스, <a class="reference internal" href="mapping_api.html#sqlalchemy.orm.mapper.Mapper" title="sqlalchemy.orm.mapper.Mapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapper</span></code></a>객체, orm-enabled <em>설명자(descriptor)</em>, <code class="docutils literal notranslate"><span class="pre">AliasedClass</span></code> 객체로 정의된다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># query from a class</span>
+<span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ed&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+<span class="c1"># query with multiple classes, returns tuples</span>
+<span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">Address</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;addresses&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ed&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+<span class="c1"># query using orm-enabled descriptors</span>
+<span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">fullname</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+<span class="c1"># query from a mapper</span>
+<span class="n">user_mapper</span> <span class="o">=</span> <span class="n">class_mapper</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">user_mapper</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>가 결과를 반환되면 인스턴스화된 각 객체 가 identity map 안에 저장된다. 행(row)이 이미 있는 객체와 일치하면 동일한 객체가 반환된다. 후자의 경우 기존 객체가 존재하는지 여부는 인스턴스의 속성이 <em>만기(expired)</em> 되었는지에 따라 나뉜다. <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>의 기본-구성은 트렌잭션 경계(boundaries)에 따라 모든 인스턴스를 자동으로 만료하므로 일반적으로격리된 트랜잭션의 경우 현재 트랜잭션과 관련하여 오래된 데이터를 나타내는 인스턴스에문제가 없어야 합니다.</p>
+<p><a class="reference internal" href="tutorial.html#ormtutorial-toplevel"><span class="std std-ref">ORM 튜토리얼</span></a>에 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>객체에 대해 매우 자세히 소개되어있고, 더 자세한 설명은 <a class="reference internal" href="query.html#query-api-toplevel"><span class="std std-ref">Query API</span></a>을 참조.</p>
+</div>
+<div class="section" id="adding-new-or-existing-items">
+<h3>기존에 존재하거나 새로운 아이템 추가<a class="headerlink" href="#adding-new-or-existing-items" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.add" title="sqlalchemy.orm.session.Session.add"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add()</span></code></a>은 세션 안에 인스턴트들을 배치하는데 사용된다. <em>일시적인(transient)</em> (즉, 새로운) 인스턴스들의 경우, 다음 플러쉬(flush)때 이러한 인스턴스에 INSERT문을 배치하는 효과를 가질 것이다. <em>지속(persistent)</em> (즉, 이 세션에 의해 로드된) 인스턴스들의 경우, 이미 존재함으로 새롭게 추가할 필요가 없다. <em>분리된(detached)</em> (즉, 세션에서 제거된) 인스턴스들의 경우 다음 방법을 사용하여 세션과 다시 연결 될 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user1</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;user1&#39;</span><span class="p">)</span>
+<span class="n">user2</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;user2&#39;</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user1</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user2</span><span class="p">)</span>
+
+<span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>     <span class="c1"># write changes to the database</span>
+</pre></div>
+</div>
+<p>한 번에 아이템 목록을 세션에 추가하려면 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.add_all" title="sqlalchemy.orm.session.Session.add_all"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_all()</span></code></a>을 사용한다</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">add_all</span><span class="p">([</span><span class="n">item1</span><span class="p">,</span> <span class="n">item2</span><span class="p">,</span> <span class="n">item3</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>이 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.add" title="sqlalchemy.orm.session.Session.add"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add()</span></code></a>연산은 <code class="docutils literal notranslate"><span class="pre">save-update</span></code>케스케이드(cascades)를 따라 <strong>케스케이드</strong> 된다.</p>
+</div>
+<div class="section" id="deleting">
+<h3>제거<a class="headerlink" href="#deleting" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.delete" title="sqlalchemy.orm.session.Session.delete"><code class="xref py py-meth docutils literal notranslate"><span class="pre">delete()</span></code></a>메소드는 인스턴스를 세션의 개체 목록에 배치하여 삭제된 것으로것으로 표시한다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># mark two objects to be deleted</span>
+<span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">obj1</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">obj2</span><span class="p">)</span>
+
+<span class="c1"># commit (or flush)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="deleting-objects-referenced-from-collections-and-scalar-relationships">
+<span id="session-deleting-from-collections"></span><h4>컬랙션들(Collections) 과 스칼러 관계들에 참조된 객체 제거<a class="headerlink" href="#deleting-objects-referenced-from-collections-and-scalar-relationships" title="제목 주소">¶</a></h4>
+<p>ORM은 일반적으로 플러쉬(flush) 프로세스 중에 컬랙션이나 스칼러 관계들을변경하지 않는다. 만약 클래스가 객체들의 컬랙션을 참조하는 <a class="reference internal" href="relationship_api.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal notranslate"><span class="pre">relationship()</span></code></a>함수를가지고 있거나, 다-대-일(many-to-one)과 같이 단일 객체에 대해 참조를 가지고있을 경우이 속성(attribute)의 내용은 플러시 프로세스 중에 변경되지 않을 것을 의미한다. 대신 만약 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.commit" title="sqlalchemy.orm.session.Session.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Session.commit()</span></code></a>의 커밋시-만료(expire-on-commit) 동작이나 명시적으로 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.expire" title="sqlalchemy.orm.session.Session.expire"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Session.expire()</span></code></a>사용하여 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이 만료된 이후엔 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>와 참조 된 개체 또는 컬랙션과 연결된 객체가 모두 지워지고 다음 액세스시 다시 로드된다.</p>
+<p>이 동작을 플러시 프로세스가 외래 키 및 기본 키 컬럼을 참조하는 컬럼 바인딩 속성(attribute)에 미치는 영향과 혼동되어서는 안된다. 이러한 속성들을 플러시 프로세스가 관리하려고 하는 속성이기 때문에  플러시 내에서 자유롭게 수정된다. <a class="reference internal" href="backref.html#relationships-backref"><span class="std std-ref">Linking Relationships with Backref</span></a>에 설명되어 있는 것처럼 역 참조의 동작과 혼동해서도 안된다. 역 참조 이벤트는 컬랙션 또는 스칼라 속성 참조를 수정하지만 관련 컬랙션 및 객체 참조를 직접 조작하는 동안 발생한다. 이는 호출하는 애플리케이션 내에서 명시적이며, 플러시 프로세스 외부에 있다.</p>
+<p>이 문제와 관련하여 발생하는 일반적인 혼동사항은 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.delete" title="sqlalchemy.orm.session.Session.delete"><code class="xref py py-meth docutils literal notranslate"><span class="pre">delete()</span></code></a>메소드를 사용하는 것이 포함된다. <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.delete" title="sqlalchemy.orm.session.Session.delete"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Session.delete()</span></code></a>가 객체에 의해 호출되고, <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>가 플러시 되면 행(row)은 데이터베이스에서 삭제됩니다.외래키를 통해 대상 행을 참조하는 행은 두 매핑된 객체 타입이 <a class="reference internal" href="relationship_api.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal notranslate"><span class="pre">relationship()</span></code></a>을 통해 추적된다고 가정할 때 이들의 외래 키 속성은 null로 UPDATED 되거나 정해진 삭제 케스케이드(cascades)가 설정되어 있는 경우 그 방법대로 삭제될 것이다. 그러나, 삭제 된 객체와 관련된 행이 자체적으로 수정될 수 도 있지만 <strong>객체에 대한 관계 바인딩 컬랙션이나 객체 참조는 변경되지 않는다.</strong> 이것은 플러시 자체의 범위 내에서 작업에 관여 한다. 즉 해당 컬랙션이 만료될 때까지 여전히 파이썬 내부에존재하고 있다.비슷하게, 만약 객체가 다-대-일 이나 일-대-일을 다른 객체로부터 참조 되었을 경우, 이 참조는 마찬가지로 객체가 만료되기 전까진 계속 존재할 것이다.</p>
+<p>아래 <code class="docutils literal notranslate"><span class="pre">Address</span></code>는 삭제 대상으로 표시된 객체인데 플러시 후에도 <code class="docutils literal notranslate"><span class="pre">User</span></code> 부모 객체 와 관련된 컬랙션이 여전히 있음을 보여준다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">address</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">addresses</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">address</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">addresses</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>위의 세션이 커밋되면 모든 속성(attributes)이 만료된다. 다음 <code class="docutils literal notranslate"><span class="pre">user.addresses</span></code> 접근은 컬랙션을 다시 로드하여 우리가 원하는 상태로 나타난다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">address</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">addresses</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.delete" title="sqlalchemy.orm.session.Session.delete"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Session.delete()</span></code></a>를 가로채고 만료를 차동으로 호출하는 방법이 있다. 자세한 사항은 <a class="reference external" href="http://www.sqlalchemy.org/trac/wiki/UsageRecipes/ExpireRelationshipOnFKChange">ExpireRelationshipOnFKChange</a>을참조한다. 그러나, 컬랙션 내에서 항목을 삭제하는 일반적인 방법은 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.delete" title="sqlalchemy.orm.session.Session.delete"><code class="xref py py-meth docutils literal notranslate"><span class="pre">delete()</span></code></a>직접 사용하지 않고 케이스케이드(cascade) 동작을 사용하여 부모 컬랙션에서 개체를 삭제하여 삭제를 자동으로 호출하는 것이다. <code class="docutils literal notranslate"><span class="pre">delete-orphan</span></code>케스케이드는 아래와 같이 수행할 수 있다:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+
+    <span class="c1"># ...</span>
+
+    <span class="n">addresses</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span>
+        <span class="s2">&quot;Address&quot;</span><span class="p">,</span> <span class="n">cascade</span><span class="o">=</span><span class="s2">&quot;all, delete, delete-orphan&quot;</span><span class="p">)</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">del</span> <span class="n">user</span><span class="o">.</span><span class="n">addresses</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>위의 예제는 <code class="docutils literal notranslate"><span class="pre">Address</span></code>객체를 <code class="docutils literal notranslate"><span class="pre">User.addresses</span></code>컬랙션으로부터 지우고 있다. 이 <code class="docutils literal notranslate"><span class="pre">delete-orphan</span></code> 케이스케이드는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.delete" title="sqlalchemy.orm.session.Session.delete"><code class="xref py py-meth docutils literal notranslate"><span class="pre">delete()</span></code></a>을 호출하여 <code class="docutils literal notranslate"><span class="pre">Address</span></code>객체를 삭제하는 것과 같은 효과를 가진다.</p>
+<p><code class="docutils literal notranslate"><span class="pre">delete-orphan</span></code> 케이스케이드는 다-대-일이나 일-대-일 관계에도 적용될 수 있다. 즉 한 객체가 부모로부터 참조 해제(de-associated) 되었을때 자동적으로 삭제할 수 있다는 것이다. <code class="docutils literal notranslate"><span class="pre">delete-orphan</span></code>케이스케이드를 다-대-일 이나 일-대-일 관계에 적용 할 경우 추가적인 파라미터 <a class="reference internal" href="relationship_api.html#sqlalchemy.orm.relationship.params.single_parent" title="sqlalchemy.orm.relationship"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">relationship.single_parent</span></code></a>가 필요하다. 이는 관련 객체가 다른 부모와 동시에 공유되지 않는다는 주장을 호출하는 추가 플래그이다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+
+    <span class="n">preference</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span>
+        <span class="s2">&quot;Preference&quot;</span><span class="p">,</span> <span class="n">cascade</span><span class="o">=</span><span class="s2">&quot;all, delete, delete-orphan&quot;</span><span class="p">,</span>
+        <span class="n">single_parent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>위의 경우 만약 가상 <code class="docutils literal notranslate"><span class="pre">Preference</span></code>객체가 <code class="docutils literal notranslate"><span class="pre">User</span></code>에서 삭제될 경우 플러쉬때 삭제된다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">some_user</span><span class="o">.</span><span class="n">preference</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>  <span class="c1"># will delete the Preference object</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">더 보기</p>
+<p class="last"><a class="reference internal" href="cascades.html#unitofwork-cascades"><span class="std std-ref">Cascades</span></a> for detail on cascades.</p>
+</div>
+</div>
+<div class="section" id="deleting-based-on-filter-criterion">
+<h4>필터 기준에 따라 삭제<a class="headerlink" href="#deleting-based-on-filter-criterion" title="제목 주소">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">Session.delete()</span></code>사용할때 주의해야 할 점은 삭제하기 위해 객체를 이미 가지고 있어야 한다는 것이다. 쿼리에는 기준에 따라 삭제 하는 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.delete" title="sqlalchemy.orm.query.Query.delete"><code class="xref py py-func docutils literal notranslate"><span class="pre">delete()</span></code></a>메서드가 포함되어 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="o">==</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>이 <code class="docutils literal notranslate"><span class="pre">Query.delete()</span></code> 메소드는 이미 세션에 있는 객체 중 기준에 객체를 &quot;만료(expire)&quot; 하는 기능이 포함된다. 그러나 몇 가지 주의 사항이 있는데, 이미 로드 된 컬랙션에 대해 &quot;삭제&quot; 및 &quot;delte-orphan&quot; 케이스케이드가 완전히 표현되지 않는 다는 점이 있다. 자세한 내용은 API 문서 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query.delete" title="sqlalchemy.orm.query.Query.delete"><code class="xref py py-meth docutils literal notranslate"><span class="pre">delete()</span></code></a> 를 참조한다.</p>
+</div>
+</div>
+<div class="section" id="flushing">
+<span id="session-flushing"></span><h3>플러싱(Flushing)<a class="headerlink" href="#flushing" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이 기본 구성으로 사용되면 플러쉬단계가 거의 투명하게 동작된다. 특히 플러시는 개별적인 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>가 발행되기 전에 동작하고, 마찬가지로 트랜잭션이 커밋되기 전 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.commit" title="sqlalchemy.orm.session.Session.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">commit()</span></code></a>호출을 통해 동작한다.</p>
+<p>자동 플러시 설정에 관계없이 플러시는 항상 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.flush" title="sqlalchemy.orm.session.Session.flush"><code class="xref py py-meth docutils literal notranslate"><span class="pre">flush()</span></code></a>를 사용하여강제 될 수 있다.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>&quot;flush-on-Query&quot;동작은 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a>클래스를 생성할때 플래그 <code class="docutils literal notranslate"><span class="pre">autoflush=False</span></code>를 사용하여 비활성화 할 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">autoflush</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>추가적으로, 자동 플러쉬는 <code class="docutils literal notranslate"><span class="pre">autoflush</span></code>플래그를 통해 일시적으로 비활성화 할 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysession</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+<span class="n">mysession</span><span class="o">.</span><span class="n">autoflush</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+<p>More conveniently, it can be turned off within a context managed block using <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.no_autoflush" title="sqlalchemy.orm.session.Session.no_autoflush"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Session.no_autoflush</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">mysession</span><span class="o">.</span><span class="n">no_autoflush</span><span class="p">:</span>
+    <span class="n">mysession</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">some_object</span><span class="p">)</span>
+    <span class="n">mysession</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>플러쉬 프로세스는 <code class="xref py py-class docutils literal notranslate"> <span class="pre">만약</span> <span class="pre">세션이</span> <span class="pre">``autocommit=True`</span></code>모드에 있지 않으면 기본 트랜잭션이 이미 롤백 되었더라도 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.rollback" title="sqlalchemy.orm.session.Session.rollback"><code class="xref py py-meth docutils literal notranslate"><span class="pre">rollback()</span></code></a>의 명시적 호출이 필요하다. 이는 소위 &quot;서브 트랜잭션(subtransaction)&quot;의 전반적인 중첩 패턴이 일관되게 유지되도록 하기 위한 것이다.</p>
+</div>
+<div class="section" id="committing">
+<span id="session-committing"></span><h3>커밋(Committing)<a class="headerlink" href="#committing" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.commit" title="sqlalchemy.orm.session.Session.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">commit()</span></code></a>은 현재 트랜잭션을 커밋하는데 사용된다. <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.commit" title="sqlalchemy.orm.session.Session.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">commit()</span></code></a>은 남아있는 어떠한 상태든 데이터베이스에 플러쉬 하기 위해 항상 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.flush" title="sqlalchemy.orm.session.Session.flush"><code class="xref py py-meth docutils literal notranslate"><span class="pre">flush()</span></code></a>를 발행한다. 이것은 &quot;자동 플러쉬(autoflush)&quot;설정과는 독립적이다. 만약 현재 트랜잭션이 없다면, 그것은 에러를 발생시킨다. <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>의 기본 동작은 &quot;트랜잭션&quot;이 항상 존재한다는 것이다. 이 동작은 <code class="docutils literal notranslate"><span class="pre">autocommit=True</span></code>설정을 통해 비활성화 할 수 있다.자동 커밋 모드에서 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.begin" title="sqlalchemy.orm.session.Session.begin"><code class="xref py py-meth docutils literal notranslate"><span class="pre">begin()</span></code></a>메소드를 호출하여 트랜잭션을 시작할 수 있다.</p>
+<div class="admonition note">
+<p class="first admonition-title">주석</p>
+<p class="last">여기에서 &quot;트랜잭션(transaction)&quot; 이라는 용어는 실제 데이터 베이스(DBAPI) 트랜잭션을 유지하는  <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>내부의 트랜잭션 구성을 의미한다. 개별 DBAPI 연결은 먼저 SQL 문을 실행하는데 사용되는 &quot;트랜잭션&quot; 에 참여 를 시작 한 다음, 세션-수준 &quot;트랜잭션&quot;이 완료 될 때가지 남아있는다. 자세한 내용은 <a class="reference internal" href="session_transaction.html#unitofwork-transaction"><span class="std std-ref">Managing Transactions</span></a>를 참조한다.</p>
+</div>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.commit" title="sqlalchemy.orm.session.Session.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">commit()</span></code></a>의 또 다른 동작은 기본적으로 커밋이 완료 된 후 모든 인스턴스들의 상태를 만료한다는 것이다. 이것은 속성 엑세스를 통하거나 <a class="reference internal" href="query.html#sqlalchemy.orm.query.Query" title="sqlalchemy.orm.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>결과 세트가 존재할때 인스턴드들이 가장 최신의 상태를 수신하도록 하기 위한 것이다. 이 동작을 사용하지 않으려면 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.sessionmaker" title="sqlalchemy.orm.session.sessionmaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">sessionmaker</span></code></a>구성할때 <code class="docutils literal notranslate"><span class="pre">expire_on_commit=False</span></code>을 설정한다.</p>
+<p>일반적으로, 인스턴드들은 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>로 로드된 인스턴트들은 후속 쿼리(subsequent query)를 통해 바뀌지 않는다. 이것은 현재 트랜잭션이 고립되어있어서 가장 최근에 로드된 상태는 트랜잭션이 지속될때까지 올바른 것으로 가정한다.설정 <code class="docutils literal notranslate"><span class="pre">autocommit=True</span></code>은  <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>이 트랜잭션이 존재하지 않는다는 것을 제외하고 속성 상태와 정확히 같은 방식으로 동작하므로이 모델에 대해 어느정도 작동한다.</p>
+</div>
+<div class="section" id="rolling-back">
+<span id="session-rollback"></span><h3>롤백(Rolling Back)<a class="headerlink" href="#rolling-back" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.rollback" title="sqlalchemy.orm.session.Session.rollback"><code class="xref py py-meth docutils literal notranslate"><span class="pre">rollback()</span></code></a>메소드는 현재 트랜잭션을 롤백한다. 기본 구성된 세션에서 사후-롤백(post-rollback) 상태는 다음과 같다:</p>
+<blockquote>
+<div><ul class="simple">
+<li>세션이 커넥션(Connection)에 직접 바인드 되지 않은 경우 모든 트랜잭션이 롤백되고 모든 커넥션이 커넥션 풀로 반환된다. 이 경우는 커넥션이 여전히 유지되지만 롤백 된다.</li>
+<li>트랜잭션의 수명(lifespan) 내에서 초기에 <em>보류(pending)</em> 상태로 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>추가된 객체들은 롤백되는 INSERT 문에 의해 삭제됩니다. 속성의 상태는 변경되지 않는다.</li>
+<li>트랜잭션 수명 내에 <em>삭제된 것*으로 표시된 객체는 롤백중인 DELETE 문에 따라다시 *지속(persistent)</em> 상태로 변합니다. 해당 객체가 트랜잭션 내에서 처음 <em>보류(pending)</em>중이면 해당 이 동작이 우선순위를 갖는다.</li>
+<li>모든 만료(expunged)되지 않는 객체는 완전히 만료(expired)된다.</li>
+</ul>
+</div></blockquote>
+<p>이 상태가 이해되면, <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>롤백이 발생된 이후 에도 안정적으로 계속 사용할 수 있다.</p>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.flush" title="sqlalchemy.orm.session.Session.flush"><code class="xref py py-meth docutils literal notranslate"><span class="pre">flush()</span></code></a>가 실패했을때 (프라이머리 키, 외래키, &quot;not nullable&quot; 제한사항 위반이 전형적인 원인) <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.rollback" title="sqlalchemy.orm.session.Session.rollback"><code class="xref py py-meth docutils literal notranslate"><span class="pre">rollback()</span></code></a>이 자동적으로 발행된다. (플러쉬 부분 실패 후 계속하는 것은 현재 불가능) 그러나 플러쉬 프로세스는 항상 <em>서브 트랜잭션(subtransaction)</em> 이라는 자체 트랜잭션 분리자(demarcator)를 사용 하며, 이는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>독스트링에 설명 되어 있다. 여기서 의미하는 바는 데이터베이스 트랜잭션이 롤백 되었더라도 최종 사용자는 반드시 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.rollback" title="sqlalchemy.orm.session.Session.rollback"><code class="xref py py-meth docutils literal notranslate"><span class="pre">rollback()</span></code></a>을 발행하여 완전히 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a>의 상태를 초기화 해야한다는 것이다.</p>
+</div>
+<div class="section" id="closing">
+<h3>종료(Closing)<a class="headerlink" href="#closing" title="제목 주소">¶</a></h3>
+<p><a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.close" title="sqlalchemy.orm.session.Session.close"><code class="xref py py-meth docutils literal notranslate"><span class="pre">close()</span></code></a>메소드는 <a class="reference internal" href="session_api.html#sqlalchemy.orm.session.Session.expunge_all" title="sqlalchemy.orm.session.Session.expunge_all"><code class="xref py py-meth docutils literal notranslate"><span class="pre">expunge_all()</span></code></a>을 발행하고모든 트랜잭션/커넥션 자원들을 <a class="reference internal" href="../glossary.html#term-releases"><span class="xref std std-term">releases</span></a>한다. 커넥션들이 커넥션 풀로 반환 되었을때, 트랜잭션 상태 또한 롤백된다.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="session_state_management.html" class="btn btn-neutral float-right" title="State Management" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="session.html" class="btn btn-neutral" title="세션 사용하기" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+      최종 업데이트: 06/07/2019 11:12:12
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.3.0b1',
+            LANGUAGE:'ko',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>
