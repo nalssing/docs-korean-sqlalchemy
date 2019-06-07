@@ -31,6 +31,11 @@ msgid ""
 "different class or subclasses per result row, we use the term "
 "\"polymorphic loading\"."
 msgstr ""
+":ref:`inheritance_toplevel`\ 에 설명된 것과 같이 클래스들이 \"조인된\", \"단일\", "
+"\"구체\" 테이블 상속 방식을 사용하여 상속 계층 구조에 매핑 된 경우 "
+"특정 베이스 클래스에 대한 일반적인 동작을 하는 쿼리는 하위 자식 클래스에도 똑같이 동작한다."
+"단일 쿼리가 다른 클래스 또는 하위 클래스를 사용하여 결과를 반환 할 수 있는 경우 \"다형성 로딩\" "
+"이란 용어를 사용한다."
 
 #: ../../orm/inheritance_loading.rst:16
 msgid ""
@@ -51,16 +56,29 @@ msgid ""
 "a query, which implies what columns and tables will be available in the "
 "SELECT."
 msgstr ""
+"다형성 로딩 영역, 특히 조인 된 테이블 상속, 단일 테이블 상속의 경우 서브클래스의 속성(attribute) "
+"먼저 쿼리하고 나중에 로드해야하는 추가적인 문제가 있다. 특정 서브 클래스의 속성이 먼저 쿼리될때 우리는 그 쿼리에 "
+"필터를 적용할 수 있고 그 다음 우리가 객체를 다시 가져올때 로드된다. 만약 서브 클래스를 먼저 쿼리하지 "
+"않으면 나중에 처음 엑세스할때 객체가 로드된다. "
+"이 기본 동작의 제어는 :func:`.orm.with_polymorphic`\ 을 사용하여 제공되며 "
+"두 가지 변형 옵션인 :paramref:`.mapper.with_polymorphic`\ 와  :paramref:`.mapper.polymorphic_load`\ "
+"를 사용한 매퍼 구성 및, :class:`.Query`\ 레벨에서 :meth:`.Query.with_polymorphic`\ 함수를 사용할 수 있다. "
+"\"with_polymorphic\"\ 계열은 어떤 특정한 베이스 클래스의 서브 클래스가 쿼리 안에 포함되어야 "
+"하는지 지정하는 기능을 제공한다. 이는 SELECT 구문에서 사용할 수 있는 컬럼들과 테이블들을 "
+"의미한다."
+
 
 #: ../../orm/inheritance_loading.rst:34
 msgid "Using with_polymorphic"
-msgstr ""
+msgstr "with_polymorphic 사용"
 
 #: ../../orm/inheritance_loading.rst:36
 msgid ""
 "For the following sections, assume the ``Employee`` / ``Engineer`` / "
 "``Manager`` examples introduced in :ref:`inheritance_toplevel`."
 msgstr ""
+"다음 절의 경우  ``Employee``\ / ``Engineer``\ / "
+"``Manager``\ 는 :ref:`inheritance_toplevel`\ 예제에 나와있는 것과 같다고 가정한다."
 
 #: ../../orm/inheritance_loading.rst:39
 msgid ""
@@ -68,6 +86,8 @@ msgid ""
 "inheritance hierarchy, only the columns that are local to that base class"
 " are queried::"
 msgstr ""
+"일반적으로 :class:`.Query`\ 가 상속 계층 구조의 베이스 클래스를 지정하면 해당 베이스 클래"
+"스에 대해 로컬인 컬럼만 쿼리된다::"
 
 #: ../../orm/inheritance_loading.rst:45
 msgid ""
@@ -77,6 +97,10 @@ msgid ""
 "additional attributes loaded until we first access them, at which point a"
 " lazy load is emitted."
 msgstr ""
+"위의 경우 단일 상속이든 조인 된 상속이든 ``Employee``\ 의 내부에 있는 컬럼들만 "
+"SELECT 구문에 나타나게 된다. 우리는 ``Engineer`` 혹은 ``Manager``\ 인스턴스들을 "
+"가져올 수 있지만, 처음 엑세스 할 때에 게으른 로딩이 방출되기에 "
+"우리가 처음 엑세스 할 때까지 추가 속성들이 로드되지 않는다. "
 
 #: ../../orm/inheritance_loading.rst:51
 msgid ""
@@ -87,6 +111,9 @@ msgid ""
 "columns (note that for single-table inheritance, this is common if "
 "Declarative is used, but not for a classical mapping)."
 msgstr ""
+"마찬가지로 쿼리에 ``Engineer``\ 혹은 ``Manager``\ 의 매핑된 컬럼을 참조하려는 경우 "
+"``Employee`` 엔티티가 이런 컬럼들을 참조하지 않기에 단일 혹은 조인된 테이블 상속의 경우"
+"직접적으로 위의 컬럼들을 참조할 수 없다."
 
 #: ../../orm/inheritance_loading.rst:58
 msgid ""
@@ -96,12 +123,17 @@ msgid ""
 "like any other alias.  When queried, it represents all the columns "
 "present in the classes given::"
 msgstr ""
+"이 두 가지 문제를 모두 해결하기 위해 :func:`.orm.with_polymorphic`\ 함수는 "
+"서브 클래스들에서 컬럼 범위를 나타내 주는 :class:`.AliasedClass`\ 클래스를 제공한다."
+"이 객체는 :class:`.Query`\ 에서 다른 별칭처럼 사용할 수 있다. 쿼리할때 이 클래스는 "
+"주어진 클래스에 있는 모든 컬럼을 나타낸다::"
 
 #: ../../orm/inheritance_loading.rst:70
 msgid ""
 "If the above mapping were using joined table inheritance, the SELECT "
 "statement for the above would be:"
 msgstr ""
+"위의 매핑이 조인 된 테이블 상속을 하는 경우 우의 SELECT 구문은 다음과 같다:"
 
 #: ../../orm/inheritance_loading.rst:91
 msgid ""
@@ -109,16 +141,20 @@ msgid ""
 "\"manager\" are included.  Similar behavior occurs in the case of single "
 "table inheritance."
 msgstr ""
+"위의 경우 \"engineer\" and "
+"\"manager\"\ 에 대한 추가 테이블/컬럼이 포함된다. 단일 테이블 상속의 경우에도 비슷한 동작을 한다."
 
 #: ../../orm/inheritance_loading.rst:94
 msgid ""
 ":func:`.orm.with_polymorphic` accepts a single class or mapper, a list of"
 " classes/mappers, or the string ``'*'`` to indicate all subclasses:"
 msgstr ""
+":func:`.orm.with_polymorphic`\ 함수는 단일 클래스, 단일 매퍼, 클래스들/매퍼들 목록, "
+"또는 모든 서브클래스들을 지칭하기 위한 ``'*'``\ 문자열을 지원한다."
 
 #: ../../orm/inheritance_loading.rst:110
 msgid "Using aliasing with with_polymorphic"
-msgstr ""
+msgstr "with_polymorphic 에 앨리어싱(aliasing) 사용"
 
 #: ../../orm/inheritance_loading.rst:112
 msgid ""
@@ -132,6 +168,13 @@ msgid ""
 "select for \"employee or manager\" paired with \"employee or engineer\" "
 "on employees with the same name:"
 msgstr ""
+":func:`.orm.with_polymorphic`\ 함수는 또한 다형성 선택 가능 항목(selectable) "
+"자체의 \"aliasing\"\ 을 제공한다. 즉, 동일한 클래스 계층 구조를 참조하는 두 개의 "
+"다른 :func:`.orm.with_polymorphic`\ 엔티티를 함께 사용할 수 있다. "
+":paramref:`.orm.with_polymorphic.aliased`\ 플래그를 설정하면 사용할 수 있다. "
+"여러 테이블에 걸쳐있는 다형성 선택 항목의 경우 기본 동작은 선택 가능 항목을 서브 쿼리 "
+"로 줄이는 것이다. 아래의 예제는 동일한 이름을 가진 직원(employee)의 \"직원 혹은 매니저\"\ 나 "
+"\"직원 혹은 엔지니어\"\ 쌍을 이루는 쿼리를 생성한다."
 
 #: ../../orm/inheritance_loading.rst:172
 msgid ""
@@ -144,6 +187,12 @@ msgid ""
 ":paramref:`.orm.with_polymorphic.flat` implies "
 ":paramref:`.orm.with_polymorphic.aliased`, so only one flag is necessary:"
 msgstr ""
+"위의 서브쿼리 작성은 매우 장황하다. 두개의 다른 쿼리를 잘 캡슐화 반면 이는 비효율적 일 수 있다. "
+":func:`.orm.with_polymorphic`\ 함수는 이 상황을 해결할 수 있는 추가적인 플래그를 포함 하고 있다. "
+":paramref:`.orm.with_polymorphic.flat`\ 플래그는 각각의 테이블들에 앨리어싱을 적용하는 대신 "
+"서브 쿼리, 조인 조합을 \"평평하게\" 하여 단순한 조인으로 바꾼다. "
+":paramref:`.orm.with_polymorphic.flat`\ 설정은 :paramref:`.orm.with_polymorphic.aliased`\ 을 "
+"암시하고 있기 때문에 아래와 같이 :paramref:`.orm.with_polymorphic.flat`\ 설정 하나만 해도 된다."
 
 #: ../../orm/inheritance_loading.rst:220
 msgid ""
@@ -154,6 +203,9 @@ msgid ""
 "syntax, although virtually all modern database versions now support this "
 "syntax."
 msgstr ""
+"위의 참고 사항은 :paramref:`.orm.with_polymorphic.flat`\ 를 조인된 테이블 상속과 사용할때 "
+"종종 오른쪽-중첩 된 조인을 얻는 경우가 있다. 몇몇의 오래된 데이터베이스에선 문제가 발생할 수 있지만"
+" 대부분의 최신 데이터베이스에서는 이 구문을 지원한다."
 
 #: ../../orm/inheritance_loading.rst:228
 msgid ""
@@ -162,10 +214,13 @@ msgid ""
 "when the :paramref:`.with_polymorphic.selectable` argument is **not** "
 "used."
 msgstr ""
+":paramref:`.orm.with_polymorphic.flat`\ 플래그는 **조인 된 테이블 상속**\ 의 "
+":paramref:`.with_polymorphic`\ 파라미터나 :paramref:`.with_polymorphic.selectable`\ "
+"인수가 사용되지 **않는** 경우에만 적용될 수 있다."
 
 #: ../../orm/inheritance_loading.rst:233
 msgid "Referring to Specific Subclass Attributes"
-msgstr ""
+msgstr "특정 서브클래스 속성 참조"
 
 #: ../../orm/inheritance_loading.rst:235
 msgid ""
@@ -180,10 +235,18 @@ msgid ""
 " specific to ``Engineer`` as well as ``Manager`` in terms of "
 "``eng_plus_manager``::"
 msgstr ""
+":func:`.orm.with_polymorphic`\ 함수에 의해 반환된 엔티티는 ``Employee``\ 클래스의 "
+"속성에 대한 명명된 속성을 포함하여 다른 앨리어스들과 사용할 수 있는 :class:`.AliasedClass`\ 객체 이고 "
+"이는 :class:`.Query`\ 에 의해 사용될 수 있다. "
+"앞선 예에서 ``eng_plus_manager``\ 가 3 가지 외부 조인을 참조하는데 사용한 엔티티가 된다. "
+"또한 이 엔티티에 클래스 목록에 명명된 각 클래스의 네임 스페이스가 포함되어 있으므로 "
+"해당 서브 클래스에 대한 특정한 속성도 호출 할 있다. "
+"다음 예제는 ``eng_plus_manager``\ 엔티티로 ``Engineer``\ 과 ``Manager``\ 의 특정 "
+"속성을 호출하는 것을 보여준다."
 
 #: ../../orm/inheritance_loading.rst:255
 msgid "Setting with_polymorphic at mapper configuration time"
-msgstr ""
+msgstr "매퍼 설정시 with_polymorphic 설정"
 
 #: ../../orm/inheritance_loading.rst:257
 msgid ""
@@ -197,6 +260,13 @@ msgid ""
 "entity to use a polymorphic load by default.  We can add the parameter to"
 " our ``Employee`` mapping first introduced at :ref:`joined_inheritance`::"
 msgstr ""
+":func:`.orm.with_polymorphic`\ 함수는 서브 클래스 테이블의 속성을 \"애거(eager)\" 로딩"
+"을 허용하고 쿼리 시 서브 클래스 테이블의 속성을 참조하는 기능을 제공한다. "
+"역사적으로 컬럼의 \"애거 로딩\"\ 은 방정식의 더 중요한 부분이었다. 관계에 대한 애거 로딩을"
+"구성 옵션으로 지정할 수 있는 것처럼 :paramref:`.mapper.with_polymorphic`\ 구성 파라미터를 "
+"지정하면 엔티티에서 기본적으로 다형성 로딩을 사용할 수 있다. "
+"우리는 :ref:`joined_inheritance`\ 에서 처음 소개했었던 것 처럼 파라미터를 ``Employee``\ "
+"매핑에 추가할 수 있다."
 
 #: ../../orm/inheritance_loading.rst:279
 msgid ""
@@ -209,6 +279,12 @@ msgid ""
 "idea as the load is still against a single table only, but an additional "
 "lazy load of subclass-mapped columns will be prevented."
 msgstr ""
+"위의 설정은 :paramref:`.mapper.with_polymorphic`\ 에 대한 공통 설정으로 ``'*'``\ 는 "
+"모든 서브 클래스의 컬럼들을 로드하는 의미를 갖는다. "
+"조인 된 테이블 상속의 경우 이 옵션이 항상(혹은 종종 큰) LEFT, OUTER 조인을 많은 "
+"테이블에 내보내므로 SQL 관점에서 효율적이지 않기에 이 옵션을 사용하면 안된다."
+"단일 테이블 상속의 경우 단일 테이블에 대해서만 로드하기 때문에 ``'*'``\ 를 지정하는 "
+"것이 좋지만 서브 클래스의 매핑된 컬럼들의 추가적인 게으른 로드가 실행되지 않을 것이다."
 
 #: ../../orm/inheritance_loading.rst:288
 msgid ""
@@ -216,6 +292,8 @@ msgid ""
 "will override the mapper-level :paramref:`.mapper.with_polymorphic` "
 "setting."
 msgstr ""
+":func:`.orm.with_polymorphic`\ 함수나 :meth:`.Query.with_polymorphic`\ 사용은 "
+"래퍼-수준 :paramref:`.mapper.with_polymorphic`\ 설정을 오버라이드 할 것 입니다."
 
 #: ../../orm/inheritance_loading.rst:291
 msgid ""
@@ -227,6 +305,12 @@ msgid ""
 " that they should individually participate in polymorphic loading by "
 "default using the :paramref:`.mapper.polymorphic_load` parameter::"
 msgstr ""
+":paramref:`.mapper.with_polymorphic`\ 옵션은 :func:`.orm.with_polymorphic`\ 함수가"
+"서브 클래스들을 다형적으로 로드한 것 처럼 클래스들의 목록을 입력받는다."
+"그러나 선언적 시스템(Declarative)를 사용할땐 우리가 추가하고자 하는 서브 클래스는 "
+"아직 사용할 수 없으므로 이 목록에 클래스를 직접 제공하는 것은 가능하지 않다. "
+"그대신 각 서브 클래스에서 :paramref:`.mapper.polymorphic_load`\ 파라미터를 "
+"지정함으로서 다형성 로딩을 할 수 있다."
 
 #: ../../orm/inheritance_loading.rst:317
 msgid ""
@@ -236,10 +320,14 @@ msgid ""
 "default, exactly as though they had been appended to the "
 ":paramref:`.mapper.with_polymorphic` list of classes."
 msgstr ""
+":paramref:`.mapper.polymorphic_load`\ 파라미터의 ``\"inline\"``\ 의 의미는 "
+"``Engineer``\ 과 ``Manager``\ 클래스들이 기본적으로 ``Employee``\ 베이스 클래스의 "
+"\"다형성 로드\"\ 의 일부라는 점을 의미한다. "
+"이는 :paramref:`.mapper.with_polymorphic`\ 에 클래스 목록을 입력한 것과 동일하다."
 
 #: ../../orm/inheritance_loading.rst:324
 msgid "Setting with_polymorphic against a query"
-msgstr ""
+msgstr "with_polymorphic을 쿼리에 설정"
 
 #: ../../orm/inheritance_loading.rst:326
 msgid ""
@@ -252,6 +340,12 @@ msgid ""
 "directly, rather than using an alias object.  For simple cases it might "
 "be considered to be more succinct::"
 msgstr ""
+":func:`.orm.with_polymorphic`\ 함수는 쿼리-레벨 메소드인 :meth:`.Query.with_polymorphic`\ "
+"에서 발전하였다. 이 메소드는 :func:`.orm.with_polymorphic`\ 과 동일한 목표를 가지고 있었는데 "
+"다만 :class:`.Query`\ 의 사용 패턴이 유연하지 않았다."
+"엔티티(및 서브 클래스)가 앨리어스 객체를 사용하지 않고 직접 참조 될 수 있도록 "
+"해당 엔티티의 모든 객체에 적용된다. 단순한 케이스일 경우 이 방법이 더 "
+"간결한 것으로 고려할 수 있다::"
 
 #: ../../orm/inheritance_loading.rst:344
 msgid ""
@@ -261,10 +355,14 @@ msgid ""
 "not interfere with other entities.  If its flexibility is lacking, switch"
 " to using :func:`.orm.with_polymorphic`."
 msgstr ""
+":meth:`.Query.with_polymorphic`\ 메소드는 ``Engineer``\ 과 ``Manager``\ 을 적절하게 "
+"변환하면서 다른 엔티티와 간섭하지 않아야 하므로 :func:`.orm.with_polymorphic`\ 보다 "
+"더 복잡한 작업이다."
+"유연성이 부족한 경우 :func:`.orm.with_polymorphic`\ 함수를 사용하는 것으로 전환한다. "
 
 #: ../../orm/inheritance_loading.rst:353
 msgid "Polymorphic Selectin Loading"
-msgstr ""
+msgstr "다형성 Selctin 로딩"
 
 #: ../../orm/inheritance_loading.rst:355
 msgid ""
@@ -277,12 +375,20 @@ msgid ""
 " of ``Employee`` to emit an extra SELECT per subclass by using the "
 ":func:`.orm.selectin_polymorphic` loader option::"
 msgstr ""
+"조인된 테이블 상속 구조에서 추가적인 서브 클래스들을 \"애저 로드\" 하기 위한 "
+":func:`.orm.with_polymorphic`\ 함수 계열들의 다른 대안은 다형석 \"selectin\" 로딩을 "
+"사용하는 것이다. "
+"이는 관계 로드의 :ref:`selectin_eager_loading`\ 기능과 유사하게 작동하는 "
+"애저 로드 기능이다. "
+"주어진 예제 매핑에서 우리는 :func:`.orm.selectin_polymorphic`\ 로더 옵션을 사용해 "
+"서브 클래스당 추가 SELECT 구문을 발생 시키는 로딩을 지시할 수 있다::"
 
 #: ../../orm/inheritance_loading.rst:370
 msgid ""
 "When the above query is run, two additional SELECT statements will be "
 "emitted:"
 msgstr ""
+"위의 쿼리를 실행하면 두 개의 추가 SELECT 구문이 방출된다."
 
 #: ../../orm/inheritance_loading.rst:401
 msgid ""
@@ -290,6 +396,8 @@ msgid ""
 "default by specifying the :paramref:`.mapper.polymorphic_load` parameter,"
 " using the value ``\"selectin\"`` on a per-subclass basis::"
 msgstr ""
+"서브 클래스별로 ``\"selectin\"`` 을 사용하여 :paramref:`.mapper.polymorphic_load`\ 매개"
+"변수를 지정함으로써 기본적으로 위와 같은 로드 방식을 설정할 수 있따."
 
 #: ../../orm/inheritance_loading.rst:437
 msgid ""
@@ -305,12 +413,24 @@ msgid ""
 "use any type of eager loading, such as joined eager loading via the "
 ":func:`.joinedload` function::"
 msgstr ""
+":func:`.orm.with_polymorphic`\ 함수를 사용할 떄와는 달리 :func:`.orm.selectin_polymorphic`\ "
+"방식으로 로딩을 하면 우리의 메인 쿼리 안에 있는 ``Engineer``\ 혹은 ``Manager``\ 엔티티들"
+"을 filter, order by 등으로 **참조할 수 없다** . "
+"왜냐하면 이 엔티티들은 결과들을 위치시킬때 사용한 초기 쿼리에는 현재 존재하고 있지 않기 때문이다. "
+"그러나  ``Engineer``\ 이나 ``Manager``\ 에 적용되는 로더 옵션을 설정할 수 있다. 이 옵션은 "
+"보조 SELECT가 발생할 때 적용된다. 아래 예제에서 우리는 ``Manager``\ 가 추가적인 관계 "
+"``Manager.paperwork``\ 를 가지고 있가고 가정한다."
+"이때 우리는 :func:`.joinedload`\ 함수를 통해 조인된 애거 로딩이나 어떤 타입의 애거 로딩을"
+"사용할 수 있다::"
 
 #: ../../orm/inheritance_loading.rst:456
 msgid ""
 "Using the query above, we get three SELECT statements emitted, however "
 "the one against ``Manager`` will be:"
 msgstr ""
+"위의 쿼리를 사용하면 세 개의 SELECT 구문이 나온다. ``Manager``\ 에 대한"
+"결과는 다음과 같다"
+
 
 #: ../../orm/inheritance_loading.rst:475
 msgid ""
@@ -319,20 +439,24 @@ msgid ""
 "primary key, the database in use must support tuples with \"IN\", "
 "currently known to work with MySQL and Postgresql."
 msgstr ""
+"selectin 다형성 로딩은 selectin 관계 로딩과 비슷한 주의 사항을 가지고 있다. "
+"복합 키를 사용하는 엔티티의 경우, 사용중인 데이터베이스가 \"IN\" 튜플을 지원해야 한다. "
+"현재 MySQL 및 PostgreSQL에서 작동하는 것으로 알려져 있다."
 
 #: ../../orm/inheritance_loading.rst:482
 msgid ""
 "The selectin polymorphic loading feature should be considered as "
 "**experimental** within early releases of the 1.2 series."
 msgstr ""
+"selectin 다형성 로딩은 초기 1.2 시리즈 초기 릴리즈에선 **실험적** 인 기능으로 고려되어야 한다."
 
 #: ../../orm/inheritance_loading.rst:488
 msgid "Combining selectin and with_polymorphic"
-msgstr ""
+msgstr "selectin 과 with_polymorphic 결합"
 
 #: ../../orm/inheritance_loading.rst:490
 msgid "works as of 1.2.0b3"
-msgstr ""
+msgstr "1.2.0b3 릴리즈에서 작동함."
 
 #: ../../orm/inheritance_loading.rst:492
 msgid ""
@@ -345,6 +469,12 @@ msgid ""
 "inheritance, we could ensure that a load of ``Manager`` also fully loads "
 "``VicePresident`` subtypes at the same time::"
 msgstr ""
+"신중한 설계를 통해 selectin 로딩을 \"with_polymorphic\"\ 을 사용하는 계층 구조에 적용 "
+"할 수 있다. 특정 유즈 케이스는 selectin 로딩을 사용하여 조인된 상속 서브 테이블을 로드 한 다음 "
+"\"with_polymorphic\" 을 사용하여 조인 또는 단일 테이블 상속이 될 수 있는 추가 서브 클래스를 "
+"참조 하는 것이다. 단일 테이블 상속을 사용하여 ``Manager``\ 에 ``VicePresiden``\ 클래스를 "
+"추가한 경우, ``Manager``\ 을 로드하는 동시에 ``VicePresident``\ 의 서브-타입들을 "
+"전부 로드될 수 있다."
 
 #: ../../orm/inheritance_loading.rst:521
 msgid ""
@@ -356,6 +486,11 @@ msgid ""
 "the same SELECT statement. A query against ``Employee`` that encounters a"
 " ``Manager`` row would emit similarly to the following:"
 msgstr ""
+"위의 예제에서 우리는 ``VicePresident``\ 서브클래스 아래에 위치한 "
+"``vp_info``\ 컬럼을 ``manager`` 테이블에 추가했다. 이 서브 클래스는 이 데이터를 가지는 행을 "
+"참조하는 다형성 아이덴티티 ``\"vp\"``\ 에 링크된다. 로드 방식을 \"inline\"\ 으로 설정 하면"
+" ``Manager``\ 객체를 로드할때 ``vp_info``\ 컬럼의 쿼리가 동일한 SELECT 구문에 담길 것임을 "
+"보장한다. ``Manager``\ 행에 대한 쿼리는 다음과 비슷하게 나타난다:
 
 #: ../../orm/inheritance_loading.rst:544
 msgid ""
@@ -364,10 +499,13 @@ msgid ""
 " outer-space stuff!); assuming the above mappings had no "
 "``polymorphic_load`` set up, we could get the same result as follows::"
 msgstr ""
+"\"selectin\"\ 다형성 로딩과 쿼리-시간(query-time) :func:`.orm.with_polymorphic`\ 함수를 "
+"결합하는 것도 가능하다(이는 매우 드문 케이스이다). 위의 매핑이 ``polymorphic_load``\ 설정이 "
+"되지 않았다면 다음과 같은 결과를 얻을 수 있다::"
 
 #: ../../orm/inheritance_loading.rst:559
 msgid "Referring to specific subtypes on relationships"
-msgstr ""
+msgstr "관계에 대한 특정 서브타입 참조"
 
 #: ../../orm/inheritance_loading.rst:561
 msgid ""
@@ -381,6 +519,13 @@ msgid ""
 ":func:`.orm.with_polymorphic` alias, of that class hierarchy, rather than"
 " the class directly targeted by the :func:`.relationship`."
 msgstr ""
+":func:`.relationship`\ 에 해당하는 매핑된 속성은 두 매핑간 연결을 참조하기 위해 "
+"쿼리에 사용된다. "
+"이것의 일반적인 사용방법은 :meth:`.Query.join`\ 나 :func:`.joinedload`\ 같은 로더 옵션에서 "
+":func:`.relationship`\ 를 참조하는 것이다. "
+"타겟 클래스가 상속 구조 이고 API는 조인, 애거 로드, 혹은 다른 연결을 받아들일때 "
+":func:`.relationship`\ 함수는 특정 상속 계층 구조 클래스를 직접적으로 대상(targeted)하는 것 보다,
+"특정 서브 클래스나, 앨리어스, 혹은 :func:`.orm.with_polymorphic` 앨리어스을 대상 해야 한다. "
 
 #: ../../orm/inheritance_loading.rst:570
 msgid ""
@@ -392,6 +537,13 @@ msgid ""
 "``Company`` object. We'll add a ``company_id`` column to the "
 "``employees`` table and a new table ``companies``:"
 msgstr ""
+":func:`~sqlalchemy.orm.interfaces.PropComparator.of_type`\ 메서드는 "
+"특정 파생 앨리어스나 서브클래스로 기준을 좁히면서 :func:`~sqlalchemy.orm.relationship`\ "
+"경로를 따라 조인을 구성할 수 있다. "
+"``employeess``\ 테이블이 employees들의 컬랙션을 나타내는 테이블이고 이것은 ``Company``\ "
+"객체와 관계되어 있다고 가정한다. "
+"아래 예제와 같이 우리는 ``company_id``\ 컬럼을 ``employees``\ 테이블에 추가할 것이다:"
+
 
 #: ../../orm/inheritance_loading.rst:608
 msgid ""
@@ -404,12 +556,20 @@ msgid ""
 " join or subquery against the set of columns representing the subclass "
 "using the :meth:`~.orm.interfaces.PropComparator.of_type` operator::"
 msgstr ""
+"``Company``\ 위의 ``Employee`` 관계를 쿼리할때 :meth:`.Query.join`\ 메서드나 "
+":meth:`.PropComparator.any`\ , :meth:`.PropComparator.has`\ 메서드는 "
+"``engineer``\ 과 ``manager``\ 가 포함되지 않은 채로 ``employee``\ 와 ``manager`` 의 조인된"
+"결과를 만들 것 입니다. 만약 우리가 ``Engineer``\ 클래스를 특별히 지정하고 싶다면 "
+":meth:`~.orm.interfaces.PropComparator.of_type`\ 연산자를 사용하여 서브 클래스(``Engineer``)의 "
+"컬럼 세트를 조인하거나 서브 쿼리할 수 있다. "
 
 #: ../../orm/inheritance_loading.rst:621
 msgid ""
 "Similarly, to join from ``Company`` to the polymorphic entity that "
 "includes both ``Engineer`` and ``Manager`` columns::"
 msgstr ""
+"앞선 예제와 비슷하게 ``Engineer``\ 과 ``Manager``\ 의 컬럼들을 포함한 "
+"``Company`` 다형성 엔티티를 조인할 수 있다::"
 
 #: ../../orm/inheritance_loading.rst:636
 msgid ""
@@ -418,10 +578,13 @@ msgid ""
 ":func:`~sqlalchemy.orm.interfaces.PropComparator.of_type`, such as when "
 "the embedded criterion is in terms of a subclass::"
 msgstr ""
+":meth:`.PropComparator.any`\ 와 :meth:`.PropComparator.has`\ 연산자도 "
+":func:`~sqlalchemy.orm.interfaces.PropComparator.of_type`\ 함수와 같이 사용될 수 있다. "
+"아래 예제와 같이 서브 클래스의 내부에 있는 데이터를 기준으로 쿼리할 때 사용할 수 있다."
 
 #: ../../orm/inheritance_loading.rst:649
 msgid "Eager Loading of Specific or Polymorphic Subtypes"
-msgstr ""
+msgstr "특정 또는 다형성 서브타입 애거 로딩"
 
 #: ../../orm/inheritance_loading.rst:651
 msgid ""
@@ -431,6 +594,10 @@ msgid ""
 "eagerly loading related ``Engineer`` objects, querying the ``employee`` "
 "and ``engineer`` tables simultaneously::"
 msgstr ""
+":func:`.joinedload`, :func:`.subqueryload`, :func:`.contains_eager`, 그리고 "
+"다른 애거로더 옵션들은 :func:`~.PropComparator.of_type`\ 함수를 사용할 수 있게 지원한다. "
+"아래 예제에서는 ``Company`` 행들을 로드하면서 ``Engineer`` 객체들과, ``employee``, ``engineer`` 테이블들을 동시에 "
+"애거 로딩 하고 있다."
 
 #: ../../orm/inheritance_loading.rst:664
 msgid ""
@@ -438,6 +605,9 @@ msgid ""
 " can be used to combine eager loading and :func:`.orm.with_polymorphic`, "
 "so that all sub-attributes of all referenced subtypes can be loaded::"
 msgstr ""
+"이 경우와 마찬가지로 :meth:`.Query.join`, :meth:`~.PropComparator.of_type`\ 이 "
+"애거 로딩과 결합하여, 이를 통해 :func:`.orm.with_polymorphic`\ 가 모든 참조된 서브타입의 "
+"서브-속성(sub-attributes)들을 로드할 수 있다::"
 
 #: ../../orm/inheritance_loading.rst:682
 msgid ""
@@ -447,6 +617,10 @@ msgid ""
 "the polymorphic selectable is aliased (an informative error message is "
 "raised otherwise)."
 msgstr ""
+":func:`.with_polymorphic`\ 함수를 :func:`.joinedload`\ 함수와 같이 사용하는 경우 "
+" :func:`.with_polymorphic`\ 객체는 반드시 :class:`.Alias`\ 클래스의 인스턴스인 "
+"\"aliased\" 된 객체를 대상해야 하고 이를 통해 다형성 selectable 이 aliased 되어야 한다."
+"(이런 조건이 만족되지 않을 경우 에러 메시지가 발생한다.)"
 
 #: ../../orm/inheritance_loading.rst:688
 msgid ""
@@ -459,6 +633,12 @@ msgid ""
 "is an alternate form of aliasing against join objects that produces fewer"
 " subqueries."
 msgstr ""
+"이를 수행하는 일방적인 방법은 앨리어싱을 자동으로 적용하는 :paramref:`.with_polymorphic.aliased`\ 나"
+" :paramref:`.flat`\ 플래그를 포함하는 것이다. "
+"그러나 :paramref:`.with_polymorphic.selectable`\ 인수가 전달된 객체(이미 :class:`.Alias`\ 인 객체) "
+"는 이 플래그를 **설정 해선 안된다.** "
+"\"flat\"\ 옵션은 \"aliased\"\ 옵션을 암시하고, 보다 적은 서브쿼리들을 생성하는 조인된 객체들의 앨리어싱 "
+"의 대체적인(alternative) 형태 이다."
 
 #: ../../orm/inheritance_loading.rst:697
 msgid ""
@@ -468,10 +648,14 @@ msgid ""
 "on the eager-loaded ``Engineer`` class, we access this class from the "
 "namespace of the :func:`.orm.with_polymorphic` object::"
 msgstr ""
+"애거 로드에 사용된 :meth:`~.PropComparator.of_type`\ 대상은 원본 클래스 또는 "
+"파생 클래스가 아닌 후속 체이닝에 사용될 엔티티이다. 향후 에거-로드된 ``Engineer``\ 클래스의 "
+"컬랙션을 애거 로드 하고 싶다면 우리는 이 클래스를 :func:`.orm.with_polymorphic`\ 객체의 "
+"네임스페이스로부터 접근 할 수 있다."
 
 #: ../../orm/inheritance_loading.rst:713
 msgid "Loading objects with joined table inheritance"
-msgstr ""
+msgstr "조인 된 테이블 상속을 사용하여 객체 로딩"
 
 #: ../../orm/inheritance_loading.rst:715
 msgid ""
@@ -479,22 +663,28 @@ msgid ""
 "that represents a JOIN of two tables such as our ``Engineer`` example "
 "from the inheritance section, the SQL emitted is a join::"
 msgstr ""
+"\"상속\" 절에서 소개한 ``Engineer`` 예제처럼 조인 된 테이블 상속을 사용할때 "
+"만약 우리가 두 테이블이 조인 된 특정 서브 클래스를 쿼리한다면 방출된 SQL은 조인이다. "
 
 #: ../../orm/inheritance_loading.rst:721
 msgid "The above query will emit SQL like:"
-msgstr ""
+msgstr "위의 쿼리는 아래와 같은 SQL을 발생시킨다::"
 
 #: ../../orm/inheritance_loading.rst:732
 msgid ""
 "We will then get a collection of ``Engineer`` objects back, which will "
 "contain all columns from ``employee`` and ``engineer`` loaded."
 msgstr ""
+"이는 모든 ``employee``\ 컬럼과 ``engineer``\ 컬럼이 포함되고 로드되는 "
+"``Engineer`` 객체들의 컬랙션을 가져 온다."
 
 #: ../../orm/inheritance_loading.rst:735
 msgid ""
 "However, when emitting a :class:`.Query` against a base class, the "
 "behavior is to load only from the base table::"
 msgstr ""
+"그러나 베이스 테이블에 대하여 :class:`.Query`\ 를 방출하는 경우 "
+"베이스 테이블에 대해서만 로드된다."
 
 #: ../../orm/inheritance_loading.rst:740
 msgid ""
@@ -502,6 +692,9 @@ msgid ""
 " table and not from any \"sub\" tables (``engineer`` and ``manager``, in "
 "our previous examples):"
 msgstr ""
+"위의 예제에서 기본적인 동안은 ``employee`` 테이블에 대해서만 SELECT하고 "
+"어떠한 \"서브\" 테이블 (앞선 예제에서 나왔던 ``engineer`` 과 ``manager``)은"
+" SELECT 하지 않는다. "
 
 #: ../../orm/inheritance_loading.rst:752
 msgid ""
@@ -512,6 +705,10 @@ msgid ""
 "the data was not already loaded. So above, after accessing the objects "
 "you'd see further SQL issued along the lines of:"
 msgstr ""
+"쿼리를 통해 ``Employee`` 객체들의 컬랙션이 반한된 후 ``Employee`` 객체의 속성인 "
+"``engieer``\ 이나 ``manager``\ 하위 테이블들이 요청 될 경우 요청한 컬럼에 대해 두 번째"
+"로드가 실행된다(만약 데이터가 아직 로드되지 않은 첫 번째 요청일 경우). 그래서 위의"
+"객체에 엑세스 한 후에는 아래에 나온 것처럼 추가로 발행된 SQL 라인들을 볼 수 있다:"
 
 #: ../../orm/inheritance_loading.rst:773
 msgid ""
@@ -521,26 +718,34 @@ msgid ""
 "joined eager loading works for relationships, removing the necessity for "
 "a second per-entity load::"
 msgstr ""
+":func:`.orm.with_polymorphic`\ 함수와 이와 연관된 구성 옵션들은 "
+"``employee``, ``engineer``, ``manager``\ 에 대한 조건부 조인 로드, "
+"관계에 대한 조인된 애저 로딩, 두번째 엔티티 로드 필요성 제거를 할 수 있게 "
+"한다."
 
 #: ../../orm/inheritance_loading.rst:785
 msgid ""
 "The above produces a query which joins the ``employee`` table to both the"
 " ``engineer`` and ``manager`` tables like the following:"
 msgstr ""
+"위의 코드는 ``engineer``\ 과 ``manager``\ 테이블이 ``employee``\ 테이블과 조인된 "
+"다음과 같은 쿼리를 생성한다:"
 
 #: ../../orm/inheritance_loading.rst:806
 msgid ""
 "The section :ref:`with_polymorphic` discusses the "
 ":func:`.orm.with_polymorphic` function and its configurational variants."
 msgstr ""
+":ref:`with_polymorphic`\ 절에서 :func:`.orm.with_polymorphic`\ 함수와 그"
+"구성 변형을 설명한다."
 
 #: ../../orm/inheritance_loading.rst:811
 msgid ":ref:`with_polymorphic`"
-msgstr ""
+msgstr "또한 :ref:`with_polymorphic`\ 도 참조 해보면 좋다."
 
 #: ../../orm/inheritance_loading.rst:816
 msgid "Loading objects with single table inheritance"
-msgstr ""
+msgstr "단일 테이블 상속된 객체 로딩"
 
 #: ../../orm/inheritance_loading.rst:818
 msgid ""
@@ -550,6 +755,10 @@ msgid ""
 "table. In our example from :ref:`single_inheritance`, the ``Manager`` "
 "mapping for example had a :class:`.Column` specified::"
 msgstr ""
+"현대 선언적 시스템(Declarative)에서 단일 상속 매핑은 서브 테이블에만 매핑되고 수퍼 "
+"클래스에서 사용할 수 없는(동일한 테이블에 존재하더라도) :class:`.Column`\ 객체를 생성한다. "
+"우리의 :ref:`single_inheritance`\ 예제에서, 예를들어 ``Manager``\ 매핑은 하나의 지정된 :class:`.Column`\ "
+"을 갖는다."
 
 #: ../../orm/inheritance_loading.rst:831
 msgid ""
@@ -558,12 +767,18 @@ msgid ""
 "``Manager`` will include this column in the query, as well as an IN "
 "clause to limit rows only to ``Manager`` objects:"
 msgstr ""
+"위의 ``employee`` 테이블이 ``manager_data`` 컬럼을 갖고 있더라도 "
+"``Employee.manager_data``\ 속성이 없을 것이다. ``Manager``\ 에 대한 쿼리는 "
+"``manager_data``\ 컬럼을 포함하고 마찬가지로 IN 구문은 ``Manager`` 객체에 해당하는 행만 포함한다."
+
 
 #: ../../orm/inheritance_loading.rst:850
 msgid ""
 "However, in a similar way to that of joined table inheritance, a query "
 "against ``Employee`` will only query for columns mapped to ``Employee``:"
 msgstr ""
+"그러나, 비슷한 방법으로 조인된 테이블 상속의 경우, ``Employee``\ 에 대한 쿼리는 "
+"단순히 ``Employee``\ 에 매핑된 컬럼만을 쿼리할 것이다."
 
 #: ../../orm/inheritance_loading.rst:862
 msgid ""
@@ -571,6 +786,9 @@ msgid ""
 "additional columns only mapped to ``Manager`` emits a lazy load for those"
 " columns, in a similar way to joined inheritance::"
 msgstr ""
+"만약 우리가 위의 ``Manager``\ 인스턴스에서의 결과를 다시 가져온다면, "
+"``Manager``\ 에만 매핑된 컬럼에 엑세스한다면 조인된 상속과 비슷한 방식으로 "
+"이 컬럼에 대해 게으른-로딩을 할 것이다. "
 
 #: ../../orm/inheritance_loading.rst:870
 msgid ""
@@ -579,6 +797,9 @@ msgid ""
 "eager loading of subclass attributes as well as specification of "
 "subclasses in a query, just without the overhead of using OUTER JOIN::"
 msgstr ""
+":func:`.orm.with_polymorphic`\ 함수는 단일 상속의 경우 조인된 상속과 비슷한 기능을 "
+"제공한다. 이것은 OUTER JOIN을 사용하는 오버헤드 없이 서브 클래스 속성을 애저 로딩하고 "
+"서브 클래스를 지정하여 쿼리하는 것이 가능하다::"
 
 #: ../../orm/inheritance_loading.rst:884
 msgid ""
@@ -588,10 +809,14 @@ msgid ""
 " both ``Engineer`` and ``Manager`` will be loaded at once.  SQL emitted "
 "would be:"
 msgstr ""
+"위의 쿼리는 단일 테이블에 대해 적용되지만, 우리는 \"polymorphic\"\ 네임스페이스를 "
+"사용하여 ``Manager``\ 과 ``Engineer`` 에 있는 컬럼들을 참조 할 수 있다. "
+"``\"*\"``\ 를 지정하면 ``Engineer``\ 와 ``Manager`` 엔티티들은 한 번에 로드된다. "
+"방출되는 SQL은 다음과 같다:"
 
 #: ../../orm/inheritance_loading.rst:904
 msgid "Inheritance Loading API"
-msgstr ""
+msgstr "상속 로딩 API"
 
 #: of sqlalchemy.orm.with_polymorphic:1
 msgid ""
