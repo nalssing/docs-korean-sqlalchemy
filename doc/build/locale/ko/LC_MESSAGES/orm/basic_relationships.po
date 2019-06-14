@@ -19,19 +19,19 @@ msgstr ""
 
 #: ../../orm/basic_relationships.rst:4
 msgid "Basic Relationship Patterns"
-msgstr ""
+msgstr "기초 릴레이션십 패턴"
 
 #: ../../orm/basic_relationships.rst:6
 msgid "A quick walkthrough of the basic relational patterns."
-msgstr ""
+msgstr "기초 릴레이션십 패턴 둘러보기"
 
 #: ../../orm/basic_relationships.rst:8
 msgid "The imports used for each of the following sections is as follows::"
-msgstr ""
+msgstr "아래 섹션에서 사용할 import문은 다음과 같다."
 
 #: ../../orm/basic_relationships.rst:18
 msgid "One To Many"
-msgstr ""
+msgstr "일대다 관계"
 
 #: ../../orm/basic_relationships.rst:20
 msgid ""
@@ -39,6 +39,9 @@ msgid ""
 "referencing the parent.  :func:`.relationship` is then specified on the "
 "parent, as referencing a collection of items represented by the child::"
 msgstr ""
+"일대다 관계는 부모 테이블을 참조하는 외래 키를 자식 테이블에 둔다. "
+"그리고 :func:`.relationship`\ 을 부모 테이블에 추가하여 자식 테이블에 "
+"대응하는 모델의 콜렉션을 참조한다."
 
 #: ../../orm/basic_relationships.rst:34
 msgid ""
@@ -47,10 +50,13 @@ msgid ""
 ":func:`.relationship` and connect the two using the "
 ":paramref:`.relationship.back_populates` parameter::"
 msgstr ""
+"반대로 일대다 관계에서 '다'측이 부모 테이블에 대응하는 모델을 참조하여 "
+"관계를 양방향으로 맺기 위해서는 자식 테이블에 :func:`.relationship`\ 을 "
+"추가하고 :paramref:`.relationship.back_populates` 인자를 사용한다:"
 
 #: ../../orm/basic_relationships.rst:49
 msgid "``Child`` will get a ``parent`` attribute with many-to-one semantics."
-msgstr ""
+msgstr "``Child``\ 가 ``parent`` 어트리뷰트를 다대일 관계로 가리킨다."
 
 #: ../../orm/basic_relationships.rst:51
 msgid ""
@@ -58,10 +64,13 @@ msgid ""
 "on a single :func:`.relationship` instead of using "
 ":paramref:`~.relationship.back_populates`::"
 msgstr ""
+"다른 방법으로 :paramref:`~.relationship.back_populates` 대신 "
+":func:`.relationship`\ 을 한 번만 사용하고 "
+":paramref:`~.relationship.backref` 옵션으로 가리킬 수 있다."
 
 #: ../../orm/basic_relationships.rst:62
 msgid "Many To One"
-msgstr ""
+msgstr "다대일 관계"
 
 #: ../../orm/basic_relationships.rst:64
 msgid ""
@@ -69,6 +78,9 @@ msgid ""
 "child. :func:`.relationship` is declared on the parent, where a new "
 "scalar-holding attribute will be created::"
 msgstr ""
+"다대일 관계에서는 자식 테이블을 참조하는 외래키를 부모 테이블에 둔다. "
+":func:`.relationship`\ 을 부모 테이블에 선언하면 '일'에 대응하는 "
+"어트리뷰트가 추가된다:"
 
 #: ../../orm/basic_relationships.rst:78
 msgid ""
@@ -76,16 +88,21 @@ msgid ""
 ":func:`.relationship` and applying the "
 ":paramref:`.relationship.back_populates` parameter in both directions::"
 msgstr ""
+"양방향 참조는 두번째 :func:`.relationship`\ 를 사용하고 "
+"양쪽에 :paramref:`.relationship.back_populates` 인자를 추가하여 얻을 수 있다."
 
 #: ../../orm/basic_relationships.rst:93
 msgid ""
 "Alternatively, the :paramref:`~.relationship.backref` parameter may be "
 "applied to a single :func:`.relationship`, such as ``Parent.child``::"
 msgstr ""
+"다른 방법으로 ``Parent.child``\ 처럼 "
+":paramref:`~.relationship.back_populates` 대신 :func:`.relationship`\ 을 "
+"한 번만 사용하고 :paramref:`~.relationship.backref`\ 옵션으로 가리킬 수 있다."
 
 #: ../../orm/basic_relationships.rst:105
 msgid "One To One"
-msgstr ""
+msgstr "일대일 관계"
 
 #: ../../orm/basic_relationships.rst:107
 msgid ""
@@ -95,10 +112,15 @@ msgid ""
 "scalar attribute instead of a collection on the \"many\" side of the "
 "relationship. To convert one-to-many into one-to-one::"
 msgstr ""
+"일대일 관계은 양 쪽 다 한개의 대상을 가리킨다. "
+":paramref:`~.relationship.uselist`\ 플래그는 '일대다' 관계의 '다'의 "
+"콜렉션 대신 하나에 대응시킬 것을 지정한다. "
+"일대다 관계를 일대일 관계로 변환하기 위해서는:"
 
 #: ../../orm/basic_relationships.rst:123
 msgid "Or for many-to-one::"
 msgstr ""
+"다대일 관계에선"
 
 #: ../../orm/basic_relationships.rst:136
 msgid ""
@@ -107,10 +129,13 @@ msgid ""
 ":paramref:`.relationship.back_populates` approach; to specify ``uselist``"
 " on a backref, use the :func:`.backref` function::"
 msgstr ""
+":paramref:`.relationship.backref`\ 와 :func:`.backref`\ 함수는 항상 "
+":paramref:`.relationship.back_populates`\ 를 사용하는 곳에 적용할 수 있다. "
+"backref에서 ``uselist``\ 를 지정하기 위해서는:"
 
 #: ../../orm/basic_relationships.rst:152
 msgid "Many To Many"
-msgstr ""
+msgstr "다대다 관계"
 
 #: ../../orm/basic_relationships.rst:154
 msgid ""
@@ -122,6 +147,12 @@ msgid ""
 ":class:`.ForeignKey` directives can locate the remote tables with which "
 "to link::"
 msgstr ""
+"다대다 관계는 두 클래스 간에 연결 테이블을 사용한다. "
+"연결 테이블은 :func:`.relationship`\ 의 "
+":paramref:`~.relationship.secondary`\ 인자로 지정한다. "
+":class:`.Table`\ 은 주로 선언형 기초 클래스에 딸린 "
+":class:`.MetaData` 객체를 사용함으로써 "
+":class:`.ForeignKey`\ 가 가리키는 다른 테이블을 인식할 수 있다."
 
 #: ../../orm/basic_relationships.rst:175
 msgid ""
@@ -129,6 +160,9 @@ msgid ""
 "a collection.  Specify using :paramref:`.relationship.back_populates`, "
 "and for each :func:`.relationship` specify the common association table::"
 msgstr ""
+"양방향 관계에서는 둘 다 서로를 콜렉션으로 참조한다. "
+":paramref:`.relationship.back_populates`\ 로 콜렉션을 지정하고 "
+":func:`.relationship` 에 공통 연결 테이블을 지정한다."
 
 #: ../../orm/basic_relationships.rst:200
 msgid ""
@@ -137,6 +171,10 @@ msgid ""
 "use the same :paramref:`~.relationship.secondary` argument for the "
 "reverse relationship::"
 msgstr ""
+":paramref:`~.relationship.backref`\ 를 "
+":paramref:`.relationship.back_populates` 대신 "
+"사용할 땐 backeref가 역방향 관계에서도 같은 "
+":paramref:`~.relationship.secondary`\ 를 사용한다."
 
 #: ../../orm/basic_relationships.rst:220
 msgid ""
@@ -147,6 +185,10 @@ msgid ""
 "as it's available to the callable after all module initialization is "
 "complete::"
 msgstr ""
+":func:`.relationship`\ 의 :paramref:`~.relationship.secondary`\ 인자에 "
+"해당 테이블을 리턴하는 callable을 사용할 수 있다. "
+"callable은 매퍼를 처음 사용할때만 계산되며 이를 이용해 "
+"``association_table``\ 을 모든 모듈이 초기화된 시점에서 정의할 수 있다."
 
 #: ../../orm/basic_relationships.rst:233
 msgid ""
@@ -154,10 +196,12 @@ msgid ""
 "the table\" is accepted as well, matching the name of the table as stored"
 " in ``Base.metadata.tables``::"
 msgstr ""
+"선언형 확장을 사용한다면 ``Base.metadata.tables``\ 에 저장된 "
+" \"테이블의 이름\"으로도 지정할 수 있다."
 
 #: ../../orm/basic_relationships.rst:246
 msgid "Deleting Rows from the Many to Many Table"
-msgstr ""
+msgstr "다대다 관계에서 행 삭제하기"
 
 #: ../../orm/basic_relationships.rst:248
 msgid ""
@@ -168,6 +212,11 @@ msgid ""
 "to delete from this table manually**.   The act of removing a record from"
 " the collection will have the effect of the row being deleted on flush::"
 msgstr ""
+":func:`.relationship`\ 의 :paramref:`~.relationship.secondary`\ 인자만의 "
+"기능이 있다. 콜렉션에 객체를 추가하거나 삭제할 때 "
+"인자가 지정한 테이블에 자동으로 INSERT, DELETE문이 실행된다. "
+"*따라서 수동으로 테이블의 값을 지우지 않아도 된다.* "
+""
 
 #: ../../orm/basic_relationships.rst:258
 msgid ""
@@ -175,10 +224,13 @@ msgid ""
 "can be deleted when the child object is handed directly to "
 ":meth:`.Session.delete`::"
 msgstr ""
+":meth:`.Session.delete`\ 로 자식 객체를 지울 때 "
+"어떻게 \"secondary\" 테이블의 데이터를 지울 수 있는지가 "
+" 자주 나오는 질문이다:"
 
 #: ../../orm/basic_relationships.rst:263
 msgid "There are several possibilities here:"
-msgstr ""
+msgstr "여기엔 몇 가지 가능성이 있다:"
 
 #: ../../orm/basic_relationships.rst:265
 msgid ""
@@ -189,6 +241,10 @@ msgid ""
 "\"secondary\" table that links it to the ``Parent``.  No delete of the "
 "\"secondary\" table will occur."
 msgstr ""
+"``Parent``\ 에서 ``Child``\ 로의 :func:`.relationship`\ 이 있고 "
+"반대방향인 ``Child``\ 에서 ``Parent``\ 의 역방향 관계가 **없다면** "
+"SQL알케미는 ``Child``\ 를 지울 때 ``Parent``\ 와 연결하는 연결 테이블을 "
+"알 수 없다. 따라서 연결 테이블에서 삭제가 일어나지 않는다."
 
 #: ../../orm/basic_relationships.rst:270
 msgid ""
@@ -200,6 +256,11 @@ msgid ""
 "bidrectional; SQLAlchemy is strictly looking at every "
 ":func:`.relationship` associated with the ``Child`` object being deleted."
 msgstr ""
+"``Child``\ 에서 ``Parent``\ 의 역방향 관계를 ``Child.parents``\ 로 선언했다면 "
+"SQL알케미는 `Child.parents`` 콜렉션을 통해 ``Child``\ 와 연결된 "
+"모든 ``Parent``\ 를 가져오고 사이를 연결하는 \"secondary\" 테이블의 행을 삭제한다. "
+"관계를 양방향으로 설정할 필요는 없다. SQL알케미는 ``Child`` 객체를 삭제할 때 "
+"이에 연결된 :func:`.relationship`\ 을 모두 확인한다."
 
 #: ../../orm/basic_relationships.rst:277
 msgid ""
@@ -213,6 +274,13 @@ msgid ""
 ":func:`.relationship`; see :ref:`passive_deletes` for more details on "
 "this."
 msgstr ""
+"더 좋은 성능을 낼 수 있는 방법은 데이터베이스의 외래 키에 "
+"ON DELETE CASCADE 지시자를 사용하는 것이다. 이 기능을 제공하는 데이터베이스는 "
+"자식 행을 삭제할 때 연결 테이블에서 해당 행을 참조하는 행을 자동으로 같이 "
+"삭제한다. 이 경우에는 :func:`.relationship`\ 에 "
+":paramref:`~.relationship.passive_deletes` 인자를 사용하여 SQLAlchemy에 "
+"``Child.parents``\ 를 미리 가져올 수 있도록 알려줄 수 있다."
+"자세한 정보는 :ref:`passive_deletes`\ 에서 볼 수 있다."
 
 #: ../../orm/basic_relationships.rst:286
 msgid ""
@@ -225,10 +293,17 @@ msgid ""
 " delete entities in reaction to a related entity being deleted - see "
 ":ref:`unitofwork_cascades` for information on this feature."
 msgstr ""
+"다시 말하자면, 이런 행동은 오직 :func:`.relationship`\ 에 "
+":paramref:`~.relationship.secondary` 인자를 사용했을 때만 유효하다. "
+"명시적으로 매핑된 연결 테이블을 다루고 해당 :func:`.relationship`\ 에 "
+":paramref:`~.relationship.secondary` 인자가 없다면 "
+"cascades 규칙을 사용하여 관계된 엔티티를 삭제할 때 "
+"자동으로 엔티티를 삭제할 수 있다. "
+"이 기능에 대한 정보는 :ref:`unitofwork_cascades`\ 에서 볼 수 있다."
 
 #: ../../orm/basic_relationships.rst:297
 msgid "Association Object"
-msgstr ""
+msgstr "연결 객체"
 
 #: ../../orm/basic_relationships.rst:299
 msgid ""
@@ -243,6 +318,14 @@ msgid ""
 "column called ``extra_data``, which is a string value that is stored "
 "along with each association between ``Parent`` and ``Child``::"
 msgstr ""
+"연결 객체 패턴은 다대다 관계의 변종이다. "
+"연결 테이블이 양쪽 테이블을 참조하는 외래 키 외에 칼럼을 더 가지고 있을 때 "
+"사용한다. :paramref:`~.relationship.secondary`\ 인자를 사용하는 대신 "
+"새 클래스를 연결 테이블에 직접 대응한다. "
+"한 쪽은 일대다 관계로, 다른 쪽은 다대일 관계를 지정한다. "
+"밑의 코드는 ``Association`` 클래스와 대응한 연결 테이블을 보여주고 있다. "
+"이 클래스는 ``extra_data``\ 라는 칼럼을 가지고 있으며 "
+"``Parent``\ 와 ``Child``\ 를 연결하는 값과 같이 저장된다."
 
 #: ../../orm/basic_relationships.rst:327
 msgid ""
@@ -250,6 +333,9 @@ msgid ""
 ":paramref:`.relationship.back_populates` or "
 ":paramref:`.relationship.backref`::"
 msgstr ""
+"늘 그랬듯이, 양방향 관계에서는 "
+":paramref:`.relationship.back_populates`\ 나 "
+":paramref:`.relationship.backref`\ 를 사용한다:"
 
 #: ../../orm/basic_relationships.rst:348
 msgid ""
@@ -258,6 +344,9 @@ msgid ""
 "appended to the parent; similarly, access from parent to child goes "
 "through the association object::"
 msgstr ""
+"이렇게 직접 연결하는 방법은 자식 개체가 부모 객체와 연결되기 전에 "
+"연결 객체와 연결하는 것을 필요로 한다. "
+"부모 객체가 자식 객체와 연결할 때도 이와 같이 연결 객체를 통해야 한다."
 
 #: ../../orm/basic_relationships.rst:365
 msgid ""
@@ -268,12 +357,19 @@ msgid ""
 "access, one \"hop\" to the associated object, and a second to a target "
 "attribute."
 msgstr ""
+"``Association`` 객체에 대한 참조를 숨겨 연결 객체 패턴의 편의를 높이기 위해 "
+"SQL알케미는 :ref:`associationproxy_toplevel` 확장을 제공한다. "
+"이 확장은 어트리뷰트에 한 번의 액세스로 "
+"첫번째는 연결 객체로, 두 번째는 원하는 객체로 두 번의 \"뛰어넘기\"를 "
+"할 수 있는 설정을 제공한다."
 
 #: ../../orm/basic_relationships.rst:374
 msgid ""
 "The association object pattern **does not coordinate changes with a "
 "separate relationship that maps the association table as \"secondary\"**."
 msgstr ""
+"연결 객체 패턴은 **연결 객체와 부모/자식 간의 관계가 바뀌었을 때 "
+"부모 - 자식 간의 관계에 적용되지 않는다**."
 
 #: ../../orm/basic_relationships.rst:377
 msgid ""
@@ -284,6 +380,11 @@ msgid ""
 "not show up in another until the :class:`.Session` is expired, which "
 "normally occurs automatically after :meth:`.Session.commit`::"
 msgstr ""
+"밑의 스키마에서 ``Parent.children``\ 은 ``Parent.child_associations``\ 나 "
+"``Child.parent_associations``\ 이 바뀌었을 때 파이썬 실행 환경에서 변경이 "
+"적용되지 않는다. 보통 :meth:`.Session.commit`\ 이 일어나는 등 "
+":class:`.Session`\ 이 만료되기 전까지 변경이 적용되지 않고 "
+"관계는 정상적으로 동작한다:"
 
 #: ../../orm/basic_relationships.rst:404
 msgid ""
@@ -293,6 +394,9 @@ msgid ""
 "where we establish the same relationship between a ``Parent`` and "
 "``Child`` object twice::"
 msgstr ""
+"그 반대의 경우도 마찬가지로 다른 관계에 영향을 주지 않는다. "
+"두 관계에 같은 데이터를 변경하는 것은 중복으로 INSERT나 DELETE문을 만든다. "
+"밑의 예제에서는 ``Parent``\ 와 ``Child`` 간 연결이 2번 일어난다."
 
 #: ../../orm/basic_relationships.rst:417
 msgid ""
@@ -304,4 +408,9 @@ msgid ""
 "association object pattern, use the association proxy extension as "
 "documented at :ref:`associationproxy_toplevel`."
 msgstr ""
-
+"이런 행동 방식을 잘 이해한다면 연결 객체 패턴을 사용하는 것도 괜찮다. "
+"그래도 연결 관계에 ``viewonly=True`` 플래그를 적용하여 불필요한 변경을 "
+"기록하는 것을 막는 것이 더 좋은 방법일 수도 있다. "
+"그러나 연결 객체 패턴을 사용하면서 간단히 ``Parent->Child``\ 를 사용하고 싶다면 "
+"복잡함을 줄이기 위해 :ref:`associationproxy_toplevel`\ 에 작성된 "
+"association proxy을 사용하는 것이 좋다."
